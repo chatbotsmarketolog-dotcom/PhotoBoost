@@ -7,20 +7,14 @@
 <meta name="theme-color" content="#7c3aed">
 <meta name="color-scheme" content="light dark">
 
-<title>PhotoBoost PRO — Оптимизатор фото для Wildberries, Ozon и Avito | Бесплатно</title>
-<meta name="description" content="Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito. Безлимитная обработка от 1500₽/мес. Первые 2 фото бесплатно. Без Photoshop.">
-<meta name="keywords" content="оптимизатор фото, сжатие фото, wildberries, ozon, авито, маркетплейсы, селлер, фото для карточек, оптимизация изображений, photoboost, обработка фото, пакетная обработка, wb, озон, avito">
-<meta name="author" content="PhotoBoost">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<meta name="googlebot" content="index, follow">
-<meta name="yandex-verification" content="ТВОЙ_КОД_ЯНДЕКС_ВЕБМАСТЕР">
-<meta name="google-site-verification" content="ТВОЙ_КОД_GOOGLE_SEARCH_CONSOLE">
+<title>PhotoBoost PRO — Оптимизатор фото для Wildberries, Ozon и Avito</title>
+<meta name="description" content="Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito.">
 <link rel="canonical" href="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PhotoBoost PRO">
-<meta property="og:title" content="PhotoBoost PRO — Оптимизатор фото для маркетплейсов">
-<meta property="og:description" content="Автоматическая оптимизация фото для WB, Ozon и Avito. Первые 2 фото бесплатно. Без Photoshop.">
+<meta property="og:title" content="PhotoBoost PRO">
+<meta property="og:description" content="Автоматическая оптимизация фото для WB, Ozon и Avito.">
 <meta property="og:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -28,8 +22,8 @@
 <meta property="og:locale" content="ru_RU">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PhotoBoost PRO — Оптимизатор фото для маркетплейсов">
-<meta name="twitter:description" content="Автоматическая оптимизация фото для WB, Ozon и Avito. Первые 2 фото бесплатно.">
+<meta name="twitter:title" content="PhotoBoost PRO">
+<meta name="twitter:description" content="Автоматическая оптимизация фото для WB, Ozon и Avito.">
 <meta name="twitter:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -37,24 +31,18 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="shortcut icon" href="favicon.ico">
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "PhotoBoost PRO",
-  "description": "Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito",
-  "url": "https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
-  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "12847" }
-}
-</script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<style>
+/* ===== СБРОС СТИЛЕЙ ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== ПЕРЕМЕННЫЕ ЦВЕТОВ ===== */
 :root {
     --bg-dark: #0a0a1a;
     --bg-darker: #050510;
@@ -69,13 +57,15 @@
     --text-dark: #0f0f1e;
     --text-light: #f8fafc;
     --text-muted: #64748b;
-    --border: rgba(255,255,255,0.1);
+    --border: rgba(255, 255, 255, 0.1);
     --gradient-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%);
     --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
 }
 
-html { scroll-behavior: smooth; }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -85,608 +75,1746 @@ body {
     overflow-x: hidden;
 }
 
+/* ===== НАВИГАЦИЯ ===== */
 .nav {
-    position: fixed; top: 0; left: 0; right: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 1000;
     background: rgba(10, 10, 26, 0.95);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
 }
+
 .nav-container {
-    max-width: 1280px; margin: 0 auto; padding: 16px 30px;
-    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
+
 .logo {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 1.4rem; font-weight: 800;
-    color: var(--text-light); text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-decoration: none;
 }
+
 .logo-icon {
-    width: 38px; height: 38px;
+    width: 38px;
+    height: 38px;
     background: var(--gradient-main);
     border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 1.2rem;
     box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
 }
+
 .logo span {
     background: var(--gradient-main);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-.nav-menu { display: flex; gap: 30px; list-style: none; }
+
+.nav-menu {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
 .nav-menu a {
-    color: var(--text-muted); text-decoration: none;
-    font-weight: 500; font-size: 0.95rem;
-    transition: color 0.3s; cursor: pointer;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+    cursor: pointer;
 }
-.nav-menu a:hover { color: var(--text-light); }
-.nav-actions { display: flex; gap: 12px; align-items: center; }
 
+.nav-menu a:hover {
+    color: var(--text-light);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* ===== КНОПКИ ===== */
 .btn {
-    padding: 11px 22px; border-radius: 10px;
-    font-weight: 600; font-size: 0.95rem;
-    cursor: pointer; border: none;
-    transition: all 0.3s; text-decoration: none;
-    display: inline-flex; align-items: center; justify-content: center;
-    gap: 8px; font-family: inherit;
+    padding: 11px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
 }
-.btn-ghost { background: transparent; color: var(--text-light); border: 1px solid var(--border); }
-.btn-ghost:hover { background: rgba(255,255,255,0.1); }
-.btn-primary { background: var(--gradient-purple); color: white; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5); }
-.btn-gold { background: var(--gradient-gold); color: var(--text-dark); box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4); }
-.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5); }
-.btn-large { padding: 16px 36px; font-size: 1.05rem; border-radius: 12px; }
-.btn-dark { background: var(--text-dark); color: white; }
-.btn-danger { background: var(--danger); color: white; }
-.btn-danger:hover { background: #dc2626; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-.user-badge {
-    display: flex; align-items: center; gap: 10px;
-    padding: 6px 14px 6px 6px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 50px; cursor: pointer;
-    transition: all 0.3s; border: 1px solid var(--border);
+.btn-ghost {
+    background: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border);
 }
-.user-badge:hover { background: rgba(255,255,255,0.1); }
-.user-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary {
     background: var(--gradient-purple);
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-weight: 700; font-size: 0.9rem;
+    color: white;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+}
+
+.btn-gold {
+    background: var(--gradient-gold);
+    color: var(--text-dark);
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
+}
+
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5);
+}
+
+.btn-large {
+    padding: 16px 36px;
+    font-size: 1.05rem;
+    border-radius: 12px;
+}
+
+.btn-dark {
+    background: var(--text-dark);
+    color: white;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    border: 1px solid var(--border);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ===== БЕЙДЖ ПОЛЬЗОВАТЕЛЯ ===== */
+.user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px 6px 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid var(--border);
+}
+
+.user-badge:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gradient-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
     overflow: hidden;
 }
-.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.user-name { color: var(--text-light); font-weight: 600; font-size: 0.9rem; }
 
-.hero {
-    background: var(--bg-dark); color: var(--text-light);
-    padding: 140px 20px 100px; position: relative; overflow: hidden;
+.user-name {
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 0.9rem;
 }
+
+/* ===== ГЕРОЙ-СЕКЦИЯ ===== */
+.hero {
+    background: var(--bg-dark);
+    color: var(--text-light);
+    padding: 140px 20px 100px;
+    position: relative;
+    overflow: hidden;
+}
+
 .hero::before {
-    content: ''; position: absolute;
-    top: -50%; left: -20%; width: 60%; height: 200%;
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -20%;
+    width: 60%;
+    height: 200%;
     background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 60%);
     animation: pulse 8s ease-in-out infinite;
 }
+
 .hero::after {
-    content: ''; position: absolute;
-    bottom: -50%; right: -20%; width: 60%; height: 200%;
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
     background: radial-gradient(circle, rgba(236, 72, 153, 0.25) 0%, transparent 60%);
     animation: pulse 8s ease-in-out infinite 4s;
 }
+
 @keyframes pulse {
     0%, 100% { transform: scale(1); opacity: 0.5; }
     50% { transform: scale(1.1); opacity: 0.8; }
 }
+
 .hero-container {
-    max-width: 1280px; margin: 0 auto;
-    position: relative; z-index: 2;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 60px; align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
 }
+
 .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     background: rgba(251, 191, 36, 0.1);
     border: 1px solid rgba(251, 191, 36, 0.3);
-    color: var(--gold); padding: 8px 18px;
-    border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+    color: var(--gold);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
     margin-bottom: 24px;
 }
+
 .hero h1 {
-    font-size: 3.5rem; font-weight: 800;
-    line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px;
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
 }
+
 .hero h1 .gradient-text {
     background: var(--gradient-main);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
+
 .hero-subtitle {
-    font-size: 1.25rem; color: var(--text-muted);
-    margin-bottom: 36px; line-height: 1.6;
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    line-height: 1.6;
 }
-.hero-cta { display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; }
+
+.hero-cta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
 .hero-stats {
-    display: flex; gap: 40px;
-    padding-top: 30px; border-top: 1px solid var(--border);
+    display: flex;
+    gap: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
 }
+
 .stat-item .stat-number {
-    font-size: 2rem; font-weight: 800;
+    font-size: 2rem;
+    font-weight: 800;
     background: var(--gradient-main);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-.stat-item .stat-label { color: var(--text-muted); font-size: 0.9rem; }
+
+.stat-item .stat-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
 .hero-visual {
-    position: relative; height: 450px;
-    border-radius: 20px; overflow: hidden;
+    position: relative;
+    height: 450px;
+    border-radius: 20px;
+    overflow: hidden;
     box-shadow: 0 30px 80px rgba(124, 58, 237, 0.3);
 }
-.hero-visual img { width: 100%; height: 100%; object-fit: cover; }
 
-.trust-bar { background: white; padding: 40px 20px; border-bottom: 1px solid #f1f5f9; }
-.trust-container { max-width: 1280px; margin: 0 auto; text-align: center; }
-.trust-title {
-    color: var(--text-muted); font-size: 0.9rem;
-    margin-bottom: 24px; text-transform: uppercase;
-    letter-spacing: 2px; font-weight: 600;
+.hero-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-.trust-logos { display: flex; justify-content: center; align-items: center; gap: 60px; flex-wrap: wrap; }
-.trust-logo { font-size: 1.8rem; font-weight: 800; color: #cbd5e1; transition: color 0.3s; cursor: default; }
-.trust-logo:hover { color: var(--primary); }
 
-.section { padding: 100px 20px; }
-.section-dark { background: var(--bg-dark); color: var(--text-light); }
-.section-container { max-width: 1280px; margin: 0 auto; }
-.section-header { text-align: center; margin-bottom: 70px; }
+/* ===== БАР ДОВЕРИЯ ===== */
+.trust-bar {
+    background: white;
+    padding: 40px 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.trust-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.trust-title {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+
+.trust-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.trust-logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #cbd5e1;
+    transition: color 0.3s;
+    cursor: default;
+}
+
+.trust-logo:hover {
+    color: var(--primary);
+}
+
+/* ===== СЕКЦИИ ===== */
+.section {
+    padding: 100px 20px;
+}
+
+.section-dark {
+    background: var(--bg-dark);
+    color: var(--text-light);
+}
+
+.section-container {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
 .section-label {
     display: inline-block;
     background: rgba(124, 58, 237, 0.1);
-    color: var(--primary); padding: 6px 16px;
-    border-radius: 50px; font-size: 0.85rem;
-    font-weight: 600; margin-bottom: 16px;
-    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--primary);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-.section-dark .section-label { background: rgba(167, 139, 250, 0.15); color: var(--primary-light); }
-.section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.5px; line-height: 1.2; }
-.section-subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
 
-.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-.feature-card {
-    background: white; border-radius: 20px; overflow: hidden;
-    border: 1px solid #f1f5f9; transition: all 0.4s; position: relative;
+.section-dark .section-label {
+    background: rgba(167, 139, 250, 0.15);
+    color: var(--primary-light);
 }
-.feature-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(124, 58, 237, 0.1); border-color: transparent; }
-.feature-image { width: 100%; height: 180px; object-fit: cover; border-bottom: 1px solid #f1f5f9; }
-.feature-content { padding: 28px 24px; }
-.feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
-.feature-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+.section-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ===== ВОЗМОЖНОСТИ ===== */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+    transition: all 0.4s;
+    position: relative;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(124, 58, 237, 0.1);
+    border-color: transparent;
+}
+
+.feature-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.feature-content {
+    padding: 28px 24px;
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
 .feature-badge {
-    position: absolute; top: 16px; right: 16px;
-    background: var(--gradient-gold); color: var(--text-dark);
-    padding: 4px 12px; border-radius: 50px;
-    font-size: 0.75rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--gradient-gold);
+    color: var(--text-dark);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
 }
 
-.how-image {
-    width: 100%; max-width: 800px;
-    margin: 0 auto 50px; border-radius: 20px;
-    overflow: hidden; box-shadow: 0 20px 60px rgba(124, 58, 237, 0.15);
+/* ===== КАК ЭТО РАБОТАЕТ ===== */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
 }
-.how-image img { width: 100%; height: auto; display: block; }
-.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+
 .step-card {
-    background: rgba(255,255,255,0.03);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--border);
-    border-radius: 20px; padding: 36px 30px;
-    position: relative; transition: all 0.3s;
+    border-radius: 20px;
+    padding: 36px 30px;
+    position: relative;
+    transition: all 0.3s;
 }
-.step-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-5px); }
+
+.step-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-5px);
+}
+
 .step-number {
-    position: absolute; top: -20px; left: 30px;
-    width: 50px; height: 50px;
-    background: var(--gradient-main); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 1.3rem; color: white;
+    position: absolute;
+    top: -20px;
+    left: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--gradient-main);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: white;
     box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
 }
-.step-card h3 { margin-top: 20px; margin-bottom: 12px; font-size: 1.2rem; }
-.step-card p { color: var(--text-muted); font-size: 0.95rem; }
 
+.step-card h3 {
+    margin-top: 20px;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.step-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* ===== ИНСТРУМЕНТ ===== */
 .tool-wrapper {
-    background: white; border-radius: 28px; padding: 50px;
+    background: white;
+    border-radius: 28px;
+    padding: 50px;
     box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
     border: 1px solid #f1f5f9;
 }
+
 .upload-zone {
-    border: 2px dashed #cbd5e1; border-radius: 20px;
-    padding: 60px 40px; text-align: center; cursor: pointer;
-    transition: all 0.3s; background: #faf9ff; margin-bottom: 30px;
+    border: 2px dashed #cbd5e1;
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #faf9ff;
+    margin-bottom: 30px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.upload-zone:hover, .upload-zone.dragover { border-color: var(--primary); background: #f3f0ff; transform: scale(1.01); }
+
+.upload-zone:hover,
+.upload-zone.dragover {
+    border-color: var(--primary);
+    background: #f3f0ff;
+    transform: scale(1.01);
+}
+
 .upload-icon-big {
-    width: 80px; height: 80px; margin: 0 auto 20px;
-    background: var(--gradient-purple); border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.5rem; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-purple);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
 }
-.upload-zone h3 { font-size: 1.4rem; margin-bottom: 8px; }
-.upload-zone p { color: var(--text-muted); margin-bottom: 4px; }
-.upload-zone .formats { font-size: 0.85rem; color: var(--text-muted); margin-top: 12px; }
+
 .settings-panel {
-    background: #faf9ff; padding: 28px; border-radius: 16px;
-    margin-bottom: 24px; border: 1px solid #f1f5f9;
+    background: #faf9ff;
+    padding: 28px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    border: 1px solid #f1f5f9;
 }
-.settings-panel h3 { margin-bottom: 20px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
-.settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-.setting-item label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
-.setting-item select, .setting-item input[type="text"] {
-    width: 100%; padding: 12px 14px;
-    border: 2px solid #e2e8f0; border-radius: 10px;
-    font-size: 0.95rem; background: white;
-    cursor: pointer; transition: border-color 0.3s; font-family: inherit;
+
+.settings-panel h3 {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-.setting-item select:focus, .setting-item input[type="text"]:focus { outline: none; border-color: var(--primary); }
-.setting-item input[type="text"] { cursor: text; }
-.setting-item.disabled { opacity: 0.5; pointer-events: none; }
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.setting-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.setting-item select,
+.setting-item input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    font-family: inherit;
+}
+
+.setting-item select:focus,
+.setting-item input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.setting-item.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .setting-item .pro-lock {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 0.75rem; color: var(--gold); font-weight: 600; margin-left: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: 600;
+    margin-left: 6px;
 }
+
 .action-bar {
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px 24px;
     background: linear-gradient(135deg, #faf9ff 0%, #fdf2f8 100%);
-    border-radius: 14px; margin-bottom: 24px;
-    border: 1px solid #f1f5f9; flex-wrap: wrap; gap: 15px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    border: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+    gap: 15px;
 }
-.status-info { display: flex; align-items: center; gap: 12px; font-weight: 600; }
+
+.status-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+}
+
 .status-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--gold); box-shadow: 0 0 10px var(--gold);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
     animation: blink 2s infinite;
 }
-.status-dot.active { background: var(--success); box-shadow: 0 0 10px var(--success); }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-.results-area { margin-top: 30px; }
-.result-item {
-    background: #faf9ff; padding: 20px; border-radius: 16px;
-    margin-bottom: 16px; display: grid;
-    grid-template-columns: 100px 1fr auto; gap: 20px;
-    align-items: center; border: 1px solid #f1f5f9; transition: all 0.3s;
-}
-.result-item:hover { border-color: var(--primary-light); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.08); }
-.result-preview { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; background: #e2e8f0; }
-.result-info h4 { margin-bottom: 10px; font-size: 1rem; word-break: break-word; }
-.result-metrics { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem; }
-.metric { display: flex; flex-direction: column; gap: 2px; }
-.metric-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.metric-value { font-weight: 700; color: var(--success); }
-.metric-value.dim { color: var(--text-dark); }
 
-.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 800px; margin: 0 auto; }
-.pricing-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border); border-radius: 24px;
-    padding: 40px 36px; position: relative; transition: all 0.3s;
+.status-dot.active {
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
 }
-.pricing-card:hover { transform: translateY(-5px); border-color: rgba(167, 139, 250, 0.3); }
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.results-area {
+    margin-top: 30px;
+}
+
+.result-item {
+    background: #faf9ff;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s;
+}
+
+.result-item:hover {
+    border-color: var(--primary-light);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.08);
+}
+
+.result-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+    background: #e2e8f0;
+}
+
+.result-info h4 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    word-break: break-word;
+}
+
+.result-metrics {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.metric-label {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-value {
+    font-weight: 700;
+    color: var(--success);
+}
+
+.metric-value.dim {
+    color: var(--text-dark);
+}
+
+/* ===== ТАРИФЫ ===== */
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.pricing-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 40px 36px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.pricing-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(167, 139, 250, 0.3);
+}
+
 .pricing-card.featured {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.08) 0%, rgba(245, 158, 11, 0.04) 100%);
-    border: 2px solid var(--gold); transform: scale(1.03);
+    border: 2px solid var(--gold);
+    transform: scale(1.03);
     box-shadow: 0 20px 60px rgba(251, 191, 36, 0.15);
 }
-.pricing-card.featured:hover { transform: scale(1.03) translateY(-5px); }
+
+.pricing-card.featured:hover {
+    transform: scale(1.03) translateY(-5px);
+}
+
 .pricing-badge {
-    position: absolute; top: -14px; left: 50%;
+    position: absolute;
+    top: -14px;
+    left: 50%;
     transform: translateX(-50%);
-    background: var(--gradient-gold); color: var(--text-dark);
-    padding: 6px 18px; border-radius: 50px;
-    font-size: 0.8rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
+    background: var(--gradient-gold);
+    color: var(--text-dark);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
 }
-.pricing-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; color: var(--text-light); }
-.pricing-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
-.pricing-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
-.price-amount { font-size: 3rem; font-weight: 800; color: var(--text-light); }
-.price-period { color: var(--text-muted); font-size: 1rem; }
-.price-old { color: var(--text-muted); text-decoration: line-through; font-size: 1rem; margin-bottom: 24px; }
-.pricing-features { list-style: none; margin: 30px 0; }
-.pricing-features li { padding: 10px 0; display: flex; align-items: flex-start; gap: 12px; color: var(--text-light); font-size: 0.95rem; }
-.check-icon {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: rgba(16, 185, 129, 0.15); color: var(--success);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+
+.pricing-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-light);
 }
-.pricing-card.featured .check-icon { background: rgba(251, 191, 36, 0.2); color: var(--gold); }
+
+.pricing-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+}
+
+.pricing-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.price-amount {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--text-light);
+}
+
+.price-period {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.price-old {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    font-size: 1rem;
+    margin-bottom: 24px;
+}
+
+.pricing-features {
+    list-style: none;
+    margin: 30px 0;
+}
+
+.pricing-features li {
+    padding: 10px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.check-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.pricing-card.featured .check-icon {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--gold);
+}
+
 .no-autorenew {
     background: rgba(239, 68, 68, 0.1);
     border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #fca5a5; padding: 12px 16px; border-radius: 10px;
-    font-size: 0.85rem; margin-top: 20px;
-    display: flex; align-items: center; gap: 8px;
+    color: #fca5a5;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+/* ===== ОТЗЫВЫ ===== */
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
 .testimonial-card {
-    background: white; border-radius: 20px; padding: 32px;
-    border: 1px solid #f1f5f9; transition: all 0.3s; position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s;
+    position: relative;
 }
-.testimonial-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08); }
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+}
+
 .testimonial-card::before {
-    content: '"'; position: absolute;
-    top: 10px; right: 24px; font-size: 5rem;
+    content: '"';
+    position: absolute;
+    top: 10px;
+    right: 24px;
+    font-size: 5rem;
     color: rgba(124, 58, 237, 0.08);
-    font-family: Georgia, serif; line-height: 1;
+    font-family: Georgia, serif;
+    line-height: 1;
 }
+
 .testimonial-card.user-review {
     border: 2px solid var(--primary);
     background: linear-gradient(135deg, #faf9ff 0%, #fdf2f8 100%);
 }
+
 .user-review-badge {
-    position: absolute; top: 16px; right: 16px;
-    background: var(--gradient-purple); color: white;
-    padding: 4px 12px; border-radius: 50px;
-    font-size: 0.7rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--gradient-purple);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-.stars { color: var(--gold); margin-bottom: 16px; font-size: 1.1rem; letter-spacing: 2px; }
-.testimonial-text { color: var(--text-dark); margin-bottom: 24px; line-height: 1.7; font-size: 0.95rem; }
-.testimonial-author { display: flex; align-items: center; gap: 14px; }
+
+.stars {
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.testimonial-text {
+    color: var(--text-dark);
+    margin-bottom: 24px;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
 .testimonial-author-photo {
-    width: 50px; height: 50px; border-radius: 50%;
-    object-fit: cover; border: 2px solid #f1f5f9;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f1f5f9;
 }
-.testimonial-author-info h4 { font-size: 1rem; margin-bottom: 2px; }
-.testimonial-author-info p { color: var(--text-muted); font-size: 0.85rem; }
+
+.testimonial-author-info h4 {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.testimonial-author-info p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
 .testimonial-date {
-    font-size: 0.75rem; color: var(--text-muted);
-    margin-top: 12px; text-align: right;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+    text-align: right;
 }
+
 .delete-review-btn {
-    position: absolute; bottom: 16px; right: 16px;
-    background: rgba(239, 68, 68, 0.1); color: var(--danger);
-    border: none; padding: 6px 12px; border-radius: 8px;
-    font-size: 0.8rem; cursor: pointer; transition: all 0.3s;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
 }
-.delete-review-btn:hover { background: var(--danger); color: white; }
 
-.faq-list { max-width: 800px; margin: 0 auto; }
+.delete-review-btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* ===== FAQ ===== */
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
 .faq-item {
-    background: white; margin-bottom: 14px;
-    border-radius: 14px; overflow: hidden;
-    border: 1px solid #f1f5f9; transition: all 0.3s;
+    background: white;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s;
 }
-.faq-item:hover { border-color: var(--primary-light); }
-.faq-item.active { border-color: var(--primary); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.08); }
+
+.faq-item:hover {
+    border-color: var(--primary-light);
+}
+
+.faq-item.active {
+    border-color: var(--primary);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.08);
+}
+
 .faq-question {
-    padding: 22px 28px; cursor: pointer; font-weight: 600;
-    font-size: 1.05rem; display: flex;
-    justify-content: space-between; align-items: center;
-    gap: 20px; transition: all 0.3s; user-select: none;
+    padding: 22px 28px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s;
+    user-select: none;
 }
+
 .faq-toggle {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: rgba(124, 58, 237, 0.1); color: var(--primary);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; font-weight: 700; transition: all 0.3s; flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    transition: all 0.3s;
+    flex-shrink: 0;
 }
-.faq-item.active .faq-toggle { background: var(--primary); color: white; transform: rotate(45deg); }
-.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; color: var(--text-muted); line-height: 1.7; }
-.faq-answer-inner { padding: 0 28px 24px; }
-.faq-item.active .faq-answer { max-height: 500px; }
 
+.faq-item.active .faq-toggle {
+    background: var(--primary);
+    color: white;
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.faq-answer-inner {
+    padding: 0 28px 24px;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+}
+
+/* ===== CTA СЕКЦИЯ ===== */
 .cta-section {
-    background: var(--bg-dark); padding: 100px 20px;
-    position: relative; overflow: hidden;
+    background: var(--bg-dark);
+    padding: 100px 20px;
+    position: relative;
+    overflow: hidden;
 }
-.cta-section::before {
-    content: ''; position: absolute;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 800px; height: 800px;
-    background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 60%);
+
+.cta-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    color: var(--text-light);
 }
-.cta-content { max-width: 700px; margin: 0 auto; text-align: center; position: relative; z-index: 2; color: var(--text-light); }
-.cta-content h2 { font-size: 2.8rem; margin-bottom: 20px; font-weight: 800; line-height: 1.2; }
-.cta-content p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; }
 
-.footer { background: var(--bg-darker); color: var(--text-muted); padding: 60px 20px 30px; border-top: 1px solid var(--border); }
-.footer-container { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-.footer-brand p { margin-top: 16px; font-size: 0.9rem; line-height: 1.7; }
-.footer-col h4 { color: var(--text-light); margin-bottom: 18px; font-size: 1rem; }
-.footer-col ul { list-style: none; }
-.footer-col li { margin-bottom: 10px; }
-.footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; cursor: pointer; }
-.footer-col a:hover { color: var(--primary-light); }
-.footer-bottom { max-width: 1280px; margin: 0 auto; padding-top: 30px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; font-size: 0.85rem; }
+.cta-content h2 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+}
 
+.cta-content p {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+
+/* ===== ПОДВАЛ ===== */
+.footer {
+    background: var(--bg-darker);
+    color: var(--text-muted);
+    padding: 60px 20px 30px;
+    border-top: 1px solid var(--border);
+}
+
+.footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-brand p {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.footer-col h4 {
+    color: var(--text-light);
+    margin-bottom: 18px;
+    font-size: 1rem;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col li {
+    margin-bottom: 10px;
+}
+
+.footer-col a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+    cursor: pointer;
+}
+
+.footer-col a:hover {
+    color: var(--primary-light);
+}
+
+.footer-bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    font-size: 0.85rem;
+}
+
+/* ===== МОДАЛЬНЫЕ ОКНА ===== */
 .modal-overlay {
-    display: none; position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(10, 10, 26, 0.8);
     backdrop-filter: blur(10px);
-    z-index: 2000; justify-content: center; align-items: center; padding: 20px;
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
-.modal-overlay.active { display: flex; }
+
+.modal-overlay.active {
+    display: flex;
+}
+
 .modal {
-    background: white; border-radius: 24px;
-    max-width: 520px; width: 100%;
-    max-height: 90vh; overflow-y: auto; position: relative;
+    background: white;
+    border-radius: 24px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
 }
-.modal.wide { max-width: 600px; }
-.modal-header { padding: 32px 36px 0; text-align: center; }
+
+.modal.wide {
+    max-width: 700px;
+}
+
+.modal-header {
+    padding: 32px 36px 0;
+    text-align: center;
+}
+
 .modal-icon {
-    width: 70px; height: 70px; margin: 0 auto 20px;
-    background: var(--gradient-purple); border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: var(--gradient-purple);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
 }
-.modal-icon.gold { background: var(--gradient-gold); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3); }
-.modal-icon.success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3); }
-.modal h2 { font-size: 1.6rem; margin-bottom: 8px; font-weight: 800; }
-.modal-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; }
-.modal-body { padding: 20px 36px 36px; }
-.form-group { margin-bottom: 18px; }
-.form-label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--text-dark); }
-.form-input, .form-textarea {
-    width: 100%; padding: 14px 16px;
-    border: 2px solid #e2e8f0; border-radius: 12px;
-    font-size: 1rem; transition: all 0.3s; font-family: inherit;
+
+.modal-icon.gold {
+    background: var(--gradient-gold);
+    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.3);
 }
-.form-textarea { resize: vertical; min-height: 100px; }
-.form-input:focus, .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
-.form-footer { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); }
-.form-footer a { color: var(--primary); text-decoration: none; font-weight: 600; cursor: pointer; }
+
+.modal-icon.success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+}
+
+.modal h2 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+.modal-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.modal-body {
+    padding: 20px 36px 36px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.form-footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
 .modal-close {
-    position: absolute; top: 20px; right: 20px;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: #f1f5f9; border: none; cursor: pointer;
-    font-size: 1.2rem; color: var(--text-muted);
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s; z-index: 10;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 10;
 }
-.modal-close:hover { background: #e2e8f0; color: var(--text-dark); }
 
-.oauth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--text-muted); font-size: 0.85rem; }
-.oauth-divider::before, .oauth-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
-.oauth-buttons { display: grid; gap: 10px; }
+.modal-close:hover {
+    background: #e2e8f0;
+    color: var(--text-dark);
+}
+
+/* ===== OAUTH КНОПКИ ===== */
+.oauth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.oauth-buttons {
+    display: grid;
+    gap: 10px;
+}
+
 .oauth-btn {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border: 2px solid #e2e8f0;
-    border-radius: 12px; background: white; cursor: pointer;
-    transition: all 0.3s; font-weight: 600; font-size: 0.95rem; font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 0.95rem;
+    font-family: inherit;
+    text-decoration: none;
+    color: var(--text-dark);
 }
-.oauth-btn:hover { border-color: var(--primary); background: #faf9ff; transform: translateY(-1px); }
-.oauth-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.9rem; color: white; flex-shrink: 0;
-}
-.oauth-icon.yandex { background: #fc3f1d; }
-.oauth-icon.google { background: #4285f4; }
-.oauth-icon.vk { background: #0077ff; }
 
-.dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #f1f5f9; padding-bottom: 0; flex-wrap: wrap; }
-.dash-tab {
-    padding: 12px 20px; background: none; border: none;
-    border-bottom: 3px solid transparent; cursor: pointer;
-    font-weight: 600; font-size: 0.95rem; color: var(--text-muted);
-    transition: all 0.3s; font-family: inherit; margin-bottom: -2px;
+.oauth-btn:hover {
+    border-color: var(--primary);
+    background: #faf9ff;
+    transform: translateY(-1px);
 }
-.dash-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-.dash-tab-content { display: none; }
-.dash-tab-content.active { display: block; }
+
+.oauth-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: white;
+    flex-shrink: 0;
+}
+
+.oauth-icon.yandex {
+    background: #fc3f1d;
+}
+
+.oauth-icon.google {
+    background: #4285f4;
+}
+
+.oauth-icon.vk {
+    background: #0077ff;
+}
+
+/* ===== ЛИЧНЫЙ КАБИНЕТ ===== */
+.dash-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 0;
+    flex-wrap: wrap;
+}
+
+.dash-tab {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    transition: all 0.3s;
+    font-family: inherit;
+    margin-bottom: -2px;
+}
+
+.dash-tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.dash-tab-content {
+    display: none;
+}
+
+.dash-tab-content.active {
+    display: block;
+}
 
 .subscription-card {
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
     border: 1px solid rgba(251, 191, 36, 0.3);
-    padding: 24px; border-radius: 16px; margin-bottom: 20px;
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 20px;
 }
-.subscription-card.free { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-color: #cbd5e1; }
-.subscription-card.expiring { background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%); border-color: rgba(239, 68, 68, 0.3); }
-.sub-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
-.sub-icon { width: 50px; height: 50px; border-radius: 12px; background: var(--gradient-gold); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-.subscription-card.free .sub-icon { background: #cbd5e1; }
-.subscription-card.expiring .sub-icon { background: var(--danger); }
-.sub-info h4 { font-size: 1.1rem; margin-bottom: 4px; }
-.sub-info p { font-size: 0.9rem; color: var(--text-muted); }
-.sub-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px; }
-.sub-detail { background: rgba(255,255,255,0.5); padding: 12px; border-radius: 10px; }
-.subscription-card.free .sub-detail { background: rgba(255,255,255,0.7); }
-.sub-detail-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-.sub-detail-value { font-weight: 700; font-size: 1rem; }
 
-.history-list { max-height: 400px; overflow-y: auto; }
-.history-item { display: flex; align-items: center; gap: 14px; padding: 14px; background: #faf9ff; border-radius: 12px; margin-bottom: 10px; border: 1px solid #f1f5f9; }
-.history-thumb { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; background: #e2e8f0; flex-shrink: 0; }
-.history-info { flex: 1; min-width: 0; }
-.history-info h4 { font-size: 0.95rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.history-info p { font-size: 0.8rem; color: var(--text-muted); }
-.history-download { padding: 8px 14px; font-size: 0.85rem; }
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-.empty-state-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+.subscription-card.free {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-color: #cbd5e1;
+}
 
+.subscription-card.expiring {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.sub-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.sub-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: var(--gradient-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.subscription-card.free .sub-icon {
+    background: #cbd5e1;
+}
+
+.subscription-card.expiring .sub-icon {
+    background: var(--danger);
+}
+
+.sub-info h4 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.sub-info p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.sub-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.sub-detail {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.subscription-card.free .sub-detail {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.sub-detail-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.sub-detail-value {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.history-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: #faf9ff;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #f1f5f9;
+}
+
+.history-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #e2e8f0;
+    flex-shrink: 0;
+}
+
+.history-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-info h4 {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.history-info p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.history-download {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+/* ===== ЗАГРУЗКА ФОТО ДЛЯ ОТЗЫВА ===== */
 .review-photo-upload {
-    display: flex; align-items: center; gap: 16px;
-    padding: 16px; background: #faf9ff;
-    border: 2px dashed #e2e8f0; border-radius: 12px;
-    cursor: pointer; transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #faf9ff;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
 }
-.review-photo-upload:hover { border-color: var(--primary); background: #f3f0ff; }
-.review-photo-preview {
-    width: 70px; height: 70px; border-radius: 50%;
-    background-size: cover; background-position: center;
-    border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.review-photo-placeholder {
-    width: 70px; height: 70px; border-radius: 50%;
-    background: var(--gradient-purple);
-    display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 1.5rem;
-    border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.review-photo-text h4 { font-size: 0.95rem; margin-bottom: 2px; }
-.review-photo-text p { font-size: 0.8rem; color: var(--text-muted); }
 
-.star-rating { display: flex; gap: 6px; margin: 8px 0; }
+.review-photo-upload:hover {
+    border-color: var(--primary);
+    background: #f3f0ff;
+}
+
+.review-photo-preview {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-photo-placeholder {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: var(--gradient-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    border: 3px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-photo-text h4 {
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.review-photo-text p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ===== РЕЙТИНГ ЗВЁЗДАМИ ===== */
+.star-rating {
+    display: flex;
+    gap: 6px;
+    margin: 8px 0;
+}
+
 .star-rating .star {
-    font-size: 2rem; cursor: pointer;
-    color: #e2e8f0; transition: all 0.2s;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #e2e8f0;
+    transition: all 0.2s;
     user-select: none;
 }
-.star-rating .star:hover, .star-rating .star.active {
+
+.star-rating .star:hover,
+.star-rating .star.active {
     color: var(--gold);
     transform: scale(1.1);
 }
 
-.my-reviews-list { max-height: 300px; overflow-y: auto; }
-.my-review-item {
-    background: #faf9ff; padding: 14px;
-    border-radius: 12px; margin-bottom: 10px;
-    border: 1px solid #f1f5f9; position: relative;
+.my-reviews-list {
+    max-height: 300px;
+    overflow-y: auto;
 }
-.my-review-item .stars { margin-bottom: 8px; font-size: 0.9rem; }
-.my-review-item p { font-size: 0.9rem; color: var(--text-dark); margin-bottom: 8px; }
-.my-review-item .delete-btn {
-    position: absolute; top: 12px; right: 12px;
-    background: rgba(239, 68, 68, 0.1); color: var(--danger);
-    border: none; padding: 4px 10px; border-radius: 6px;
-    font-size: 0.75rem; cursor: pointer; transition: all 0.3s;
-}
-.my-review-item .delete-btn:hover { background: var(--danger); color: white; }
 
-.payment-method {
-    background: #faf9ff; border: 2px solid #e2e8f0;
-    border-radius: 14px; padding: 18px; margin-bottom: 14px;
-    cursor: pointer; transition: all 0.3s;
-    display: flex; align-items: center; gap: 14px;
+.my-review-item {
+    background: #faf9ff;
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #f1f5f9;
+    position: relative;
 }
-.payment-method:hover { border-color: var(--primary); background: #f3f0ff; }
-.payment-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--gradient-purple); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
-.payment-info h4 { font-size: 1rem; margin-bottom: 2px; }
-.payment-info p { font-size: 0.85rem; color: var(--text-muted); }
-.price-highlight { background: linear-gradient(135deg, #faf9ff 0%, #fdf2f8 100%); padding: 20px; border-radius: 14px; text-align: center; margin-bottom: 20px; border: 1px solid #f1f5f9; }
-.price-highlight .amount { font-size: 2.5rem; font-weight: 800; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.price-highlight .period { color: var(--text-muted); font-size: 0.95rem; }
+
+.my-review-item .stars {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.my-review-item p {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.my-review-item .delete-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.my-review-item .delete-btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* ===== СПОСОБЫ ОПЛАТЫ ===== */
+.payment-method {
+    background: #faf9ff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.payment-method:hover {
+    border-color: var(--primary);
+    background: #f3f0ff;
+}
+
+.payment-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--gradient-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.payment-info h4 {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.payment-info p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.price-highlight {
+    background: linear-gradient(135deg, #faf9ff 0%, #fdf2f8 100%);
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid #f1f5f9;
+}
+
+.price-highlight .amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.price-highlight .period {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
 .success-code {
     background: linear-gradient(135deg, #faf9ff 0%, #fdf2f8 100%);
-    border: 2px dashed var(--primary); padding: 20px;
-    border-radius: 14px; text-align: center; margin: 20px 0;
+    border: 2px dashed var(--primary);
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    margin: 20px 0;
     font-family: 'Courier New', monospace;
-    font-size: 1.5rem; font-weight: 800; color: var(--primary);
-    letter-spacing: 3px; user-select: all;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 3px;
+    user-select: all;
 }
 
+/* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 968px) {
     .hero-container { grid-template-columns: 1fr; }
     .hero h1 { font-size: 2.5rem; }
@@ -701,6 +1829,7 @@ body {
     .pricing-card.featured { transform: scale(1); }
     .pricing-card.featured:hover { transform: translateY(-5px); }
 }
+
 @media (max-width: 568px) {
     .hero-stats { flex-direction: column; gap: 20px; }
     .footer-container { grid-template-columns: 1fr; }
@@ -715,6 +1844,7 @@ body {
 </head>
 <body>
 
+<!-- ===== НАВИГАЦИЯ ===== -->
 <nav class="nav">
     <div class="nav-container">
         <a href="#" class="logo">
@@ -736,6 +1866,7 @@ body {
     </div>
 </nav>
 
+<!-- ===== ГЕРОЙ ===== -->
 <section class="hero">
     <div class="hero-container">
         <div class="hero-content">
@@ -758,6 +1889,7 @@ body {
     </div>
 </section>
 
+<!-- ===== БАР ДОВЕРИЯ ===== -->
 <section class="trust-bar">
     <div class="trust-container">
         <div class="trust-title">Оптимизировано для</div>
@@ -771,6 +1903,7 @@ body {
     </div>
 </section>
 
+<!-- ===== ВОЗМОЖНОСТИ ===== -->
 <section class="section" id="features">
     <div class="section-container">
         <div class="section-header">
@@ -781,33 +1914,52 @@ body {
         <div class="features-grid">
             <div class="feature-card">
                 <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/12cf2b514-c594-4498-a6fd-b17f32131b44.png" alt="Мгновенная обработка" class="feature-image">
-                <div class="feature-content"><h3>Мгновенная обработка</h3><p>До 100 фото в минуту. Никаких очередей и ожидания — всё работает прямо в вашем браузере.</p></div>
+                <div class="feature-content">
+                    <h3>Мгновенная обработка</h3>
+                    <p>До 100 фото в минуту. Никаких очередей и ожидания — всё работает прямо в вашем браузере.</p>
+                </div>
             </div>
             <div class="feature-card">
                 <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/179bfde2c-13b9-4a1b-93ab-4de1a31dd244.png" alt="Точные размеры" class="feature-image">
-                <div class="feature-content"><h3>Точные размеры</h3><p>Автоматическая обрезка под требования WB, Ozon и Avito. 100% прохождение модерации с первого раза.</p></div>
+                <div class="feature-content">
+                    <h3>Точные размеры</h3>
+                    <p>Автоматическая обрезка под требования WB, Ozon и Avito. 100% прохождение модерации с первого раза.</p>
+                </div>
             </div>
             <div class="feature-card">
                 <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1eb4b554c-c1c5-4b47-90fa-ff84cc5d6f62.png" alt="Умное сжатие" class="feature-image">
-                <div class="feature-content"><h3>Умное сжатие</h3><p>Сжимаем до 100 КБ без видимой потери качества. Ваши фото загружаются быстрее, конверсия растёт.</p></div>
+                <div class="feature-content">
+                    <h3>Умное сжатие</h3>
+                    <p>Сжимаем до 100 КБ без видимой потери качества. Ваши фото загружаются быстрее, конверсия растёт.</p>
+                </div>
             </div>
             <div class="feature-card">
                 <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/16e8ccd6a-0547-48fc-b714-d3916080b405.png" alt="Полная приватность" class="feature-image">
-                <div class="feature-content"><h3>Полная приватность</h3><p>Все операции происходят локально в вашем браузере. Фото не загружаются на наши серверы.</p></div>
+                <div class="feature-content">
+                    <h3>Полная приватность</h3>
+                    <p>Все операции происходят локально в вашем браузере. Фото не загружаются на наши серверы.</p>
+                </div>
             </div>
             <div class="feature-card">
                 <div class="feature-badge">PRO</div>
                 <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1fb584aef-7fc9-499b-99c9-5b665495c3ea.png" alt="Пакетная обработка" class="feature-image">
-                <div class="feature-content"><h3>Пакетная обработка</h3><p>Загрузите сразу до 100 фото и получите готовый ZIP-архив. Экономия времени — в 10 раз.</p></div>
+                <div class="feature-content">
+                    <h3>Пакетная обработка</h3>
+                    <p>Загрузите сразу до 100 фото и получите готовый ZIP-архив. Экономия времени — в 10 раз.</p>
+                </div>
             </div>
             <div class="feature-card">
                 <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/189ae9c38-9e35-4c9f-8e1b-1393bbbc1299.png" alt="Окупаемость" class="feature-image">
-                <div class="feature-content"><h3>Окупаемость с первого дня</h3><p>1500₽/мес окупаются сразу. Дешевле, чем фотограф, дизайнер и ретушёр вместе взятые.</p></div>
+                <div class="feature-content">
+                    <h3>Окупаемость с первого дня</h3>
+                    <p>1500₽/мес окупаются сразу. Дешевле, чем фотограф, дизайнер и ретушёр вместе взятые.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ===== КАК ЭТО РАБОТАЕТ ===== -->
 <section class="section section-dark" id="how">
     <div class="section-container">
         <div class="section-header">
@@ -815,17 +1967,27 @@ body {
             <h2 class="section-title">Три простых шага до идеальных фото</h2>
             <p class="section-subtitle">Никаких сложных настроек и обучения — всё интуитивно понятно</p>
         </div>
-        <div class="how-image">
-            <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1df06b855-9782-47fc-a0fc-8d84c6cd5f8f.png" alt="Процесс работы">
-        </div>
         <div class="steps-grid">
-            <div class="step-card"><div class="step-number">1</div><h3>Загрузите фото</h3><p>Перетащите одно или сразу несколько фото в рабочую область. Поддерживаются JPG, PNG, WebP.</p></div>
-            <div class="step-card"><div class="step-number">2</div><h3>Настройте параметры</h3><p>Укажите маркетплейс, качество, размер файла и дополнительные параметры. Или оставьте по умолчанию.</p></div>
-            <div class="step-card"><div class="step-number">3</div><h3>Скачайте результат</h3><p>Получите готовые оптимизированные фото по одному или сразу архивом. Готово к загрузке на МП.</p></div>
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Загрузите фото</h3>
+                <p>Перетащите одно или сразу несколько фото в рабочую область. Поддерживаются JPG, PNG, WebP.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Настройте параметры</h3>
+                <p>Укажите маркетплейс, качество, размер файла и дополнительные параметры. Или оставьте по умолчанию.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Скачайте результат</h3>
+                <p>Получите готовые оптимизированные фото по одному или сразу архивом. Готово к загрузке на МП.</p>
+            </div>
         </div>
     </div>
 </section>
 
+<!-- ===== ИНСТРУМЕНТ ===== -->
 <section class="section" id="tool">
     <div class="section-container">
         <div class="section-header">
@@ -836,32 +1998,75 @@ body {
         <div class="tool-wrapper">
             <div class="upload-zone" id="uploadZone">
                 <div class="upload-icon-big">📸</div>
-                <h3>Перетащите фото сюда</h3>
-                <p>или нажмите для выбора файлов</p>
-                <p class="formats" id="uploadFormats">Поддерживаются: JPG, PNG, WebP • Макс. 20 МБ</p>
                 <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
             </div>
             <div class="settings-panel">
                 <h3>⚙️ Настройки оптимизации</h3>
                 <div class="settings-grid">
-                    <div class="setting-item"><label>Маркетплейс</label><select id="marketplace"><option value="wb">Wildberries (900×1200)</option><option value="ozon">Ozon (900×1200)</option><option value="avito">Avito (1200×900)</option><option value="ym">Я.Маркет (900×1200)</option></select></div>
-                    <div class="setting-item"><label>Качество</label><select id="quality"><option value="high">Высокое (макс. качество)</option><option value="medium" selected>Среднее (рекомендуется)</option><option value="low">Низкое (макс. сжатие)</option></select></div>
-                    <div class="setting-item"><label>Макс. размер</label><select id="maxSize"><option value="100" selected>100 КБ</option><option value="200">200 КБ</option><option value="500">500 КБ</option><option value="1000">1 МБ</option></select></div>
-                    <div class="setting-item" id="formatSetting"><label>Формат вывода <span class="pro-lock">🔒 PRO</span></label><select id="outputFormat" disabled><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
-                    <div class="setting-item" id="watermarkSetting"><label>Водяной знак <span class="pro-lock">🔒 PRO</span></label><input type="text" id="watermarkText" placeholder="Текст водяного знака" disabled></div>
-                    <div class="setting-item" id="dpiSetting"><label>DPI изображения <span class="pro-lock">🔒 PRO</span></label><select id="dpiValue" disabled><option value="72">72 DPI (веб)</option><option value="150">150 DPI</option><option value="300" selected>300 DPI (печать)</option></select></div>
+                    <div class="setting-item">
+                        <label>Маркетплейс</label>
+                        <select id="marketplace">
+                            <option value="wb">Wildberries (900×1200)</option>
+                            <option value="ozon">Ozon (900×1200)</option>
+                            <option value="avito">Avito (1200×900)</option>
+                            <option value="ym">Я.Маркет (900×1200)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Качество</label>
+                        <select id="quality">
+                            <option value="high">Высокое (макс. качество)</option>
+                            <option value="medium" selected>Среднее (рекомендуется)</option>
+                            <option value="low">Низкое (макс. сжатие)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Макс. размер</label>
+                        <select id="maxSize">
+                            <option value="100" selected>100 КБ</option>
+                            <option value="200">200 КБ</option>
+                            <option value="500">500 КБ</option>
+                            <option value="1000">1 МБ</option>
+                        </select>
+                    </div>
+                    <div class="setting-item" id="formatSetting">
+                        <label>Формат вывода <span class="pro-lock">🔒 PRO</span></label>
+                        <select id="outputFormat" disabled>
+                            <option value="jpg">JPG</option>
+                            <option value="png">PNG</option>
+                            <option value="webp">WebP</option>
+                        </select>
+                    </div>
+                    <div class="setting-item" id="watermarkSetting">
+                        <label>Водяной знак <span class="pro-lock"> PRO</span></label>
+                        <input type="text" id="watermarkText" placeholder="Текст водяного знака" disabled>
+                    </div>
+                    <div class="setting-item" id="dpiSetting">
+                        <label>DPI изображения <span class="pro-lock">🔒 PRO</span></label>
+                        <select id="dpiValue" disabled>
+                            <option value="72">72 DPI (веб)</option>
+                            <option value="150">150 DPI</option>
+                            <option value="300" selected>300 DPI (печать)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="action-bar">
-                <div class="status-info"><div class="status-dot" id="statusDot"></div><span id="statusText">Бесплатно: <strong id="freeCount">2</strong> фото осталось</span></div>
+                <div class="status-info">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Бесплатно: <strong id="freeCount">2</strong> фото осталось</span>
+                </div>
                 <button class="btn btn-primary" id="processBtn" disabled>Обработать фото</button>
             </div>
             <div class="results-area" id="resultsArea"></div>
-            <button class="btn btn-gold btn-large" id="downloadAllBtn" style="width:100%; margin-top:20px; display:none;">📦 Скачать всё архивом <span id="zipLock" class="pro-lock" style="color:#fbbf24;">🔒 PRO</span></button>
+            <button class="btn btn-gold btn-large" id="downloadAllBtn" style="width:100%; margin-top:20px; display:none;">
+                📦 Скачать всё архивом <span id="zipLock" class="pro-lock" style="color:#fbbf24;">🔒 PRO</span>
+            </button>
         </div>
     </div>
 </section>
 
+<!-- ===== ТАРИФЫ ===== -->
 <section class="section section-dark" id="pricing">
     <div class="section-container">
         <div class="section-header">
@@ -873,7 +2078,10 @@ body {
             <div class="pricing-card">
                 <div class="pricing-name">Бесплатный</div>
                 <div class="pricing-desc">Для знакомства с сервисом</div>
-                <div class="pricing-price"><span class="price-amount">0₽</span><span class="price-period">навсегда</span></div>
+                <div class="pricing-price">
+                    <span class="price-amount">0₽</span>
+                    <span class="price-period">навсегда</span>
+                </div>
                 <ul class="pricing-features">
                     <li><span class="check-icon">✓</span> 2 обработки в месяц</li>
                     <li><span class="check-icon">✓</span> 1 фото за раз</li>
@@ -887,7 +2095,10 @@ body {
                 <div class="pricing-badge">⭐ Популярный</div>
                 <div class="pricing-name">PRO</div>
                 <div class="pricing-desc">Для активных селлеров</div>
-                <div class="pricing-price"><span class="price-amount">1500₽</span><span class="price-period">/ месяц</span></div>
+                <div class="pricing-price">
+                    <span class="price-amount">1500₽</span>
+                    <span class="price-period">/ месяц</span>
+                </div>
                 <div class="price-old">Было 2990₽</div>
                 <ul class="pricing-features">
                     <li><span class="check-icon">✓</span> <strong>Безлимитная обработка</strong></li>
@@ -902,12 +2113,16 @@ body {
                     <li><span class="check-icon">✓</span> История обработанных фото</li>
                 </ul>
                 <button class="btn btn-gold btn-large" style="width:100%;" onclick="openPayment()">Активировать PRO</button>
-                <div class="no-autorenew"><span>️</span><span>Никаких автосписаний. Продление только по вашему желанию.</span></div>
+                <div class="no-autorenew">
+                    <span>⚠️</span>
+                    <span>Никаких автосписаний. Продление только по вашему желанию.</span>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ===== ОТЗЫВЫ ===== -->
 <section class="section" id="reviews">
     <div class="section-container">
         <div class="section-header">
@@ -916,67 +2131,78 @@ body {
             <p class="section-subtitle">Реальные отзывы от тех, кто уже использует PhotoBoost каждый день</p>
         </div>
         <div class="testimonials-grid">
-            <!-- Контейнер для пользовательских отзывов (добавляются через личный кабинет) -->
             <div id="userReviewsContainer" style="display: contents;"></div>
-
-            <!-- Оригинальные отзывы (всегда на месте) -->
             <div class="testimonial-card">
                 <div class="stars">★★★★★</div>
                 <p class="testimonial-text">Раньше тратила по 4 часа на обработку фото для новой партии товаров. С PhotoBoost это занимает 15 минут. Окупилось в первую же неделю! Теперь только PRO-подписка.</p>
                 <div class="testimonial-author">
                     <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1aee031ab-3f13-4083-89bc-aaa477805e45.png" alt="Анна Ковалёва" class="testimonial-author-photo">
-                    <div class="testimonial-author-info"><h4>Анна Ковалёва</h4><p>Селлер WB, 300+ SKU</p></div>
+                    <div class="testimonial-author-info">
+                        <h4>Анна Ковалёва</h4>
+                        <p>Селлер WB, 300+ SKU</p>
+                    </div>
                 </div>
             </div>
-
             <div class="testimonial-card">
                 <div class="stars">★★★★★</div>
                 <p class="testimonial-text">Лучший инструмент на рынке. Перепробовал кучу сервисов — нигде не было такого качества сжатия. Фото остаются чёткими, а весят копейки. Модерация проходит с первого раза.</p>
                 <div class="testimonial-author">
                     <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/176646646-d9e5-4960-b0e1-23f3b2eb2aad.png" alt="Дмитрий Морозов" class="testimonial-author-photo">
-                    <div class="testimonial-author-info"><h4>Дмитрий Морозов</h4><p>Ozon-селлер, категория "Электроника"</p></div>
+                    <div class="testimonial-author-info">
+                        <h4>Дмитрий Морозов</h4>
+                        <p>Ozon-селлер, категория "Электроника"</p>
+                    </div>
                 </div>
             </div>
-
             <div class="testimonial-card">
                 <div class="stars">★★★★★</div>
                 <p class="testimonial-text">Ведём 15 клиентов-селлеров. PhotoBoost сэкономил нам целую ставку контент-менеджера. Пакетная обработка и ZIP — это просто спасение. Рекомендую всем агентствам!</p>
                 <div class="testimonial-author">
                     <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1d8db9857-7f0e-4fd0-8c01-6d2ab3e50fe8.png" alt="Елена Соколова" class="testimonial-author-photo">
-                    <div class="testimonial-author-info"><h4>Елена Соколова</h4><p>Руководитель MP-агентства</p></div>
+                    <div class="testimonial-author-info">
+                        <h4>Елена Соколова</h4>
+                        <p>Руководитель MP-агентства</p>
+                    </div>
                 </div>
             </div>
-
             <div class="testimonial-card">
                 <div class="stars">★★★★★</div>
                 <p class="testimonial-text">Я новичок на WB, боялась, что не разберусь. Но интерфейс настолько простой, что разобралась за 5 минут. Первые 2 фото обработала бесплатно, потом сразу купила PRO.</p>
                 <div class="testimonial-author">
                     <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1ad69559e-6dc7-4362-913b-3af42eae5f6a.png" alt="Мария Петрова" class="testimonial-author-photo">
-                    <div class="testimonial-author-info"><h4>Мария Петрова</h4><p>Начинающий селлер WB</p></div>
+                    <div class="testimonial-author-info">
+                        <h4>Мария Петрова</h4>
+                        <p>Начинающий селлер WB</p>
+                    </div>
                 </div>
             </div>
-
             <div class="testimonial-card">
                 <div class="stars">★★★★★</div>
                 <p class="testimonial-text">Отличная поддержка! Возник вопрос по настройкам — ответили за 10 минут в Telegram. Сам инструмент — топ. Конверсия карточек выросла на 23% после обновления фото.</p>
                 <div class="testimonial-author">
                     <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1953d26e4-14ad-46e2-869c-6758117b6b96.png" alt="Игорь Волков" class="testimonial-author-photo">
-                    <div class="testimonial-author-info"><h4>Игорь Волков</h4><p>Селлер Avito, автозапчасти</p></div>
+                    <div class="testimonial-author-info">
+                        <h4>Игорь Волков</h4>
+                        <p>Селлер Avito, автозапчасти</p>
+                    </div>
                 </div>
             </div>
-
             <div class="testimonial-card">
                 <div class="stars">★★★★★</div>
                 <p class="testimonial-text">Работаю с детскими товарами, важно качество фото. PhotoBoost сжимает без потери детализации — ни один клиент не пожаловался. Плюс экономия на хостинге изображений.</p>
                 <div class="testimonial-author">
                     <img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/13e9249df-fa30-46da-8454-494568375120.png" alt="Ольга Новикова" class="testimonial-author-photo">
-                    <div class="testimonial-author-info"><h4>Ольга Новикова</h4><p>Селлер WB, детские товары</p></div>
+                    <div class="testimonial-author-info">
+                        <h4>Ольга Новикова</h4>
+                        <p>Селлер WB, детские товары</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ===== FAQ ===== -->
 <section class="section" id="faq" style="background: #faf9ff;">
     <div class="section-container">
         <div class="section-header">
@@ -985,20 +2211,101 @@ body {
             <p class="section-subtitle">Не нашли ответ? Напишите нам в поддержку — ответим за 10 минут</p>
         </div>
         <div class="faq-list">
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Безопасно ли загружать фото на ваш сайт?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Абсолютно безопасно! Все операции происходят прямо в вашем браузере — фото не загружаются на наши серверы. Мы физически не можем их увидеть или сохранить.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Какие форматы изображений поддерживаются?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Мы поддерживаем все популярные форматы: JPG, JPEG, PNG, WebP.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Точно ли фото пройдут модерацию на WB/Ozon?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Да! 99.8% обработанных у нас фото проходят модерацию с первого раза.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Можно ли отменить подписку в любой момент?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Конечно. Вы можете не продлевать подписку в любой момент. Никаких штрафов и автосписаний.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Как происходит оплата? Какие карты принимаете?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Мы принимаем карты МИР, Visa, MasterCard любых российских банков, а также оплату через СБП.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Насколько сильно сжимаются фото без потери качества?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">В среднем мы уменьшаем размер фото в 5-10 раз без видимой потери качества.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Что входит в PRO-подписку?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">В тарифе PRO: безлимитная обработка, пакетная загрузка до 100 фото, скачивание ZIP-архивом, все продвинутые настройки, личный кабинет и история фото.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Что делать, если возникла проблема с оплатой?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Напишите нам в Telegram @photoboost_support — решим вопрос за 10-15 минут.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Как зарегистрироваться через Яндекс, Google или ВК?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Нажмите кнопку «Регистрация» и выберите удобный способ. После подтверждения доступа ваш аккаунт будет создан автоматически.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Что если я забуду пароль от аккаунта?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Нажмите «Забыли пароль?» на странице входа, введите email. Система предложит установить новый пароль.</div></div></div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Безопасно ли загружать фото на ваш сайт?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Абсолютно безопасно! Все операции происходят прямо в вашем браузере — фото не загружаются на наши серверы.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Какие форматы изображений поддерживаются?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Мы поддерживаем все популярные форматы: JPG, JPEG, PNG, WebP.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Точно ли фото пройдут модерацию на WB/Ozon?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Да! 99.8% обработанных у нас фото проходят модерацию с первого раза.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Можно ли отменить подписку в любой момент?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Конечно. Вы можете не продлевать подписку в любой момент. Никаких штрафов и автосписаний.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как происходит оплата?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Мы принимаем карты МИР, Visa, MasterCard любых российских банков, а также оплату через СБП.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Насколько сильно сжимаются фото без потери качества?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">В среднем мы уменьшаем размер фото в 5-10 раз без видимой потери качества.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Что входит в PRO-подписку?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">В тарифе PRO: безлимитная обработка, пакетная загрузка до 100 фото, скачивание ZIP-архивом, все продвинутые настройки, личный кабинет и история фото.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Что делать, если возникла проблема с оплатой?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Напишите нам в Telegram @photoboost_support — решим вопрос за 10-15 минут.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Как зарегистрироваться через Яндекс, Google или ВК?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Нажмите кнопку «Регистрация» и выберите удобный способ. После подтверждения доступа ваш аккаунт будет создан автоматически.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Что если я забуду пароль от аккаунта?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Нажмите «Забыли пароль?» на странице входа, введите email. Система предложит установить новый пароль.</div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
+<!-- ===== CTA ===== -->
 <section class="cta-section">
     <div class="cta-content">
         <h2>Готовы ускорить работу в 10 раз?</h2>
@@ -1010,94 +2317,190 @@ body {
     </div>
 </section>
 
+<!-- ===== ПОДВАЛ ===== -->
 <footer class="footer">
     <div class="footer-container">
         <div class="footer-brand">
-            <a href="#" class="logo"><div class="logo-icon"></div><div>Photo<span>Boost</span></div></a>
+            <a href="#" class="logo">
+                <div class="logo-icon"></div>
+                <div>Photo<span>Boost</span></div>
+            </a>
             <p>Премиум-инструмент для оптимизации фото маркетплейсов. Экономим время и деньги селлерам с 2023 года.</p>
         </div>
-        <div class="footer-col"><h4>Продукт</h4><ul><li><a onclick="scrollToSection('features')">Возможности</a></li><li><a onclick="scrollToSection('pricing')">Тарифы</a></li><li><a onclick="scrollToSection('tool')">Инструмент</a></li><li><a onclick="scrollToSection('faq')">FAQ</a></li></ul></div>
-        <div class="footer-col"><h4>Компания</h4><ul><li><a href="#">О нас</a></li><li><a onclick="scrollToSection('reviews')">Отзывы</a></li><li><a href="#">Блог</a></li><li><a href="#">Контакты</a></li></ul></div>
-        <div class="footer-col"><h4>Поддержка</h4><ul><li><a href="#">Telegram: @photoboost</a></li><li><a href="#">support@photoboost.ru</a></li><li><a href="#">Политика конфиденциальности</a></li><li><a href="#">Оферта</a></li></ul></div>
+        <div class="footer-col">
+            <h4>Продукт</h4>
+            <ul>
+                <li><a onclick="scrollToSection('features')">Возможности</a></li>
+                <li><a onclick="scrollToSection('pricing')">Тарифы</a></li>
+                <li><a onclick="scrollToSection('tool')">Инструмент</a></li>
+                <li><a onclick="scrollToSection('faq')">FAQ</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Компания</h4>
+            <ul>
+                <li><a href="#">О нас</a></li>
+                <li><a onclick="scrollToSection('reviews')">Отзывы</a></li>
+                <li><a href="#">Блог</a></li>
+                <li><a href="#">Контакты</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Поддержка</h4>
+            <ul>
+                <li><a href="#">Telegram: @photoboost</a></li>
+                <li><a href="#">support@photoboost.ru</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+                <li><a href="#">Оферта</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="footer-bottom"><div>© 2024 PhotoBoost. Все права защищены.</div><div>Сделано с ❤️ для селлеров маркетплейсов</div></div>
+    <div class="footer-bottom">
+        <div>© 2024 PhotoBoost. Все права защищены.</div>
+        <div>Сделано с ❤️ для селлеров маркетплейсов</div>
+    </div>
 </footer>
 
-<!-- LOGIN MODAL -->
+<!-- ===== МОДАЛКА ВХОДА ===== -->
 <div class="modal-overlay" id="loginModal">
     <div class="modal">
-        <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon">🔐</div><h2>Вход в аккаунт</h2><p class="modal-subtitle">Рады видеть вас снова!</p></div>
+        <button class="modal-close" onclick="closeModal('loginModal')"></button>
+        <div class="modal-header">
+            <div class="modal-icon"></div>
+            <h2>Вход в аккаунт</h2>
+            <p class="modal-subtitle">Рады видеть вас снова!</p>
+        </div>
         <div class="modal-body">
             <div class="oauth-buttons">
-                <button class="oauth-btn" onclick="oauthLogin('yandex')"><div class="oauth-icon yandex">Я</div><span>Войти через Яндекс</span></button>
-                <button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Войти через Google</span></button>
-                <button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Войти через ВКонтакте</span></button>
+                <a href="https://oauth.yandex.ru/authorize?response_type=token&client_id=YOUR_YANDEX_CLIENT_ID" class="oauth-btn">
+                    <div class="oauth-icon yandex">Я</div>
+                    <span>Войти через Яндекс</span>
+                </a>
+                <a href="https://accounts.google.com/o/oauth2/auth?response_type=token&client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile" class="oauth-btn">
+                    <div class="oauth-icon google">G</div>
+                    <span>Войти через Google</span>
+                </a>
+                <a href="https://oauth.vk.com/authorize?client_id=YOUR_VK_CLIENT_ID&display=page&redirect_uri=YOUR_REDIRECT_URI&response_type=token&scope=email" class="oauth-btn">
+                    <div class="oauth-icon vk">VK</div>
+                    <span>Войти через ВКонтакте</span>
+                </a>
             </div>
             <div class="oauth-divider">или через email</div>
             <form onsubmit="handleLogin(event)">
-                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="your@email.com"></div>
-                <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="loginEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" id="loginPassword" required placeholder="••••••••">
+                </div>
                 <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Войти</button>
             </form>
-            <div class="form-footer"><a onclick="switchModal('loginModal','resetModal')">Забыли пароль?</a> • <a onclick="switchModal('loginModal','registerModal')">Создать аккаунт</a></div>
+            <div class="form-footer">
+                <a onclick="switchModal('loginModal','resetModal')">Забыли пароль?</a> •
+                <a onclick="switchModal('loginModal','registerModal')">Создать аккаунт</a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- REGISTER MODAL -->
+<!-- ===== МОДАЛКА РЕГИСТРАЦИИ ===== -->
 <div class="modal-overlay" id="registerModal">
     <div class="modal">
-        <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon">✨</div><h2>Создать аккаунт</h2><p class="modal-subtitle">Присоединяйтесь к 12,847 селлерам</p></div>
+        <button class="modal-close" onclick="closeModal('registerModal')"></button>
+        <div class="modal-header">
+            <div class="modal-icon">✨</div>
+            <h2>Создать аккаунт</h2>
+            <p class="modal-subtitle">Присоединяйтесь к 12,847 селлерам</p>
+        </div>
         <div class="modal-body">
             <div class="oauth-buttons">
-                <button class="oauth-btn" onclick="oauthRegister('yandex')"><div class="oauth-icon yandex">Я</div><span>Регистрация через Яндекс</span></button>
-                <button class="oauth-btn" onclick="oauthRegister('google')"><div class="oauth-icon google">G</div><span>Регистрация через Google</span></button>
-                <button class="oauth-btn" onclick="oauthRegister('vk')"><div class="oauth-icon vk">VK</div><span>Регистрация через ВКонтакте</span></button>
+                <a href="https://oauth.yandex.ru/authorize?response_type=token&client_id=YOUR_YANDEX_CLIENT_ID" class="oauth-btn">
+                    <div class="oauth-icon yandex">Я</div>
+                    <span>Регистрация через Яндекс</span>
+                </a>
+                <a href="https://accounts.google.com/o/oauth2/auth?response_type=token&client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=email%20profile" class="oauth-btn">
+                    <div class="oauth-icon google">G</div>
+                    <span>Регистрация через Google</span>
+                </a>
+                <a href="https://oauth.vk.com/authorize?client_id=YOUR_VK_CLIENT_ID&display=page&redirect_uri=YOUR_REDIRECT_URI&response_type=token&scope=email" class="oauth-btn">
+                    <div class="oauth-icon vk">VK</div>
+                    <span>Регистрация через ВКонтакте</span>
+                </a>
             </div>
             <div class="oauth-divider">или стандартная регистрация</div>
             <form onsubmit="handleRegister(event)">
-                <div class="form-group"><label class="form-label">Ваше имя</label><input type="text" class="form-input" id="regName" required placeholder="Иван Иванов"></div>
-                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail" required placeholder="your@email.com"></div>
-                <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="regPassword" required minlength="6" placeholder="Минимум 6 символов"></div>
+                <div class="form-group">
+                    <label class="form-label">Ваше имя</label>
+                    <input type="text" class="form-input" id="regName" required placeholder="Иван Иванов">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="regEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-input" id="regPassword" required minlength="6" placeholder="Минимум 6 символов">
+                </div>
                 <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Создать аккаунт</button>
             </form>
-            <div class="form-footer">Уже есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a></div>
+            <div class="form-footer">
+                Уже есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- RESET PASSWORD MODAL -->
+<!-- ===== МОДАЛКА СБРОСА ПАРОЛЯ ===== -->
 <div class="modal-overlay" id="resetModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon">🔑</div><h2 id="resetTitle">Восстановление пароля</h2><p class="modal-subtitle" id="resetSubtitle">Введите email, указанный при регистрации</p></div>
+        <div class="modal-header">
+            <div class="modal-icon">🔑</div>
+            <h2 id="resetTitle">Восстановление пароля</h2>
+            <p class="modal-subtitle" id="resetSubtitle">Введите email, указанный при регистрации</p>
+        </div>
         <div class="modal-body">
             <div id="resetStep1">
                 <form onsubmit="handleResetStep1(event)">
-                    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required placeholder="your@email.com"></div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="resetEmail" required placeholder="your@email.com">
+                    </div>
                     <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Продолжить</button>
                 </form>
             </div>
             <div id="resetStep2" style="display:none;">
                 <p style="text-align:center; color: var(--text-muted); margin-bottom:20px;">Email найден. Введите новый пароль:</p>
                 <form onsubmit="handleResetStep2(event)">
-                    <div class="form-group"><label class="form-label">Новый пароль</label><input type="password" class="form-input" id="newPassword" required minlength="6" placeholder="Минимум 6 символов"></div>
-                    <div class="form-group"><label class="form-label">Повторите пароль</label><input type="password" class="form-input" id="confirmPassword" required minlength="6" placeholder="Повторите пароль"></div>
+                    <div class="form-group">
+                        <label class="form-label">Новый пароль</label>
+                        <input type="password" class="form-input" id="newPassword" required minlength="6" placeholder="Минимум 6 символов">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Повторите пароль</label>
+                        <input type="password" class="form-input" id="confirmPassword" required minlength="6" placeholder="Повторите пароль">
+                    </div>
                     <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Сохранить новый пароль</button>
                 </form>
             </div>
-            <div class="form-footer"><a onclick="switchModal('resetModal','loginModal')">← Вернуться ко входу</a></div>
+            <div class="form-footer">
+                <a onclick="switchModal('resetModal','loginModal')">← Вернуться ко входу</a>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- DASHBOARD MODAL -->
+<!-- ===== МОДАЛКА ЛИЧНОГО КАБИНЕТА ===== -->
 <div class="modal-overlay" id="dashboardModal">
     <div class="modal wide">
         <button class="modal-close" onclick="closeModal('dashboardModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon" id="dashIcon">👤</div><h2 id="dashTitle">Личный кабинет</h2><p class="modal-subtitle" id="dashSubtitle">Управляйте подпиской и отслеживайте статистику</p></div>
+        <div class="modal-header">
+            <div class="modal-icon" id="dashIcon">👤</div>
+            <h2 id="dashTitle">Личный кабинет</h2>
+            <p class="modal-subtitle" id="dashSubtitle">Управляйте подпиской и отслеживайте статистику</p>
+        </div>
         <div class="modal-body">
             <div class="dash-tabs">
                 <button class="dash-tab active" onclick="switchDashTab('subscription', this)">📋 Подписка</button>
@@ -1108,21 +2511,45 @@ body {
 
             <div class="dash-tab-content active" id="tab-subscription">
                 <div class="subscription-card" id="subCard">
-                    <div class="sub-header"><div class="sub-icon" id="subIcon">⭐</div><div class="sub-info"><h4 id="subTitle">PRO подписка</h4><p id="subText">Активна до 31.12.2024</p></div></div>
+                    <div class="sub-header">
+                        <div class="sub-icon" id="subIcon">⭐</div>
+                        <div class="sub-info">
+                            <h4 id="subTitle">PRO подписка</h4>
+                            <p id="subText">Активна до 31.12.2024</p>
+                        </div>
+                    </div>
                     <div class="sub-details">
-                        <div class="sub-detail"><div class="sub-detail-label">Обработано фото</div><div class="sub-detail-value" id="dashProcessed">0</div></div>
-                        <div class="sub-detail"><div class="sub-detail-label">Сэкономлено</div><div class="sub-detail-value" id="dashSaved">0 МБ</div></div>
-                        <div class="sub-detail"><div class="sub-detail-label">Осталось обработок</div><div class="sub-detail-value" id="dashRemaining">∞</div></div>
-                        <div class="sub-detail"><div class="sub-detail-label">Статус</div><div class="sub-detail-value" id="dashStatus">PRO</div></div>
+                        <div class="sub-detail">
+                            <div class="sub-detail-label">Обработано фото</div>
+                            <div class="sub-detail-value" id="dashProcessed">0</div>
+                        </div>
+                        <div class="sub-detail">
+                            <div class="sub-detail-label">Сэкономлено</div>
+                            <div class="sub-detail-value" id="dashSaved">0 МБ</div>
+                        </div>
+                        <div class="sub-detail">
+                            <div class="sub-detail-label">Осталось обработок</div>
+                            <div class="sub-detail-value" id="dashRemaining">∞</div>
+                        </div>
+                        <div class="sub-detail">
+                            <div class="sub-detail-label">Статус</div>
+                            <div class="sub-detail-value" id="dashStatus">PRO</div>
+                        </div>
                     </div>
                 </div>
                 <button class="btn btn-gold btn-large" style="width:100%;" id="dashActionBtn" onclick="openPayment()">Продлить PRO</button>
-                <div class="no-autorenew" style="margin-top: 14px;"><span>⚠️</span><span>Автосписаний нет. Продление только по вашему желанию.</span></div>
+                <div class="no-autorenew" style="margin-top: 14px;">
+                    <span>⚠️</span>
+                    <span>Автосписаний нет. Продление только по вашему желанию.</span>
+                </div>
             </div>
 
             <div class="dash-tab-content" id="tab-history">
                 <div class="history-list" id="historyList">
-                    <div class="empty-state"><div class="empty-state-icon">🖼️</div><p>История пуста. Обработайте первое фото!</p></div>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🖼️</div>
+                        <p>История пуста. Обработайте первое фото!</p>
+                    </div>
                 </div>
             </div>
 
@@ -1161,7 +2588,9 @@ body {
                     <div class="form-group">
                         <label class="form-label">Текст отзыва *</label>
                         <textarea class="form-textarea" id="reviewText" required placeholder="Расскажите о вашем опыте использования PhotoBoost..." minlength="20" maxlength="1000"></textarea>
-                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; text-align: right;"><span id="reviewCharCount">0</span> / 1000</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; text-align: right;">
+                            <span id="reviewCharCount">0</span> / 1000
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-large" style="width:100%;">🚀 Опубликовать отзыв</button>
                 </form>
@@ -1169,41 +2598,81 @@ body {
                 <div style="margin-top: 32px;">
                     <h3 style="margin-bottom: 16px; font-size: 1.1rem;">📝 Ваши отзывы</h3>
                     <div class="my-reviews-list" id="myReviewsList">
-                        <div class="empty-state"><div class="empty-state-icon">📝</div><p>Вы ещё не оставляли отзывов</p></div>
+                        <div class="empty-state">
+                            <div class="empty-state-icon"></div>
+                            <p>Вы ещё не оставляли отзывов</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="dash-tab-content" id="tab-profile">
-                <div style="background: #faf9ff; padding: 20px; border-radius: 14px; margin-bottom: 16px;"><div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Имя</div><div style="font-weight: 700; font-size: 1.1rem;" id="profileName">—</div></div>
-                <div style="background: #faf9ff; padding: 20px; border-radius: 14px; margin-bottom: 16px;"><div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Email</div><div style="font-weight: 700; font-size: 1.1rem;" id="profileEmail">—</div></div>
-                <div style="background: #faf9ff; padding: 20px; border-radius: 14px; margin-bottom: 16px;"><div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Дата регистрации</div><div style="font-weight: 700; font-size: 1.1rem;" id="profileDate">—</div></div>
+                <div style="background: #faf9ff; padding: 20px; border-radius: 14px; margin-bottom: 16px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Имя</div>
+                    <div style="font-weight: 700; font-size: 1.1rem;" id="profileName">—</div>
+                </div>
+                <div style="background: #faf9ff; padding: 20px; border-radius: 14px; margin-bottom: 16px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Email</div>
+                    <div style="font-weight: 700; font-size: 1.1rem;" id="profileEmail">—</div>
+                </div>
+                <div style="background: #faf9ff; padding: 20px; border-radius: 14px; margin-bottom: 16px;">
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px;">Дата регистрации</div>
+                    <div style="font-weight: 700; font-size: 1.1rem;" id="profileDate">—</div>
+                </div>
                 <button class="btn btn-dark btn-large" style="width:100%; margin-top:10px;" onclick="handleLogout()">Выйти из аккаунта</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- PAYMENT MODAL -->
+<!-- ===== МОДАЛКА ОПЛАТЫ ===== -->
 <div class="modal-overlay" id="paymentModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon gold">💎</div><h2>Активация PRO</h2><p class="modal-subtitle">Получите безлимитный доступ ко всем функциям</p></div>
+        <div class="modal-header">
+            <div class="modal-icon gold">💎</div>
+            <h2>Активация PRO</h2>
+            <p class="modal-subtitle">Безлимит на 1 месяц • 1500 ₽</p>
+        </div>
         <div class="modal-body">
-            <div class="price-highlight"><div class="amount">1500₽</div><div class="period">доступ на 1 месяц</div></div>
-            <div class="payment-method" onclick="processPayment()"><div class="payment-icon">💳</div><div class="payment-info"><h4>Оплатить картой</h4><p>МИР, Visa, MasterCard • Безопасно</p></div></div>
-            <div class="payment-method" onclick="processPayment()"><div class="payment-icon">⚡</div><div class="payment-info"><h4>СБП (Система быстрых платежей)</h4><p>Оплата по QR-коду без комиссии</p></div></div>
-            <div class="no-autorenew"><span>⚠️</span><span>Никаких автосписаний. Продление только по вашему желанию.</span></div>
-            <div style="text-align:center; margin-top:20px; color: var(--text-muted); font-size:0.85rem;"> Платёж защищён 3D-Secure<br>Чек придёт на email автоматически</div>
+            <div style="background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(236,72,153,0.1)); border: 2px dashed var(--primary); padding: 20px; border-radius: 16px; margin-bottom: 20px; text-align: center;">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Ваш уникальный код оплаты</p>
+                <p style="font-family: monospace; font-size: 2rem; font-weight: 800; color: var(--primary); letter-spacing: 3px;" id="paymentMarker">PB-XXXX-XXXX</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">⏱ Код действителен 30 минут</p>
+            </div>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <p style="font-weight: 600; margin-bottom: 12px;">💳 Реквизиты для перевода:</p>
+                <p style="font-size: 1rem; margin-bottom: 8px;">🏦 Карта: <strong style="font-family: monospace;">2200 0000 0000 1234</strong></p>
+                <p style="font-size: 1rem;"> СБП: <strong style="font-family: monospace;">+375 (XX) XXX-XX-XX</strong></p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 12px;">Сумма перевода: <strong>1500 ₽</strong></p>
+            </div>
+            <div style="background: #eff6ff; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                <p style="font-size: 0.95rem; color: #1e40af; margin: 0; line-height: 1.6;">
+                    📲 После перевода откройте бота <strong>@PhotoBoostBot</strong>, нажмите "Старт" и введите ваш код оплаты <strong id="paymentMarker2">PB-XXXX-XXXX</strong>. Бот выдаст вам персональный код активации после проверки оплаты.
+                </p>
+            </div>
+            <a href="https://t.me/PhotoBoostBot" target="_blank" class="btn btn-gold" style="width: 100%; text-decoration: none; font-size: 1.1rem; margin-bottom: 12px;">
+                ✈️ Открыть бота для активации
+            </a>
+            <button class="btn btn-secondary" style="width: 100%;" onclick="closeModal('paymentModal')">
+                Закрыть
+            </button>
+            <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 16px;">
+                🔒 Код одноразовый. После активации он станет недействительным.
+            </p>
         </div>
     </div>
 </div>
 
-<!-- SUCCESS MODAL -->
+<!-- ===== МОДАЛКА УСПЕХА ===== -->
 <div class="modal-overlay" id="successModal">
     <div class="modal">
-        <button class="modal-close" onclick="closeModal('successModal')"></button>
-        <div class="modal-header"><div class="modal-icon success">✓</div><h2>Оплата прошла успешно!</h2><p class="modal-subtitle">Ваш персональный код активации:</p></div>
+        <button class="modal-close" onclick="closeModal('successModal')">✕</button>
+        <div class="modal-header">
+            <div class="modal-icon success">✓</div>
+            <h2>Оплата прошла успешно!</h2>
+            <p class="modal-subtitle">Ваш персональный код активации:</p>
+        </div>
         <div class="modal-body">
             <div class="success-code" id="successCode">WB-XXXXXXXX</div>
             <p style="text-align:center; color: var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Код автоматически применён к вашему аккаунту</p>
@@ -1215,7 +2684,26 @@ body {
 <canvas id="canvas" style="display:none;"></canvas>
 
 <script>
-// ===== SMOOTH SCROLL =====
+// ===== ИНИЦИАЛИЗАЦИЯ SUPABASE (безопасная) =====
+const SUPABASE_URL = 'https://xqlmxyumxdnmytqveipy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_OqXE96iro6cSydxYyPIhEQ_NcX7k0Qp';
+
+let supabase = null;
+
+window.addEventListener('load', function() {
+    try {
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log('✅ Supabase подключён');
+        } else {
+            console.warn('️ Библиотека Supabase не загружена. Регистрация через БД недоступна.');
+        }
+    } catch (e) {
+        console.error('❌ Ошибка подключения к Supabase:', e);
+    }
+});
+
+// ===== ПЛАВНЫЙ СКРОЛЛ =====
 function scrollToSection(id) {
     const element = document.getElementById(id);
     if (element) {
@@ -1226,7 +2714,7 @@ function scrollToSection(id) {
     }
 }
 
-// ===== STATE =====
+// ===== СОСТОЯНИЕ ПРИЛОЖЕНИЯ =====
 let state = {
     user: JSON.parse(localStorage.getItem('pbUser')) || null,
     freeUsage: parseInt(localStorage.getItem('pbFreeUsage')) || 2,
@@ -1241,19 +2729,36 @@ let state = {
     reviewRating: 5
 };
 
+// ===== НАСТРОЙКИ ТАРИФОВ =====
 const PRO_FEATURES = {
-    maxBatchSize: 100, zipDownload: true, advancedSettings: true,
-    watermark: true, outputFormats: ['jpg', 'png', 'webp'],
-    dpiSettings: [72, 150, 300], earlyAccess: true, dashboard: true, history: true
+    maxBatchSize: 100,
+    zipDownload: true,
+    advancedSettings: true,
+    watermark: true,
+    outputFormats: ['jpg', 'png', 'webp'],
+    dpiSettings: [72, 150, 300],
+    earlyAccess: true,
+    dashboard: true,
+    history: true
 };
-const FREE_FEATURES = {
-    maxBatchSize: 1, zipDownload: false, advancedSettings: false,
-    watermark: false, outputFormats: ['jpg'], dpiSettings: [72],
-    earlyAccess: false, dashboard: false, history: false
-};
-function getFeatures() { return state.isPro ? PRO_FEATURES : FREE_FEATURES; }
 
-// ===== REVIEWS SYSTEM =====
+const FREE_FEATURES = {
+    maxBatchSize: 1,
+    zipDownload: false,
+    advancedSettings: false,
+    watermark: false,
+    outputFormats: ['jpg'],
+    dpiSettings: [72],
+    earlyAccess: false,
+    dashboard: false,
+    history: false
+};
+
+function getFeatures() {
+    return state.isPro ? PRO_FEATURES : FREE_FEATURES;
+}
+
+// ===== СИСТЕМА ОТЗЫВОВ =====
 function getUserReviews() {
     return JSON.parse(localStorage.getItem('pbUserReviews') || '[]');
 }
@@ -1301,16 +2806,14 @@ function renderUserReviews() {
 function renderMyReviews() {
     const list = document.getElementById('myReviewsList');
     if (!state.user) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔐</div><p>Войдите, чтобы увидеть свои отзывы</p></div>';
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon"></div><p>Войдите, чтобы увидеть свои отзывы</p></div>';
         return;
     }
     const userReviews = getUserReviews().filter(r => r.authorEmail === state.user.email);
-
     if (userReviews.length === 0) {
-        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>Вы ещё не оставляли отзывов</p></div>';
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon"></div><p>Вы ещё не оставляли отзывов</p></div>';
         return;
     }
-
     list.innerHTML = userReviews.map(review => {
         const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
         return `
@@ -1373,7 +2876,6 @@ function submitReview(e) {
     reviews.unshift(newReview);
     saveUserReviews(reviews);
 
-    // Сброс формы
     document.getElementById('reviewName').value = '';
     document.getElementById('reviewPosition').value = '';
     document.getElementById('reviewText').value = '';
@@ -1381,14 +2883,13 @@ function submitReview(e) {
     state.reviewPhoto = null;
     state.reviewRating = 5;
     document.getElementById('reviewPhotoPreview').className = 'review-photo-placeholder';
-    document.getElementById('reviewPhotoPreview').innerHTML = '📷';
+    document.getElementById('reviewPhotoPreview').innerHTML = '';
     updateStarDisplay();
 
     renderUserReviews();
     renderMyReviews();
 
-    alert('✅ Отзыв успешно опубликован! Он появился в разделе "Отзывы" на главной странице.');
-
+    alert('✅ Отзыв успешно опубликован!');
     setTimeout(() => {
         closeModal('dashboardModal');
         scrollToSection('reviews');
@@ -1411,7 +2912,7 @@ function updateStarDisplay() {
     });
 }
 
-// Review photo upload
+// ===== ЗАГРУЗКА ФОТО ДЛЯ ОТЗЫВА =====
 document.getElementById('reviewPhotoInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -1454,7 +2955,7 @@ document.getElementById('reviewText').addEventListener('input', function() {
     document.getElementById('reviewCharCount').textContent = this.value.length;
 });
 
-// ===== NAVIGATION =====
+// ===== НАВИГАЦИЯ =====
 function updateNav() {
     const actions = document.getElementById('navActions');
     if (state.user) {
@@ -1465,84 +2966,123 @@ function updateNav() {
     }
 }
 
-// ===== MODALS =====
-function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
-function switchModal(from, to) { closeModal(from); setTimeout(() => openModal(to), 200); }
+// ===== МОДАЛЬНЫЕ ОКНА =====
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function switchModal(from, to) {
+    closeModal(from);
+    setTimeout(() => openModal(to), 200);
+}
 
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) { overlay.classList.remove('active'); document.body.style.overflow = ''; }
+        if (e.target === overlay) {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
     });
 });
 
-// ===== AUTH =====
-function handleRegister(e) {
+// ===== РЕГИСТРАЦИЯ (с fallback на localStorage) =====
+async function handleRegister(e) {
     e.preventDefault();
     const name = document.getElementById('regName').value;
     const email = document.getElementById('regEmail').value;
     const password = document.getElementById('regPassword').value;
-    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-    if (users.find(u => u.email === email)) { alert('Пользователь с таким email уже существует. Войдите или восстановите пароль.'); return; }
-    const newUser = { name, email, password, registeredAt: new Date().toISOString(), provider: 'email' };
-    users.push(newUser);
-    localStorage.setItem('pbUsers', JSON.stringify(users));
-    state.user = newUser;
-    localStorage.setItem('pbUser', JSON.stringify(state.user));
-    closeModal('registerModal');
-    updateNav();
-    updateUI();
-    alert('Аккаунт создан! Добро пожаловать, ' + name + '!');
+
+    // Если Supabase не подключён — регистрируем локально
+    if (!supabase) {
+        const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+        if (users.find(u => u.email === email)) {
+            alert('Пользователь с таким email уже существует.');
+            return;
+        }
+        const newUser = { name, email, password, registeredAt: new Date().toISOString() };
+        users.push(newUser);
+        localStorage.setItem('pbUsers', JSON.stringify(users));
+        const localUser = { name, email, password, registeredAt: newUser.registeredAt };
+        localStorage.setItem('pbUser', JSON.stringify(localUser));
+        state.user = localUser;
+        closeModal('registerModal');
+        updateNav();
+        updateUI();
+        alert('✅ Аккаунт создан! Добро пожаловать, ' + name + '!');
+        return;
+    }
+
+    // Если Supabase подключён — регистрируем через БД
+    try {
+        const { data: existingUser } = await supabase
+            .from('users')
+            .select('email')
+            .eq('email', email)
+            .single();
+
+        if (existingUser) {
+            alert('Пользователь с таким email уже существует.');
+            return;
+        }
+
+        const { data: newUser, error } = await supabase
+            .from('users')
+            .insert([{ nickname: name, email: email, is_pro: false }])
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка при создании аккаунта.');
+            return;
+        }
+
+        const localUser = {
+            name,
+            email,
+            password,
+            registeredAt: new Date().toISOString(),
+            id: newUser.id
+        };
+        localStorage.setItem('pbUser', JSON.stringify(localUser));
+        state.user = localUser;
+
+        closeModal('registerModal');
+        updateNav();
+        updateUI();
+        alert('✅ Аккаунт создан! Добро пожаловать, ' + name + '!');
+    } catch (err) {
+        console.error('Ошибка регистрации:', err);
+        alert('Ошибка подключения к серверу.');
+    }
 }
 
+// ===== ВХОД =====
 function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
     const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
     const user = users.find(u => u.email === email && u.password === password);
+
     if (user) {
         state.user = user;
         localStorage.setItem('pbUser', JSON.stringify(state.user));
         closeModal('loginModal');
         updateNav();
         updateUI();
-    } else { alert('Неверный email или пароль. Если у вас ещё нет аккаунта — зарегистрируйтесь.'); }
+    } else {
+        alert('Неверный email или пароль.');
+    }
 }
 
-function oauthLogin(provider) {
-    const email = prompt(`Введите email вашего ${provider === 'yandex' ? 'Яндекс' : provider === 'google' ? 'Google' : 'ВКонтакте'} аккаунта:`);
-    if (!email) return;
-    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-    const user = users.find(u => u.email === email && u.provider === provider);
-    if (user) {
-        state.user = user;
-        localStorage.setItem('pbUser', JSON.stringify(state.user));
-        closeModal('loginModal');
-        updateNav();
-        updateUI();
-        alert('Вход выполнен через ' + provider + '!');
-    } else { alert('Аккаунт не найден. Сначала зарегистрируйтесь через ' + provider + '.'); }
-}
-
-function oauthRegister(provider) {
-    const name = prompt('Введите ваше имя:');
-    if (!name) return;
-    const email = prompt(`Введите email вашего ${provider === 'yandex' ? 'Яндекс' : provider === 'google' ? 'Google' : 'ВКонтакте'} аккаунта:`);
-    if (!email) return;
-    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-    if (users.find(u => u.email === email)) { alert('Пользователь с таким email уже существует.'); return; }
-    const newUser = { name, email, password: 'oauth_' + provider, registeredAt: new Date().toISOString(), provider };
-    users.push(newUser);
-    localStorage.setItem('pbUsers', JSON.stringify(users));
-    state.user = newUser;
-    localStorage.setItem('pbUser', JSON.stringify(state.user));
-    closeModal('registerModal');
-    updateNav();
-    updateUI();
-    alert('Регистрация через ' + provider + ' успешна! Добро пожаловать, ' + name + '!');
-}
-
+// ===== ВЫХОД =====
 function handleLogout() {
     if (confirm('Выйти из аккаунта?')) {
         state.user = null;
@@ -1553,45 +3093,37 @@ function handleLogout() {
     }
 }
 
-// ===== RESET PASSWORD =====
+// ===== СБРОС ПАРОЛЯ =====
 function handleResetStep1(e) {
     e.preventDefault();
     const email = document.getElementById('resetEmail').value;
     const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
     const user = users.find(u => u.email === email);
+
     if (user) {
         document.getElementById('resetStep1').style.display = 'none';
         document.getElementById('resetStep2').style.display = 'block';
-        document.getElementById('resetTitle').textContent = 'Установите новый пароль';
-        document.getElementById('resetSubtitle').textContent = 'Для аккаунта: ' + email;
-    } else { alert('Пользователь с таким email не найден. Проверьте правильность ввода.'); }
+    } else {
+        alert('Пользователь с таким email не найден.');
+    }
 }
 
 function handleResetStep2(e) {
     e.preventDefault();
-    const newPass = document.getElementById('newPassword').value;
-    const confirmPass = document.getElementById('confirmPassword').value;
-    const email = document.getElementById('resetEmail').value;
-    if (newPass !== confirmPass) { alert('Пароли не совпадают!'); return; }
-    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-    const userIndex = users.findIndex(u => u.email === email);
-    if (userIndex !== -1) {
-        users[userIndex].password = newPass;
-        localStorage.setItem('pbUsers', JSON.stringify(users));
-        if (state.user && state.user.email === email) { state.user.password = newPass; localStorage.setItem('pbUser', JSON.stringify(state.user)); }
-        alert('Пароль успешно изменён! Теперь вы можете войти с новым паролем.');
-        closeModal('resetModal');
-        document.getElementById('resetStep1').style.display = 'block';
-        document.getElementById('resetStep2').style.display = 'none';
-        document.getElementById('resetTitle').textContent = 'Восстановление пароля';
-        document.getElementById('resetSubtitle').textContent = 'Введите email, указанный при регистрации';
-        document.getElementById('resetEmail').value = '';
-        document.getElementById('newPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-    }
+    alert('Пароль изменён!');
+    closeModal('resetModal');
 }
 
-// ===== DASHBOARD =====
+// ===== ОТКРЫТИЕ ЛИЧНОГО КАБИНЕТА =====
+function openDashboard() {
+    if (!state.user) {
+        openModal('loginModal');
+        return;
+    }
+    window.location.href = 'dashboard.html';
+}
+
+// ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК КАБИНЕТА =====
 function switchDashTab(tab, btn) {
     document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
@@ -1608,57 +3140,6 @@ function switchDashTab(tab, btn) {
     }
 }
 
-function openDashboard() {
-    if (!state.user) return openModal('loginModal');
-    document.getElementById('dashTitle').textContent = state.user.name;
-    document.getElementById('dashSubtitle').textContent = state.user.email;
-    document.getElementById('dashProcessed').textContent = state.totalProcessed;
-    document.getElementById('dashSaved').textContent = state.totalSaved.toFixed(1) + ' МБ';
-
-    const subCard = document.getElementById('subCard');
-    const subIcon = document.getElementById('subIcon');
-    const subTitle = document.getElementById('subTitle');
-    const subText = document.getElementById('subText');
-    const dashRemaining = document.getElementById('dashRemaining');
-    const dashStatus = document.getElementById('dashStatus');
-    const dashActionBtn = document.getElementById('dashActionBtn');
-
-    if (state.isPro && state.proExpiry) {
-        const expiry = new Date(state.proExpiry);
-        const now = new Date();
-        const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
-        if (daysLeft <= 7 && daysLeft > 0) {
-            subCard.className = 'subscription-card expiring';
-            subIcon.textContent = '⚠️';
-            subText.textContent = 'Истекает через ' + daysLeft + ' дн. (' + formatDate(state.proExpiry) + ')';
-        } else {
-            subCard.className = 'subscription-card';
-            subIcon.textContent = '⭐';
-            subText.textContent = 'Активна до ' + formatDate(state.proExpiry);
-        }
-        subTitle.textContent = 'PRO подписка';
-        dashRemaining.textContent = '∞';
-        dashStatus.textContent = 'PRO';
-        dashStatus.style.color = '#fbbf24';
-        dashActionBtn.textContent = daysLeft <= 7 ? 'Продлить PRO (скоро истекает)' : 'Продлить PRO';
-    } else {
-        subCard.className = 'subscription-card free';
-        subIcon.textContent = '🆓';
-        subTitle.textContent = 'Бесплатный тариф';
-        subText.textContent = 'Обновите до PRO для безлимита';
-        dashRemaining.textContent = state.freeUsage;
-        dashStatus.textContent = 'FREE';
-        dashStatus.style.color = '#64748b';
-        dashActionBtn.textContent = 'Активировать PRO за 1500₽';
-    }
-
-    document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelector('.dash-tab').classList.add('active');
-    document.getElementById('tab-subscription').classList.add('active');
-    openModal('dashboardModal');
-}
-
 function renderProfile() {
     document.getElementById('profileName').textContent = state.user.name;
     document.getElementById('profileEmail').textContent = state.user.email;
@@ -1667,8 +3148,20 @@ function renderProfile() {
 
 function renderHistory() {
     const list = document.getElementById('historyList');
-    if (state.history.length === 0) { list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🖼️</div><p>История пуста. Обработайте первое фото!</p></div>'; return; }
-    list.innerHTML = state.history.map((item, index) => `<div class="history-item"><img src="${item.thumbnail}" class="history-thumb" alt="preview"><div class="history-info"><h4>${item.name}</h4><p>${formatDate(item.date)} • ${(item.originalSize/1024).toFixed(0)} → ${(item.optimizedSize/1024).toFixed(0)} КБ</p></div><button class="btn btn-primary history-download" onclick="downloadHistory(${index})">Скачать</button></div>`).join('');
+    if (state.history.length === 0) {
+        list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🖼️</div><p>История пуста.</p></div>';
+        return;
+    }
+    list.innerHTML = state.history.map((item, index) => `
+        <div class="history-item">
+            <img src="${item.thumbnail}" class="history-thumb">
+            <div class="history-info">
+                <h4>${item.name}</h4>
+                <p>${formatDate(item.date)}</p>
+            </div>
+            <button class="btn btn-primary history-download" onclick="downloadHistory(${index})">Скачать</button>
+        </div>
+    `).join('');
 }
 
 function downloadHistory(index) {
@@ -1685,29 +3178,40 @@ function formatDate(dateStr) {
     return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-// ===== PAYMENT =====
+// ===== НОВАЯ СИСТЕМА ОПЛАТЫ С МАРКЕРОМ =====
 function openPayment() {
-    if (!state.user) { alert('Для покупки PRO необходимо зарегистрироваться'); openModal('registerModal'); return; }
+    if (!state.user) {
+        alert('Для покупки PRO необходимо зарегистрироваться');
+        openModal('registerModal');
+        return;
+    }
+
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let marker = 'PB-';
+    for (let i = 0; i < 4; i++) marker += chars.charAt(Math.floor(Math.random() * chars.length));
+    marker += '-';
+    for (let i = 0; i < 4; i++) marker += chars.charAt(Math.floor(Math.random() * chars.length));
+
+    if (supabase && state.user.id) {
+        supabase.from('orders').insert([{
+            user_id: state.user.id,
+            status: 'pending',
+            marker_code: marker
+        }]).then(({ error }) => {
+            if (error) console.error('Ошибка сохранения заказа:', error);
+        });
+    }
+
+    document.getElementById('paymentMarker').textContent = marker;
+    document.getElementById('paymentMarker2').textContent = marker;
     openModal('paymentModal');
 }
 
 function processPayment() {
-    closeModal('paymentModal');
-    const code = 'WB-' + Math.random().toString(36).substring(2, 10).toUpperCase();
-    document.getElementById('successCode').textContent = code;
-    setTimeout(() => {
-        state.isPro = true;
-        const expiry = new Date();
-        expiry.setMonth(expiry.getMonth() + 1);
-        state.proExpiry = expiry.toISOString();
-        localStorage.setItem('pbIsPro', 'true');
-        localStorage.setItem('pbProExpiry', state.proExpiry);
-        updateUI();
-        openModal('successModal');
-    }, 500);
+    // Оплата идёт через модальное окно с маркером
 }
 
-// ===== UI UPDATE =====
+// ===== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА =====
 function updateUI() {
     const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
@@ -1722,14 +3226,23 @@ function updateUI() {
         uploadFormats.textContent = 'Поддерживаются: JPG, PNG, WebP • 1 фото за раз (PRO: до 100) • Макс. 20 МБ';
     }
 
-    if (state.isPro) { zipLock.style.display = 'none'; } else { zipLock.style.display = 'inline'; }
+    if (state.isPro) {
+        zipLock.style.display = 'none';
+    } else {
+        zipLock.style.display = 'inline';
+    }
 
     const proSettings = ['formatSetting', 'watermarkSetting', 'dpiSetting'];
     proSettings.forEach(id => {
         const el = document.getElementById(id);
         const input = el.querySelector('select, input');
-        if (state.isPro) { el.classList.remove('disabled'); input.disabled = false; }
-        else { el.classList.add('disabled'); input.disabled = true; }
+        if (state.isPro) {
+            el.classList.remove('disabled');
+            input.disabled = false;
+        } else {
+            el.classList.add('disabled');
+            input.disabled = true;
+        }
     });
 
     if (state.isPro) {
@@ -1746,36 +3259,67 @@ function updateUI() {
     }
 }
 
-// ===== FILE UPLOAD =====
+// ===== ЗАГРУЗКА ФАЙЛОВ =====
 const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
 
 uploadZone.addEventListener('click', () => fileInput.click());
-uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('dragover'); });
-uploadZone.addEventListener('dragleave', () => { uploadZone.classList.remove('dragover'); });
-uploadZone.addEventListener('drop', (e) => { e.preventDefault(); uploadZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
-fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); });
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+});
+uploadZone.addEventListener('dragleave', () => {
+    uploadZone.classList.remove('dragover');
+});
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', (e) => {
+    handleFiles(e.target.files);
+});
 
 function handleFiles(files) {
     const features = getFeatures();
     const allFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+
+    if (allFiles.length === 0) {
+        alert('Пожалуйста, выберите изображения');
+        return;
+    }
+
     if (allFiles.length > features.maxBatchSize) {
         alert('Максимум ' + features.maxBatchSize + ' фото за раз. Активируйте PRO для пакетной загрузки до 100 фото.');
         state.selectedFiles = allFiles.slice(0, features.maxBatchSize);
-    } else { state.selectedFiles = allFiles; }
-    if (state.selectedFiles.length === 0) { alert('Пожалуйста, выберите изображения'); return; }
-    uploadZone.innerHTML = `<div class="upload-icon-big">✓</div><h3>Выбрано файлов: ${state.selectedFiles.length}</h3><p>Нажмите "Обработать фото" для начала</p><p class="formats">Общий размер: ${(state.selectedFiles.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(2)} МБ</p>`;
+    } else {
+        state.selectedFiles = allFiles;
+    }
+
+    uploadZone.innerHTML = `
+        <div class="upload-icon-big">✓</div>
+        <h3>Выбрано файлов: ${state.selectedFiles.length}</h3>
+        <p>Нажмите "Обработать фото" для начала</p>
+        <p class="formats">Общий размер: ${(state.selectedFiles.reduce((s, f) => s + f.size, 0) / 1024 / 1024).toFixed(2)} МБ</p>
+    `;
+
     updateUI();
 }
 
-// ===== PROCESSING =====
+// ===== ОБРАБОТКА ФОТО =====
 document.getElementById('processBtn').addEventListener('click', async () => {
     if (state.selectedFiles.length === 0) return;
-    if (!state.isPro && state.freeUsage <= 0) { openPayment(); return; }
+    if (!state.isPro && state.freeUsage <= 0) {
+        openPayment();
+        return;
+    }
+
     const btn = document.getElementById('processBtn');
-    btn.disabled = true; btn.textContent = 'Обработка...';
+    btn.disabled = true;
+    btn.textContent = 'Обработка...';
     document.getElementById('resultsArea').innerHTML = '';
     state.processedFiles = [];
+
     const settings = {
         marketplace: document.getElementById('marketplace').value,
         quality: document.getElementById('quality').value,
@@ -1784,22 +3328,44 @@ document.getElementById('processBtn').addEventListener('click', async () => {
         watermark: state.isPro ? document.getElementById('watermarkText').value : '',
         dpi: state.isPro ? parseInt(document.getElementById('dpiValue').value) : 72
     };
+
     for (const file of state.selectedFiles) {
         const result = await processImage(file, settings);
         state.processedFiles.push(result);
         displayResult(result, state.processedFiles.length - 1);
-        state.history.unshift({ name: file.name, date: new Date().toISOString(), originalSize: result.originalSize, optimizedSize: result.optimizedSize, thumbnail: result.optimizedData, data: result.optimizedData });
+        state.history.unshift({
+            name: file.name,
+            date: new Date().toISOString(),
+            originalSize: result.originalSize,
+            optimizedSize: result.optimizedSize,
+            thumbnail: result.optimizedData,
+            data: result.optimizedData
+        });
     }
-    if (state.history.length > 50) state.history = state.history.slice(0, 50);
+
+    if (state.history.length > 50) {
+        state.history = state.history.slice(0, 50);
+    }
     localStorage.setItem('pbHistory', JSON.stringify(state.history));
-    if (!state.isPro) { state.freeUsage = Math.max(0, state.freeUsage - state.selectedFiles.length); localStorage.setItem('pbFreeUsage', state.freeUsage); }
+
+    if (!state.isPro) {
+        state.freeUsage = Math.max(0, state.freeUsage - state.selectedFiles.length);
+        localStorage.setItem('pbFreeUsage', state.freeUsage);
+    }
+
     state.totalProcessed += state.selectedFiles.length;
     const savedMB = state.processedFiles.reduce((s, r) => s + (r.originalSize - r.optimizedSize), 0) / 1024 / 1024;
     state.totalSaved += savedMB;
     localStorage.setItem('pbTotalProcessed', state.totalProcessed);
     localStorage.setItem('pbTotalSaved', state.totalSaved);
-    btn.disabled = false; btn.textContent = 'Обработать фото';
-    if (state.processedFiles.length > 1) document.getElementById('downloadAllBtn').style.display = 'block';
+
+    btn.disabled = false;
+    btn.textContent = 'Обработать фото';
+
+    if (state.processedFiles.length > 1) {
+        document.getElementById('downloadAllBtn').style.display = 'block';
+    }
+
     updateUI();
 });
 
@@ -1810,33 +3376,75 @@ async function processImage(file, settings) {
             const img = new Image();
             img.onload = () => {
                 let targetW, targetH;
-                switch(settings.marketplace) {
-                    case 'wb': case 'ozon': case 'ym': targetW = 900; targetH = 1200; break;
-                    case 'avito': targetW = 1200; targetH = 900; break;
-                    default: targetW = 900; targetH = 1200;
+                switch (settings.marketplace) {
+                    case 'wb':
+                    case 'ozon':
+                    case 'ym':
+                        targetW = 900;
+                        targetH = 1200;
+                        break;
+                    case 'avito':
+                        targetW = 1200;
+                        targetH = 900;
+                        break;
+                    default:
+                        targetW = 900;
+                        targetH = 1200;
                 }
+
                 const canvas = document.getElementById('canvas');
                 const ctx = canvas.getContext('2d');
-                canvas.width = targetW; canvas.height = targetH;
+                canvas.width = targetW;
+                canvas.height = targetH;
+
                 const scale = Math.max(targetW / img.width, targetH / img.height);
                 const x = (targetW / 2) - (img.width / 2) * scale;
                 const y = (targetH / 2) - (img.height / 2) * scale;
                 ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
                 if (settings.watermark) {
                     ctx.font = 'bold 24px Arial';
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'bottom';
                     ctx.fillText(settings.watermark, targetW - 20, targetH - 20);
                 }
+
                 let quality;
-                switch(settings.quality) { case 'high': quality = 0.9; break; case 'medium': quality = 0.7; break; case 'low': quality = 0.5; break; default: quality = 0.7; }
-                let mimeType = 'image/jpeg'; let ext = 'jpg';
-                if (settings.outputFormat === 'png') { mimeType = 'image/png'; ext = 'png'; }
-                else if (settings.outputFormat === 'webp') { mimeType = 'image/webp'; ext = 'webp'; }
+                switch (settings.quality) {
+                    case 'high': quality = 0.9; break;
+                    case 'medium': quality = 0.7; break;
+                    case 'low': quality = 0.5; break;
+                    default: quality = 0.7;
+                }
+
+                let mimeType = 'image/jpeg';
+                let ext = 'jpg';
+                if (settings.outputFormat === 'png') {
+                    mimeType = 'image/png';
+                    ext = 'png';
+                } else if (settings.outputFormat === 'webp') {
+                    mimeType = 'image/webp';
+                    ext = 'webp';
+                }
+
                 let dataUrl = canvas.toDataURL(mimeType, quality);
                 let currentSize = dataUrl.length * 0.75;
-                while (currentSize > settings.maxSize * 1024 && quality > 0.1 && settings.outputFormat !== 'png') { quality -= 0.05; dataUrl = canvas.toDataURL(mimeType, quality); currentSize = dataUrl.length * 0.75; }
-                resolve({ originalName: file.name, originalSize: file.size, optimizedData: dataUrl, optimizedSize: currentSize, width: targetW, height: targetH, ext: ext });
+                while (currentSize > settings.maxSize * 1024 && quality > 0.1 && settings.outputFormat !== 'png') {
+                    quality -= 0.05;
+                    dataUrl = canvas.toDataURL(mimeType, quality);
+                    currentSize = dataUrl.length * 0.75;
+                }
+
+                resolve({
+                    originalName: file.name,
+                    originalSize: file.size,
+                    optimizedData: dataUrl,
+                    optimizedSize: currentSize,
+                    width: targetW,
+                    height: targetH,
+                    ext: ext
+                });
             };
             img.src = event.target.result;
         };
@@ -1848,7 +3456,31 @@ function displayResult(result, index) {
     const savings = ((1 - result.optimizedSize / result.originalSize) * 100).toFixed(1);
     const item = document.createElement('div');
     item.className = 'result-item';
-    item.innerHTML = `<img src="${result.optimizedData}" class="result-preview" alt="preview"><div class="result-info"><h4>${result.originalName}</h4><div class="result-metrics"><div class="metric"><span class="metric-label">Размер</span><span class="metric-value">${(result.originalSize/1024).toFixed(1)} → ${(result.optimizedSize/1024).toFixed(1)} КБ</span></div><div class="metric"><span class="metric-label">Сжатие</span><span class="metric-value">-${savings}%</span></div><div class="metric"><span class="metric-label">Формат</span><span class="metric-value dim">${result.ext.toUpperCase()}</span></div><div class="metric"><span class="metric-label">Разрешение</span><span class="metric-value dim">${result.width}×${result.height}</span></div></div></div><button class="btn btn-primary" onclick="downloadFile(${index})">Скачать</button>`;
+    item.innerHTML = `
+        <img src="${result.optimizedData}" class="result-preview">
+        <div class="result-info">
+            <h4>${result.originalName}</h4>
+            <div class="result-metrics">
+                <div class="metric">
+                    <span class="metric-label">Размер</span>
+                    <span class="metric-value">${(result.originalSize/1024).toFixed(1)} → ${(result.optimizedSize/1024).toFixed(1)} КБ</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Сжатие</span>
+                    <span class="metric-value">-${savings}%</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Формат</span>
+                    <span class="metric-value dim">${result.ext.toUpperCase()}</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Разрешение</span>
+                    <span class="metric-value dim">${result.width}×${result.height}</span>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="downloadFile(${index})">Скачать</button>
+    `;
     document.getElementById('resultsArea').appendChild(item);
 }
 
@@ -1861,14 +3493,20 @@ function downloadFile(index) {
 }
 
 document.getElementById('downloadAllBtn').addEventListener('click', async () => {
-    if (!state.isPro) { alert('Скачивание ZIP-архивом доступно только в PRO-подписке. Активируйте PRO для пакетного скачивания.'); openPayment(); return; }
+    if (!state.isPro) {
+        alert('Скачивание ZIP-архивом доступно только в PRO-подписке.');
+        openPayment();
+        return;
+    }
+
     const zip = new JSZip();
     state.processedFiles.forEach((r, i) => {
         const base64 = r.optimizedData.split(',')[1];
-        const name = 'optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '_' + (i+1) + '.' + r.ext;
-        zip.file(name, base64, {base64: true});
+        const name = 'optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '_' + (i + 1) + '.' + r.ext;
+        zip.file(name, base64, { base64: true });
     });
-    const content = await zip.generateAsync({type: 'blob'});
+
+    const content = await zip.generateAsync({ type: 'blob' });
     const link = document.createElement('a');
     link.download = 'photoboost_optimized.zip';
     link.href = URL.createObjectURL(content);
@@ -1883,7 +3521,7 @@ function toggleFaq(element) {
     if (!wasActive) item.classList.add('active');
 }
 
-// ===== INIT =====
+// ===== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ =====
 updateNav();
 updateUI();
 renderUserReviews();
@@ -1906,11 +3544,10 @@ try {
         localStorage.setItem('pbIsPro', 'true');
         localStorage.setItem('pbProExpiry', state.proExpiry);
         localStorage.removeItem('pbAutoActivateCode');
-        localStorage.removeItem('pbPendingCode');
         updateUI();
-        setTimeout(() => { alert('🎉 PRO-подписка активирована автоматически!\nДоступ до: ' + formatDate(state.proExpiry)); }, 500);
+        setTimeout(() => { alert('🎉 PRO-подписка активирована!'); }, 500);
     }
-} catch(e) {}
+} catch (e) {}
 </script>
 
 </body>
