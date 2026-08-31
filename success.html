@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- ===== БАЗОВЫЕ МЕТА-ТЕГИ ===== -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#10b981">
+<meta name="color-scheme" content="light dark">
+
+<!-- ===== SEO: ЗАГОЛОВОК И ОПИСАНИЕ ===== -->
+<title>Оплата успешна — PhotoBoost PRO | Код активации</title>
+<meta name="description" content="Оплата PRO-подписки PhotoBoost прошла успешно. Скопируйте код активации и вернитесь на главную страницу.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<link rel="canonical" href="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/success.html">
+
+<!-- ===== OPEN GRAPH (для соцсетей) ===== -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PhotoBoost PRO">
+<meta property="og:title" content="Оплата успешна — PhotoBoost PRO">
+<meta property="og:description" content="Ваш PRO-код активации готов. Скопируйте его и активируйте подписку.">
+<meta property="og:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/success.html">
+<meta property="og:locale" content="ru_RU">
+
+<!-- ===== TWITTER CARDS ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Оплата успешна — PhotoBoost PRO">
+<meta name="twitter:description" content="Ваш PRO-код активации готов.">
+<meta name="twitter:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
+
+<!-- ===== FAVICON ===== -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="shortcut icon" href="favicon.ico">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg-dark: #0a0a1a;
+    --bg-darker: #050510;
+    --primary: #7c3aed;
+    --primary-light: #a78bfa;
+    --accent: #ec4899;
+    --gold: #fbbf24;
+    --success: #10b981;
+    --text-light: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: rgba(255,255,255,0.1);
+    --gradient-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%);
+    --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+    --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%; left: -20%;
+    width: 60%; height: 200%;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, transparent 60%);
+    animation: pulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -50%; right: -20%;
+    width: 60%; height: 200%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 60%);
+    animation: pulse 8s ease-in-out infinite 4s;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes checkmark {
+    0% { stroke-dashoffset: 100; }
+    100% { stroke-dashoffset: 0; }
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.container {
+    position: relative;
+    z-index: 2;
+    max-width: 560px;
+    width: 100%;
+    animation: slideUp 0.8s ease-out;
+    margin: 0 auto;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-light);
+    text-decoration: none;
+    margin-bottom: 40px;
+}
+
+.logo-icon {
+    width: 38px; height: 38px;
+    background: var(--gradient-main);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+}
+
+.logo-link span {
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card {
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 48px 40px;
+    text-align: center;
+    position: relative;
+    overflow: visible;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-success);
+    border-radius: 28px 28px 0 0;
+}
+
+.success-icon-wrap {
+    width: 100px; height: 100px;
+    margin: 0 auto 28px;
+    background: var(--gradient-success);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 15px 40px rgba(16, 185, 129, 0.4);
+    animation: scaleIn 0.6s ease-out 0.3s both;
+    position: relative;
+}
+
+.success-icon-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.checkmark-svg {
+    width: 50px; height: 50px;
+}
+
+.checkmark-svg path {
+    fill: none;
+    stroke: white;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    animation: checkmark 0.8s ease-out 0.6s both;
+}
+
+.card h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.card h1 .gradient-text {
+    background: var(--gradient-success);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.auto-notice {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.auto-notice-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.code-section {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%);
+    border: 2px dashed rgba(16, 185, 129, 0.4);
+    border-radius: 18px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.code-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.code-value {
+    font-family: 'Courier New', monospace;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--success);
+    letter-spacing: 4px;
+    user-select: all;
+    cursor: pointer;
+    padding: 8px 0;
+    position: relative;
+    background: linear-gradient(90deg, var(--success), var(--primary-light), var(--success));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+    transition: transform 0.2s;
+}
+
+.code-value:hover {
+    transform: scale(1.05);
+}
+
+.copy-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.copy-hint.copied {
+    color: var(--success);
+}
+
+.info-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+.info-box h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-box li {
+    padding: 6px 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+}
+
+.info-box li::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 36px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    text-decoration: none;
+    font-family: inherit;
+    width: 100%;
+}
+
+.btn-primary {
+    background: var(--gradient-purple);
+    color: white;
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(124, 58, 237, 0.5);
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-light);
+    border: 1px solid var(--border);
+    margin-top: 12px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.footer-info {
+    text-align: center;
+    margin-top: 32px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.footer-info a {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+
+.footer-info a:hover {
+    text-decoration: underline;
+}
+
+.scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--gradient-success);
+    z-index: 100;
+    transition: width 0.1s;
+    border-radius: 0 2px 2px 0;
+}
+
+.confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    top: -20px;
+    z-index: 1;
+    animation: confetti 3s ease-in forwards;
+    pointer-events: none;
+}
+
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--gradient-purple);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+    transition: all 0.3s;
+    z-index: 100;
+}
+
+.scroll-top-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(124, 58, 237, 0.5);
+}
+
+.scroll-top-btn.visible {
+    display: flex;
+}
+
+@media (max-width: 568px) {
+    body { padding: 20px 16px; }
+    .card { padding: 36px 24px; }
+    .card h1 { font-size: 1.6rem; }
+    .code-value { font-size: 1.6rem; letter-spacing: 2px; }
+    .success-icon-wrap { width: 80px; height: 80px; }
+    .checkmark-svg { width: 40px; height: 40px; }
+    .scroll-top-btn { bottom: 20px; right: 20px; width: 44px; height: 44px; font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-indicator" id="scrollIndicator"></div>
+<div id="confetti"></div>
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="Наверх">↑</button>
+
+<div class="container">
+    <a href="index.html" class="logo-link">
+        <div class="logo-icon"></div>
+        <div>Photo<span>Boost</span></div>
+    </a>
+
+    <div class="card">
+        <div class="success-icon-wrap">
+            <svg class="checkmark-svg" viewBox="0 0 50 50">
+                <path d="M14 26 L22 34 L36 18"/>
+            </svg>
+        </div>
+
+        <h1>Оплата прошла <span class="gradient-text">успешно!</span></h1>
+        <p class="subtitle">Спасибо за покупку PRO-подписки! Ваш персональный код активации готов.</p>
+
+        <div class="auto-notice">
+            <span class="auto-notice-icon">⚡</span>
+            <span>Код автоматически применится при переходе на главную страницу</span>
+        </div>
+
+        <div class="code-section">
+            <div class="code-label">Ваш код активации</div>
+            <div class="code-value" id="promoCode" onclick="copyCode()">WB-XXXXXXXX</div>
+            <div class="copy-hint" id="copyHint">
+                <span>📋</span>
+                <span>Нажмите на код, чтобы скопировать</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>📌 Что делать дальше?</h3>
+            <ul>
+                <li>Скопируйте код выше (или нажмите на него)</li>
+                <li>Вернитесь на главную страницу PhotoBoost</li>
+                <li>Войдите в свой аккаунт (если ещё не вошли)</li>
+                <li>PRO активируется автоматически при переходе</li>
+                <li>Получите безлимитный доступ ко всем функциям на 1 месяц</li>
+            </ul>
+        </div>
+
+        <a href="index.html" class="btn btn-primary">
+             🚀 Перейти к активации
+        </a>
+        <a href="index.html#tool" class="btn btn-secondary">
+            📸 К инструменту
+        </a>
+    </div>
+
+    <div class="footer-info">
+        <p>Код автоматически применится к вашему аккаунту при переходе на главную</p>
+        <p style="margin-top: 8px;">Возникли вопросы? Напишите нам в <a href="#">Telegram</a></p>
+        <p style="margin-top: 16px; padding-bottom: 40px;">© 2024 PhotoBoost. Все права защищены.</p>
+    </div>
+</div>
+
+<script>
+// ===== ГЕНЕРАЦИЯ КОДА =====
+function generateCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = 'WB-';
+    for (let i = 0; i < 8; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+}
+
+let code = localStorage.getItem('pbLastGeneratedCode');
+if (!code) {
+    code = generateCode();
+    localStorage.setItem('pbLastGeneratedCode', code);
+}
+document.getElementById('promoCode').textContent = code;
+
+try {
+    const pendingCode = {
+        code: code,
+        timestamp: new Date().toISOString(),
+        used: false
+    };
+    localStorage.setItem('pbPendingCode', JSON.stringify(pendingCode));
+} catch(e) {}
+
+// ===== КОПИРОВАНИЕ КОДА =====
+function copyCode() {
+    const codeText = document.getElementById('promoCode').textContent;
+    navigator.clipboard.writeText(codeText).then(() => {
+        showCopied();
+    }).catch(() => {
+        const range = document.createRange();
+        range.selectNode(document.getElementById('promoCode'));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        showCopied();
+    });
+}
+
+function showCopied() {
+    const hint = document.getElementById('copyHint');
+    hint.classList.add('copied');
+    hint.innerHTML = '<span>✓</span><span>Код скопирован!</span>';
+    setTimeout(() => {
+        hint.classList.remove('copied');
+        hint.innerHTML = '<span>📋</span><span>Нажмите на код, чтобы скопировать</span>';
+    }, 2000);
+}
+
+// ===== КОНФЕТТИ =====
+function createConfetti() {
+    const colors = ['#7c3aed', '#ec4899', '#fbbf24', '#10b981', '#3b82f6', '#f43f5e'];
+    const container = document.getElementById('confetti');
+    
+    for (let i = 0; i < 50; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 2 + 's';
+        piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        piece.style.width = (Math.random() * 8 + 5) + 'px';
+        piece.style.height = (Math.random() * 8 + 5) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        container.appendChild(piece);
+    }
+    
+    setTimeout(() => { container.innerHTML = ''; }, 5000);
+}
+
+createConfetti();
+
+// ===== СКРОЛЛ =====
+function updateScrollIndicator() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollPercent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    document.getElementById('scrollIndicator').style.width = scrollPercent + '%';
+    
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    if (scrollTop > 300) {
+        scrollTopBtn.classList.add('visible');
+    } else {
+        scrollTopBtn.classList.remove('visible');
+    }
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.addEventListener('scroll', updateScrollIndicator);
+updateScrollIndicator();
+
+// ===== АВТО-АКТИВАЦИЯ ПРИ ПЕРЕХОДЕ НА ГЛАВНУЮ =====
+document.querySelectorAll('a[href="index.html"], a[href="index.html#tool"]').forEach(link => {
+    link.addEventListener('click', () => {
+        try {
+            const pending = JSON.parse(localStorage.getItem('pbPendingCode') || '{}');
+            if (pending.code && !pending.used) {
+                pending.used = true;
+                pending.activatedAt = new Date().toISOString();
+                localStorage.setItem('pbPendingCode', JSON.stringify(pending));
+                localStorage.setItem('pbAutoActivateCode', pending.code);
+            }
+        } catch(e) {}
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.style.overflowY = 'auto';
+    document.documentElement.style.overflowY = 'auto';
+});
+</script>
+
+</body>
+</html>
