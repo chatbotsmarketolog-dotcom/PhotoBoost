@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /success.html
+
+# Специальные правила для Яндекса
+User-agent: Yandex
+Allow: /
+Disallow: /success.html
+Clean-param: utm_source&utm_medium&utm_campaign&ref
+
+# Карта сайта
+Sitemap: https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/sitemap.xml
