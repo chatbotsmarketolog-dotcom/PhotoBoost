@@ -3,34 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PhotoBoost PRO</title>
+<title>PhotoBoost PRO — Оптимизатор фото для Wildberries, Ozon и Avito</title>
+<!-- ===== SEO / ИНДЕКСАЦИЯ ===== -->
+<meta name="description" content="Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito за секунды. Бесплатно 2 обработки. PRO — безлимит и пакетная загрузка.">
+<link rel="canonical" href="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PhotoBoost PRO — фото для маркетплейсов за секунды">
+<meta property="og:description" content="Оптимизация фото под WB, Ozon, Avito. Бесплатно. PRO — безлимит.">
+<meta property="og:url" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/">
+<meta property="og:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
+<meta name="twitter:card" content="summary_large_image">
+<!-- Вставь сюда код из Google Search Console (Verify): -->
+<meta name="google-site-verification" content="">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-:root { --bg-dark: #0a0a1a; --bg-light: #faf9ff; --primary: #7c3aed; --gold: #fbbf24; --success: #10b981; --danger: #ef4444; --text-dark: #0f0f1e; --text-light: #f8fafc; --text-muted: #64748b; --border: rgba(255,255,255,0.1); --gradient-main: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #f59e0b 100%); --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); }
+:root { --bg-dark: #0a0a1a; --bg-light: #faf9ff; --primary: #7c3aed; --gold: #fbbf24; --success: #10b981; --danger: #ef4444; --text-dark: #0f0f1e; --text-light: #f8fafc; --text-muted: #64748b; --border: rgba(255,255,255,0.1); --gradient-main: linear-gradient(135deg,#7c3aed 0%,#ec4899 50%,#f59e0b 100%); --gradient-purple: linear-gradient(135deg,#7c3aed 0%,#ec4899 100%); --gradient-gold: linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%); }
 html { scroll-behavior: smooth; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-light); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+
+/* Навигация */
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,26,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
-.nav-container { max-width: 1280px; margin: 0 auto; padding: 16px 30px; display: flex; justify-content: space-between; align-items: center; }
+.nav-container { max-width: 1280px; margin: 0 auto; padding: 16px 30px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .logo { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 800; color: var(--text-light); text-decoration: none; }
-.logo-icon { width: 38px; height: 38px; background: var(--gradient-main); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.logo-icon { width: 38px; height: 38px; background: var(--gradient-main); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
 .logo span { background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .nav-menu { display: flex; gap: 30px; list-style: none; }
 .nav-menu a { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.95rem; cursor: pointer; }
 .nav-menu a:hover { color: var(--text-light); }
-.nav-actions { display: flex; gap: 12px; align-items: center; }
+.nav-actions { display: flex; gap: 10px; align-items: center; }
+.burger { display: none; background: none; border: none; color: var(--text-light); font-size: 1.7rem; cursor: pointer; padding: 4px 8px; }
+.mobile-menu { display: none; position: fixed; top: 70px; left: 0; right: 0; background: rgba(10,10,26,0.98); z-index: 999; padding: 10px 20px 20px; }
+.mobile-menu.open { display: block; }
+.mobile-menu a { display: block; padding: 14px 6px; color: var(--text-light); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--border); }
+
+/* Кнопки */
 .btn { padding: 11px 22px; border-radius: 10px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; transition: all 0.3s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
 .btn-ghost { background: transparent; color: var(--text-light); border: 1px solid var(--border); }
+.btn-ghost:hover { background: rgba(255,255,255,0.1); }
 .btn-primary { background: var(--gradient-purple); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5); }
 .btn-gold { background: var(--gradient-gold); color: var(--text-dark); }
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(251, 191, 36, 0.5); }
 .btn-large { padding: 16px 36px; font-size: 1.05rem; border-radius: 12px; }
 .btn-dark { background: var(--text-dark); color: white; }
 .btn-secondary { background: #0077ff; color: white; }
-.btn-danger { background: var(--danger); color: white; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Бейдж пользователя */
 .user-badge { display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; background: rgba(255,255,255,0.05); border-radius: 50px; cursor: pointer; border: 1px solid var(--border); }
 .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--gradient-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem; }
 .user-name { color: var(--text-light); font-weight: 600; font-size: 0.9rem; }
+
+/* Секции */
 .hero { background: var(--bg-dark); color: var(--text-light); padding: 140px 20px 100px; position: relative; overflow: hidden; }
 .hero-container { max-width: 1280px; margin: 0 auto; position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
 .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--gold); padding: 8px 18px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 24px; }
@@ -38,16 +65,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .hero h1 .gradient-text { background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .hero-subtitle { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 36px; }
 .hero-cta { display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; }
-.hero-stats { display: flex; gap: 40px; padding-top: 30px; border-top: 1px solid var(--border); }
+.hero-stats { display: flex; gap: 40px; padding-top: 30px; border-top: 1px solid var(--border); flex-wrap: wrap; }
 .stat-item .stat-number { font-size: 2rem; font-weight: 800; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .stat-item .stat-label { color: var(--text-muted); font-size: 0.9rem; }
 .hero-visual { height: 450px; border-radius: 20px; overflow: hidden; }
 .hero-visual img { width: 100%; height: 100%; object-fit: cover; }
+
 .trust-bar { background: white; padding: 40px 20px; }
 .trust-container { max-width: 1280px; margin: 0 auto; text-align: center; }
 .trust-title { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; text-transform: uppercase; letter-spacing: 2px; }
 .trust-logos { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; }
 .trust-logo { font-size: 1.8rem; font-weight: 800; color: #cbd5e1; }
+
 .section { padding: 100px 20px; }
 .section-dark { background: var(--bg-dark); color: var(--text-light); }
 .section-container { max-width: 1280px; margin: 0 auto; }
@@ -56,19 +85,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .section-dark .section-label { background: rgba(167,139,250,0.15); color: #a78bfa; }
 .section-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 16px; }
 .section-subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
 .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-.feature-card { background: white; border-radius: 20px; overflow: hidden; border: 1px solid #f1f5f9; transition: all 0.4s; position: relative; }
-.feature-card:hover { transform: translateY(-8px); }
+.feature-card { background: white; border-radius: 20px; overflow: hidden; border: 1px solid #f1f5f9; position: relative; }
 .feature-image { width: 100%; height: 180px; object-fit: cover; }
 .feature-content { padding: 28px 24px; }
 .feature-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
 .feature-card p { color: var(--text-muted); font-size: 0.95rem; }
 .feature-badge { position: absolute; top: 16px; right: 16px; background: var(--gradient-gold); color: var(--text-dark); padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; }
+
 .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
 .step-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 20px; padding: 36px 30px; position: relative; }
 .step-number { position: absolute; top: -20px; left: 30px; width: 50px; height: 50px; background: var(--gradient-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.3rem; color: white; }
 .step-card h3 { margin-top: 20px; margin-bottom: 12px; }
 .step-card p { color: var(--text-muted); }
+
 .tool-wrapper { background: white; border-radius: 28px; padding: 50px; border: 1px solid #f1f5f9; }
 .upload-zone { border: 2px dashed #cbd5e1; border-radius: 20px; padding: 60px 40px; text-align: center; cursor: pointer; background: #faf9ff; margin-bottom: 30px; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .upload-zone:hover { border-color: var(--primary); background: #f3f0ff; }
@@ -79,10 +110,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .setting-item select, .setting-item input[type="text"] { width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; background: white; font-family: inherit; }
 .setting-item.disabled { opacity: 0.5; pointer-events: none; }
 .pro-lock { font-size: 0.75rem; color: var(--gold); font-weight: 600; margin-left: 6px; }
-.action-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: linear-gradient(135deg, #faf9ff 0%, #fdf2f8 100%); border-radius: 14px; margin-bottom: 24px; flex-wrap: wrap; gap: 15px; }
+
+.action-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: linear-gradient(135deg,#faf9ff 0%,#fdf2f8 100%); border-radius: 14px; margin-bottom: 24px; flex-wrap: wrap; gap: 15px; }
 .status-info { display: flex; align-items: center; gap: 12px; font-weight: 600; }
 .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); }
 .status-dot.active { background: var(--success); }
+
 .results-area { margin-top: 30px; }
 .result-item { background: #faf9ff; padding: 20px; border-radius: 16px; margin-bottom: 16px; display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; align-items: center; }
 .result-preview { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; }
@@ -91,6 +124,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .metric-value { font-weight: 700; color: var(--success); }
 .metric-value.dim { color: var(--text-dark); }
 .metric-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+
 .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 800px; margin: 0 auto; }
 .pricing-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 24px; padding: 40px 36px; position: relative; }
 .pricing-card.featured { border: 2px solid var(--gold); transform: scale(1.03); }
@@ -104,7 +138,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .pricing-features li { padding: 10px 0; display: flex; gap: 12px; color: var(--text-light); }
 .check-icon { width: 22px; height: 22px; border-radius: 50%; background: rgba(16,185,129,0.15); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
 .no-autorenew { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; padding: 12px 16px; border-radius: 10px; font-size: 0.85rem; margin-top: 20px; }
-.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+
+.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
 .testimonial-card { background: white; border-radius: 20px; padding: 32px; border: 1px solid #f1f5f9; }
 .stars { color: var(--gold); margin-bottom: 16px; letter-spacing: 2px; }
 .testimonial-text { margin-bottom: 24px; line-height: 1.7; font-size: 0.95rem; }
@@ -112,6 +147,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .testimonial-author-photo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
 .testimonial-author-info h4 { font-size: 1rem; }
 .testimonial-author-info p { color: var(--text-muted); font-size: 0.85rem; }
+
 .faq-list { max-width: 800px; margin: 0 auto; }
 .faq-item { background: white; margin-bottom: 14px; border-radius: 14px; overflow: hidden; border: 1px solid #f1f5f9; }
 .faq-question { padding: 22px 28px; cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
@@ -120,10 +156,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; color: var(--text-muted); }
 .faq-answer-inner { padding: 0 28px 24px; }
 .faq-item.active .faq-answer { max-height: 500px; }
+
 .cta-section { background: var(--bg-dark); padding: 100px 20px; }
 .cta-content { max-width: 700px; margin: 0 auto; text-align: center; color: var(--text-light); }
 .cta-content h2 { font-size: 2.8rem; margin-bottom: 20px; }
 .cta-content p { font-size: 1.2rem; color: var(--text-muted); margin-bottom: 40px; }
+
 .footer { background: var(--bg-dark); color: var(--text-muted); padding: 60px 20px 30px; }
 .footer-container { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
 .footer-col h4 { color: var(--text-light); margin-bottom: 18px; }
@@ -131,6 +169,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .footer-col li { margin-bottom: 10px; }
 .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; cursor: pointer; }
 .footer-bottom { max-width: 1280px; margin: 0 auto; padding-top: 30px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 15px; font-size: 0.85rem; }
+
+/* Модалки */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,26,0.8); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
 .modal { background: white; border-radius: 24px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -146,334 +186,492 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .form-footer { text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); }
 .form-footer a { color: var(--primary); font-weight: 600; cursor: pointer; }
 .modal-close { position: absolute; top: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: none; cursor: pointer; font-size: 1.2rem; color: var(--text-muted); z-index: 10; }
+
 .oauth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: var(--text-muted); font-size: 0.85rem; }
 .oauth-divider::before, .oauth-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
 .oauth-buttons { display: grid; gap: 10px; }
 .oauth-btn { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; background: white; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-dark); font-family: inherit; }
 .oauth-btn:hover { border-color: var(--primary); }
 .oauth-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: white; }
-.oauth-icon.yandex { background: #fc3f1d; }
-.oauth-icon.google { background: #4285f4; }
-.oauth-icon.vk { background: #0077ff; }
+.oauth-icon.google { background: #4285f4; } .oauth-icon.vk { background: #0077ff; }
+
 .receipt-box { background: #fffbeb; border: 2px solid #fbbf24; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
 .receipt-box p { color: #92400e; font-weight: 600; font-size: 0.9rem; }
 .sber-notice { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 8px; margin-top: 12px; font-size: 0.85rem; color: #1e40af; }
 .contact-buttons { display: grid; gap: 10px; margin-bottom: 16px; }
-@media (max-width: 968px) { .hero-container { grid-template-columns: 1fr; } .hero h1 { font-size: 2.5rem; } .hero-visual { display: none; } .nav-menu { display: none; } .section-title { font-size: 2rem; } .footer-container { grid-template-columns: 1fr 1fr; } .tool-wrapper { padding: 30px 20px; } }
-@media (max-width: 568px) { .hero-stats { flex-direction: column; gap: 20px; } .footer-container { grid-template-columns: 1fr; } }
+
+/* ===== АДАПТАЦИЯ ===== */
+@media (max-width: 1024px) {
+  .hero h1 { font-size: 2.6rem; } .section-title { font-size: 2.2rem; } .tool-wrapper { padding: 30px; } .hero-container { gap: 30px; }
+}
+@media (max-width: 900px) {
+  .nav-menu { display: none; } .burger { display: block; } .nav-container { padding: 14px 20px; }
+  .hero { padding: 120px 20px 70px; } .hero-container { grid-template-columns: 1fr; } .hero-visual { height: 300px; }
+  .trust-logos { gap: 30px; } .trust-logo { font-size: 1.3rem; } .footer-container { grid-template-columns: 1fr 1fr; } .section { padding: 70px 20px; }
+}
+@media (max-width: 640px) {
+  .hero h1 { font-size: 2rem; } .hero-subtitle { font-size: 1.05rem; } .hero-cta .btn { width: 100%; } .hero-stats { gap: 20px; }
+  .section { padding: 60px 16px; } .section-title { font-size: 1.7rem; } .section-header { margin-bottom: 40px; }
+  .tool-wrapper { padding: 20px 14px; border-radius: 18px; } .upload-zone { padding: 40px 16px; min-height: 160px; }
+  .settings-panel { padding: 18px 14px; } .settings-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .action-bar { flex-direction: column; align-items: stretch; text-align: center; }
+  .result-item { grid-template-columns: 80px 1fr; gap: 12px; } .result-item .btn { grid-column: 1 / -1; width: 100%; }
+  .result-preview { width: 80px; height: 80px; } .pricing-grid { grid-template-columns: 1fr; } .pricing-card.featured { transform: none; }
+  .pricing-card { padding: 30px 22px; } .modal-body { padding: 16px 18px 24px; } .modal-header { padding: 24px 18px 0; }
+  .footer-container { grid-template-columns: 1fr; gap: 24px; } .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .cta-content h2 { font-size: 1.9rem; } .cta-content p { font-size: 1.05rem; } .logo { font-size: 1.2rem; }
+}
+@media (max-width: 400px) {
+  .settings-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.75rem; } .hero-stats { flex-direction: column; gap: 14px; }
+}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-    <div class="nav-container">
-        <a href="#" class="logo"><div class="logo-icon">📸</div><div>Photo<span>Boost</span></div></a>
-        <ul class="nav-menu">
-            <li><a href="#features" onclick="event.preventDefault(); scrollToSection('features')">Возможности</a></li>
-            <li><a href="#how" onclick="event.preventDefault(); scrollToSection('how')">Как работает</a></li>
-            <li><a href="#tool" onclick="event.preventDefault(); scrollToSection('tool')">Инструмент</a></li>
-            <li><a href="#pricing" onclick="event.preventDefault(); scrollToSection('pricing')">Тарифы</a></li>
-            <li><a href="#reviews" onclick="event.preventDefault(); scrollToSection('reviews')">Отзывы</a></li>
-            <li><a href="#faq" onclick="event.preventDefault(); scrollToSection('faq')">FAQ</a></li>
-        </ul>
-        <div class="nav-actions" id="navActions"></div>
-    </div>
+  <div class="nav-container">
+    <a href="./" class="logo"><div class="logo-icon">📸</div><div>Photo<span>Boost</span></div></a>
+    <ul class="nav-menu">
+      <li><a href="#features" onclick="event.preventDefault(); scrollToSection('features')">Возможности</a></li>
+      <li><a href="#how" onclick="event.preventDefault(); scrollToSection('how')">Как работает</a></li>
+      <li><a href="#tool" onclick="event.preventDefault(); scrollToSection('tool')">Инструмент</a></li>
+      <li><a href="#pricing" onclick="event.preventDefault(); scrollToSection('pricing')">Тарифы</a></li>
+      <li><a href="#reviews" onclick="event.preventDefault(); scrollToSection('reviews')">Отзывы</a></li>
+      <li><a href="#faq" onclick="event.preventDefault(); scrollToSection('faq')">FAQ</a></li>
+    </ul>
+    <div class="nav-actions" id="navActions"></div>
+    <button class="burger" onclick="toggleMenu()">☰</button>
+  </div>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#features" onclick="closeMenu(); scrollToSection('features')">Возможности</a>
+  <a href="#how" onclick="closeMenu(); scrollToSection('how')">Как работает</a>
+  <a href="#tool" onclick="closeMenu(); scrollToSection('tool')">Инструмент</a>
+  <a href="#pricing" onclick="closeMenu(); scrollToSection('pricing')">Тарифы</a>
+  <a href="#reviews" onclick="closeMenu(); scrollToSection('reviews')">Отзывы</a>
+  <a href="#faq" onclick="closeMenu(); scrollToSection('faq')">FAQ</a>
+</div>
 
 <section class="hero">
-    <div class="hero-container">
-        <div>
-            <div class="hero-badge"><span>⭐</span><span>Премиум инструмент №1 для селлеров</span></div>
-            <h1>Фото для <span class="gradient-text">маркетплейсов</span> за секунды</h1>
-            <p class="hero-subtitle">Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito.</p>
-            <div class="hero-cta">
-                <button class="btn btn-primary btn-large" onclick="scrollToSection('tool')">Попробовать бесплатно →</button>
-                <button class="btn btn-ghost btn-large" onclick="scrollToSection('how')">Как это работает</button>
-            </div>
-            <div class="hero-stats">
-                <div class="stat-item"><div class="stat-number">12,847</div><div class="stat-label">Активных селлеров</div></div>
-                <div class="stat-item"><div class="stat-number">2.4M+</div><div class="stat-label">Обработано фото</div></div>
-                <div class="stat-item"><div class="stat-number">4.9/5</div><div class="stat-label">Средняя оценка</div></div>
-            </div>
-        </div>
-        <div class="hero-visual"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1dae7b2ea-4122-406b-943c-a74ce382715c.png" alt="PhotoBoost"></div>
+  <div class="hero-container">
+    <div>
+      <div class="hero-badge"><span>⭐</span><span>Премиум инструмент №1 для селлеров</span></div>
+      <h1>Фото для <span class="gradient-text">маркетплейсов</span> за секунды</h1>
+      <p class="hero-subtitle">Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-large" onclick="scrollToSection('tool')">Попробовать бесплатно →</button>
+        <button class="btn btn-ghost btn-large" onclick="scrollToSection('how')">Как это работает</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-number">12,847</div><div class="stat-label">Активных селлеров</div></div>
+        <div class="stat-item"><div class="stat-number">2.4M+</div><div class="stat-label">Обработано фото</div></div>
+        <div class="stat-item"><div class="stat-number">4.9/5</div><div class="stat-label">Средняя оценка</div></div>
+      </div>
     </div>
+    <div class="hero-visual"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1dae7b2ea-4122-406b-943c-a74ce382715c.png" alt="PhotoBoost"></div>
+  </div>
 </section>
 
-<section class="trust-bar">
-    <div class="trust-container">
-        <div class="trust-title">Оптимизировано для</div>
-        <div class="trust-logos">
-            <div class="trust-logo">WILDBERRIES</div><div class="trust-logo">OZON</div><div class="trust-logo">АВИТО</div><div class="trust-logo">Я.МАРКЕТ</div><div class="trust-logo">СБЕРМЕГАМАРКЕТ</div>
-        </div>
-    </div>
-</section>
+<section class="trust-bar"><div class="trust-container"><div class="trust-title">Оптимизировано для</div>
+  <div class="trust-logos"><div class="trust-logo">WILDBERRIES</div><div class="trust-logo">OZON</div><div class="trust-logo">АВИТО</div><div class="trust-logo">Я.МАРКЕТ</div><div class="trust-logo">СБЕРМЕГАМАРКЕТ</div></div>
+</div></section>
 
-<section class="section" id="features">
-    <div class="section-container">
-        <div class="section-header">
-            <span class="section-label">Возможности</span>
-            <h2 class="section-title">Всё, что нужно для идеальных карточек</h2>
-            <p class="section-subtitle">Мощные инструменты, которые экономят часы работы</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/12cf2b514-c594-4498-a6fd-b17f32131b44.png" class="feature-image"><div class="feature-content"><h3>Мгновенная обработка</h3><p>До 100 фото в минуту прямо в браузере.</p></div></div>
-            <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/179bfde2c-13b9-4a1b-93ab-4de1a31dd244.png" class="feature-image"><div class="feature-content"><h3>Точные размеры</h3><p>Автоматическая обрезка под WB, Ozon и Avito.</p></div></div>
-            <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1eb4b554c-c1c5-4b47-90fa-ff84cc5d6f62.png" class="feature-image"><div class="feature-content"><h3>Умное сжатие</h3><p>Сжимаем до 100 КБ без потери качества.</p></div></div>
-            <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/16e8ccd6a-0547-48fc-b714-d3916080b405.png" class="feature-image"><div class="feature-content"><h3>Полная приватность</h3><p>Все операции локально в вашем браузере.</p></div></div>
-            <div class="feature-card"><div class="feature-badge">PRO</div><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1fb584aef-7fc9-499b-99c9-5b665495c3ea.png" class="feature-image"><div class="feature-content"><h3>Пакетная обработка</h3><p>До 100 фото и ZIP-архив.</p></div></div>
-            <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/189ae9c38-9e35-4c9f-8e1b-1393bbbc1299.png" class="feature-image"><div class="feature-content"><h3>Окупаемость</h3><p>1500₽/мес окупаются сразу.</p></div></div>
-        </div>
-    </div>
-</section>
+<section class="section" id="features"><div class="section-container">
+  <div class="section-header"><span class="section-label">Возможности</span><h2 class="section-title">Всё, что нужно для идеальных карточек</h2><p class="section-subtitle">Мощные инструменты, которые экономят часы работы</p></div>
+  <div class="features-grid">
+    <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/12cf2b514-c594-4498-a6fd-b17f32131b44.png" class="feature-image"><div class="feature-content"><h3>Мгновенная обработка</h3><p>До 100 фото в минуту прямо в браузере.</p></div></div>
+    <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/179bfde2c-13b9-4a1b-93ab-4de1a31dd244.png" class="feature-image"><div class="feature-content"><h3>Точные размеры</h3><p>Автоматическая обрезка под WB, Ozon и Avito.</p></div></div>
+    <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1eb4b554c-c1c5-4b47-90fa-ff84cc5d6f62.png" class="feature-image"><div class="feature-content"><h3>Умное сжатие</h3><p>Сжимаем до 100 КБ без потери качества.</p></div></div>
+    <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/16e8ccd6a-0547-48fc-b714-d3916080b405.png" class="feature-image"><div class="feature-content"><h3>Полная приватность</h3><p>Все операции локально в вашем браузере.</p></div></div>
+    <div class="feature-card"><div class="feature-badge">PRO</div><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1fb584aef-7fc9-499b-99c9-5b665495c3ea.png" class="feature-image"><div class="feature-content"><h3>Пакетная обработка</h3><p>До 100 фото и ZIP-архив.</p></div></div>
+    <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/189ae9c38-9e35-4c9f-8e1b-1393bbbc1299.png" class="feature-image"><div class="feature-content"><h3>Окупаемость</h3><p>1500₽/мес окупаются сразу.</p></div></div>
+  </div>
+</div></section>
 
-<section class="section section-dark" id="how">
-    <div class="section-container">
-        <div class="section-header">
-            <span class="section-label">Как это работает</span>
-            <h2 class="section-title">Три простых шага</h2>
-            <p class="section-subtitle">Всё интуитивно понятно</p>
-        </div>
-        <div class="steps-grid">
-            <div class="step-card"><div class="step-number">1</div><h3>Загрузите фото</h3><p>Перетащите фото. JPG, PNG, WebP.</p></div>
-            <div class="step-card"><div class="step-number">2</div><h3>Настройте параметры</h3><p>Укажите маркетплейс и качество.</p></div>
-            <div class="step-card"><div class="step-number">3</div><h3>Скачайте результат</h3><p>Готовые оптимизированные фото.</p></div>
-        </div>
-    </div>
-</section>
+<section class="section section-dark" id="how"><div class="section-container">
+  <div class="section-header"><span class="section-label">Как это работает</span><h2 class="section-title">Три простых шага</h2><p class="section-subtitle">Всё интуитивно понятно</p></div>
+  <div class="steps-grid">
+    <div class="step-card"><div class="step-number">1</div><h3>Загрузите фото</h3><p>Перетащите фото. JPG, PNG, WebP.</p></div>
+    <div class="step-card"><div class="step-number">2</div><h3>Настройте параметры</h3><p>Укажите маркетплейс и качество.</p></div>
+    <div class="step-card"><div class="step-number">3</div><h3>Скачайте результат</h3><p>Готовые оптимизированные фото.</p></div>
+  </div>
+</div></section>
 
-<section class="section" id="tool">
-    <div class="section-container">
-        <div class="section-header">
-            <span class="section-label">Инструмент</span>
-            <h2 class="section-title">Попробуйте прямо сейчас</h2>
-            <p class="section-subtitle">Бесплатно 2 обработки</p>
-        </div>
-        <div class="tool-wrapper">
-            <div class="upload-zone" id="uploadZone">
-                <div class="upload-icon-big">📸</div>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
-            </div>
-            <div class="settings-panel">
-                <h3>⚙️ Настройки оптимизации</h3>
-                <div class="settings-grid">
-                    <div class="setting-item"><label>Маркетплейс</label><select id="marketplace"><option value="wb">Wildberries (900×1200)</option><option value="ozon">Ozon (900×1200)</option><option value="avito">Avito (1200×900)</option><option value="ym">Я.Маркет (900×1200)</option></select></div>
-                    <div class="setting-item"><label>Качество</label><select id="quality"><option value="high">Высокое</option><option value="medium" selected>Среднее</option><option value="low">Низкое</option></select></div>
-                    <div class="setting-item"><label>Макс. размер</label><select id="maxSize"><option value="100" selected>100 КБ</option><option value="200">200 КБ</option><option value="500">500 КБ</option><option value="1000">1 МБ</option></select></div>
-                    <div class="setting-item" id="formatSetting"><label>Формат <span class="pro-lock">🔒 PRO</span></label><select id="outputFormat" disabled><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
-                    <div class="setting-item" id="watermarkSetting"><label>Водяной знак <span class="pro-lock">🔒 PRO</span></label><input type="text" id="watermarkText" placeholder="Текст" disabled></div>
-                    <div class="setting-item" id="dpiSetting"><label>DPI <span class="pro-lock">🔒 PRO</span></label><select id="dpiValue" disabled><option value="72">72 DPI</option><option value="150">150 DPI</option><option value="300" selected>300 DPI</option></select></div>
-                </div>
-            </div>
-            <div class="action-bar">
-                <div class="status-info"><div class="status-dot" id="statusDot"></div><span id="statusText"></span></div>
-                <button class="btn btn-primary" id="processBtn" disabled>Обработать фото</button>
-            </div>
-            <div class="results-area" id="resultsArea"></div>
-            <button class="btn btn-gold btn-large" id="downloadAllBtn" style="width:100%; margin-top:20px; display:none;">📦 Скачать архивом <span id="zipLock" class="pro-lock">🔒 PRO</span></button>
-        </div>
+<section class="section" id="tool"><div class="section-container">
+  <div class="section-header"><span class="section-label">Инструмент</span><h2 class="section-title">Попробуйте прямо сейчас</h2><p class="section-subtitle">Бесплатно 2 обработки</p></div>
+  <div class="tool-wrapper">
+    <div class="upload-zone" id="uploadZone"><div class="upload-icon-big">📸</div><p>Нажмите или перетащите фото</p></div>
+    <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+    <div class="settings-panel"><h3>⚙️ Настройки оптимизации</h3>
+      <div class="settings-grid">
+        <div class="setting-item"><label>Маркетплейс</label><select id="marketplace"><option value="wb">Wildberries (900×1200)</option><option value="ozon">Ozon (900×1200)</option><option value="avito">Avito (1200×900)</option><option value="ym">Я.Маркет (900×1200)</option></select></div>
+        <div class="setting-item"><label>Качество</label><select id="quality"><option value="high">Высокое</option><option value="medium" selected>Среднее</option><option value="low">Низкое</option></select></div>
+        <div class="setting-item"><label>Макс. размер</label><select id="maxSize"><option value="100" selected>100 КБ</option><option value="200">200 КБ</option><option value="500">500 КБ</option><option value="1000">1 МБ</option></select></div>
+        <div class="setting-item" id="formatSetting"><label>Формат <span class="pro-lock">🔒 PRO</span></label><select id="outputFormat" disabled><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
+        <div class="setting-item" id="watermarkSetting"><label>Водяной знак <span class="pro-lock">🔒 PRO</span></label><input type="text" id="watermarkText" placeholder="Текст" disabled></div>
+        <div class="setting-item" id="dpiSetting"><label>DPI <span class="pro-lock">🔒 PRO</span></label><select id="dpiValue" disabled><option value="72">72</option><option value="150">150</option><option value="300" selected>300</option></select></div>
+      </div>
     </div>
-</section>
+    <div class="action-bar">
+      <div class="status-info"><div class="status-dot" id="statusDot"></div><span id="statusText"></span></div>
+      <button class="btn btn-primary" id="processBtn" disabled>Обработать фото</button>
+    </div>
+    <div class="results-area" id="resultsArea"></div>
+    <button class="btn btn-gold btn-large" id="downloadAllBtn" style="width:100%; margin-top:16px; display:none;">📦 Скачать архивом <span id="zipLock" class="pro-lock">🔒 PRO</span></button>
+  </div>
+</div></section>
 
-<section class="section section-dark" id="pricing">
-    <div class="section-container">
-        <div class="section-header">
-            <span class="section-label">Тарифы</span>
-            <h2 class="section-title">Выберите план</h2>
-        </div>
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <div class="pricing-name">Бесплатный</div>
-                <div class="pricing-desc">Для знакомства</div>
-                <div><span class="price-amount">0₽</span> <span class="price-period">навсегда</span></div>
-                <ul class="pricing-features">
-                    <li><span class="check-icon">✓</span> 2 обработки в месяц</li>
-                    <li><span class="check-icon">✓</span> 1 фото за раз</li>
-                    <li><span class="check-icon">✓</span> Базовые настройки</li>
-                    <li><span class="check-icon">✓</span> Формат JPG</li>
-                </ul>
-                <button class="btn btn-ghost btn-large" style="width:100%;" onclick="scrollToSection('tool')">Начать бесплатно</button>
-            </div>
-            <div class="pricing-card featured">
-                <div class="pricing-badge">⭐ Популярный</div>
-                <div class="pricing-name">PRO</div>
-                <div class="pricing-desc">Для активных селлеров</div>
-                <div><span class="price-amount">1500₽</span> <span class="price-period">/ месяц</span></div>
-                <div class="price-old">Было 2990₽</div>
-                <ul class="pricing-features">
-                    <li><span class="check-icon">✓</span> <strong>Безлимитная обработка</strong></li>
-                    <li><span class="check-icon">✓</span> До 100 фото за раз</li>
-                    <li><span class="check-icon">✓</span> ZIP-архив</li>
-                    <li><span class="check-icon">✓</span> Все настройки</li>
-                    <li><span class="check-icon">✓</span> Водяной знак</li>
-                    <li><span class="check-icon">✓</span> JPG / PNG / WebP</li>
-                    <li><span class="check-icon">✓</span> Настройка DPI</li>
-                    <li><span class="check-icon">✓</span> Личный кабинет</li>
-                </ul>
-                <button class="btn btn-gold btn-large" style="width:100%;" onclick="openPayment()">Активировать PRO</button>
-                <div class="no-autorenew">⚠️ Без автосписаний</div>
-            </div>
-        </div>
+<section class="section section-dark" id="pricing"><div class="section-container">
+  <div class="section-header"><span class="section-label">Тарифы</span><h2 class="section-title">Выберите план</h2></div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-name">Бесплатный</div><div class="pricing-desc">Для знакомства</div>
+      <div><span class="price-amount">0₽</span> <span class="price-period">навсегда</span></div>
+      <ul class="pricing-features"><li><span class="check-icon">✓</span> 2 обработки в месяц</li><li><span class="check-icon">✓</span> 1 фото за раз</li><li><span class="check-icon">✓</span> Базовые настройки</li><li><span class="check-icon">✓</span> Формат JPG</li></ul>
+      <button class="btn btn-ghost btn-large" style="width:100%;" onclick="scrollToSection('tool')">Начать бесплатно</button>
     </div>
-</section>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">⭐ Популярный</div>
+      <div class="pricing-name">PRO</div><div class="pricing-desc">Для активных селлеров</div>
+      <div><span class="price-amount">1500₽</span> <span class="price-period">/ месяц</span></div>
+      <div class="price-old">Было 2990₽</div>
+      <ul class="pricing-features"><li><span class="check-icon">✓</span> <strong>Безлимит</strong></li><li><span class="check-icon">✓</span> До 100 фото за раз</li><li><span class="check-icon">✓</span> ZIP-архив</li><li><span class="check-icon">✓</span> Все настройки</li><li><span class="check-icon">✓</span> Водяной знак</li><li><span class="check-icon">✓</span> JPG / PNG / WebP</li><li><span class="check-icon">✓</span> DPI</li><li><span class="check-icon">✓</span> Личный кабинет</li></ul>
+      <button class="btn btn-gold btn-large" style="width:100%;" onclick="openPayment()">Активировать PRO</button>
+      <div class="no-autorenew">⚠️ Без автосписаний</div>
+    </div>
+  </div>
+</div></section>
 
-<section class="section" id="reviews">
-    <div class="section-container">
-        <div class="section-header">
-            <span class="section-label">Отзывы</span>
-            <h2 class="section-title">Нам доверяют тысячи селлеров</h2>
-        </div>
-        <div class="testimonials-grid">
-            <div id="userReviewsContainer" style="display: contents;"></div>
-            <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Раньше тратила 4 часа на фото. С PhotoBoost — 15 минут. Окупилось в первую неделю!</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1aee031ab-3f13-4083-89bc-aaa477805e45.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Анна Ковалёва</h4><p>Селлер WB</p></div></div></div>
-            <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Лучший инструмент. Фото чёткие, весят копейки. Модерация с первого раза.</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/176646646-d9e5-4960-b0e1-23f3b2eb2aad.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Дмитрий Морозов</h4><p>Ozon-селлер</p></div></div></div>
-            <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Ведём 15 клиентов. PhotoBoost сэкономил ставку контент-менеджера.</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1d8db9857-7f0e-4fd0-8c01-6d2ab3e50fe8.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Елена Соколова</h4><p>MP-агентство</p></div></div></div>
-            <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Новичок на WB, разобралась за 5 минут. Первые 2 фото бесплатно, потом купила PRO.</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1ad69559e-6dc7-4362-913b-3af42eae5f6a.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Мария Петрова</h4><p>Селлер WB</p></div></div></div>
-        </div>
-    </div>
-</section>
+<section class="section" id="reviews"><div class="section-container">
+  <div class="section-header"><span class="section-label">Отзывы</span><h2 class="section-title">Нам доверяют тысячи селлеров</h2></div>
+  <div class="testimonials-grid">
+    <div id="userReviewsContainer" style="display: contents;"></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Раньше тратила 4 часа на фото. С PhotoBoost — 15 минут. Окупилось в первую неделю!</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1aee031ab-3f13-4083-89bc-aaa477805e45.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Анна Ковалёва</h4><p>Селлер WB</p></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Лучший инструмент. Фото чёткие, весят копейки. Модерация с первого раза.</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/176646646-d9e5-4960-b0e1-23f3b2eb2aad.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Дмитрий Морозов</h4><p>Ozon-селлер</p></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Ведём 15 клиентов. PhotoBoost сэкономил ставку контент-менеджера.</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1d8db9857-7f0e-4fd0-8c01-6d2ab3e50fe8.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Елена Соколова</h4><p>MP-агентство</p></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">Новичок на WB, разобралась за 5 минут. Первые 2 фото бесплатно, потом купила PRO.</p><div class="testimonial-author"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1ad69559e-6dc7-4362-913b-3af42eae5f6a.png" class="testimonial-author-photo"><div class="testimonial-author-info"><h4>Мария Петрова</h4><p>Селлер WB</p></div></div></div>
+  </div>
+</div></section>
 
-<section class="section" id="faq" style="background: #faf9ff;">
-    <div class="section-container">
-        <div class="section-header">
-            <span class="section-label">FAQ</span>
-            <h2 class="section-title">Частые вопросы</h2>
-        </div>
-        <div class="faq-list">
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Безопасно ли загружать фото?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Да! Всё происходит в вашем браузере.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Переводом на карту Альфа-Банка или через СБП.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Что в PRO?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Безлимит, пакетная загрузка, ZIP, все настройки.</div></div></div>
-            <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Проблема с оплатой?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Напишите нам в Telegram или ВКонтакте.</div></div></div>
-        </div>
-    </div>
-</section>
+<section class="section" id="faq" style="background:#faf9ff;"><div class="section-container">
+  <div class="section-header"><span class="section-label">FAQ</span><h2 class="section-title">Частые вопросы</h2></div>
+  <div class="faq-list">
+    <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Безопасно ли загружать фото?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Да! Всё происходит в вашем браузере.</div></div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Как оплатить?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Переводом на карту Альфа-Банка или через СБП.</div></div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Что в PRO?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Безлимит, пакетная загрузка, ZIP, все настройки.</div></div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggleFaq(this)"><span>Проблема с оплатой?</span><div class="faq-toggle">+</div></div><div class="faq-answer"><div class="faq-answer-inner">Напишите нам в Telegram или ВКонтакте.</div></div></div>
+  </div>
+</div></section>
 
-<section class="cta-section">
-    <div class="cta-content">
-        <h2>Готовы ускорить работу?</h2>
-        <p>Начните бесплатно — без карты и обязательств.</p>
-        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-            <button class="btn btn-primary btn-large" onclick="scrollToSection('tool')">Начать бесплатно →</button>
-            <button class="btn btn-gold btn-large" onclick="openPayment()">Активировать PRO</button>
-        </div>
-    </div>
-</section>
+<section class="cta-section"><div class="cta-content">
+  <h2>Готовы ускорить работу?</h2>
+  <p>Начните бесплатно — без карты и обязательств.</p>
+  <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+    <button class="btn btn-primary btn-large" onclick="scrollToSection('tool')">Начать бесплатно →</button>
+    <button class="btn btn-gold btn-large" onclick="openPayment()">Активировать PRO</button>
+  </div>
+</div></section>
 
-<footer class="footer">
-    <div class="footer-container">
-        <div><a href="#" class="logo"><div class="logo-icon"></div><div>Photo<span>Boost</span></div></a><p style="margin-top:16px; font-size:0.9rem;">Премиум-инструмент для оптимизации фото маркетплейсов.</p></div>
-        <div class="footer-col"><h4>Продукт</h4><ul><li><a href="#features" onclick="event.preventDefault(); scrollToSection('features')">Возможности</a></li><li><a href="#pricing" onclick="event.preventDefault(); scrollToSection('pricing')">Тарифы</a></li><li><a href="#tool" onclick="event.preventDefault(); scrollToSection('tool')">Инструмент</a></li></ul></div>
-        <div class="footer-col"><h4>Компания</h4><ul><li><a href="#reviews" onclick="event.preventDefault(); scrollToSection('reviews')">Отзывы</a></li><li><a href="#faq" onclick="event.preventDefault(); scrollToSection('faq')">FAQ</a></li></ul></div>
-        <div class="footer-col"><h4>Поддержка</h4><ul><li><a href="https://t.me/PhotoBoosts" target="_blank">Telegram: @PhotoBoosts</a></li><li><a href="https://vk.ru/art_akrilll" target="_blank">ВКонтакте</a></li></ul></div>
-    </div>
-    <div class="footer-bottom"><div>© 2024 PhotoBoost</div><div>Сделано с ❤️</div></div>
-</footer>
+<footer class="footer"><div class="footer-container">
+  <div><a href="./" class="logo"><div class="logo-icon"></div><div>Photo<span>Boost</span></div></a><p style="margin-top:16px; font-size:0.9rem;">Премиум-инструмент для оптимизации фото маркетплейсов.</p></div>
+  <div class="footer-col"><h4>Продукт</h4><ul><li><a href="#features" onclick="event.preventDefault(); scrollToSection('features')">Возможности</a></li><li><a href="#pricing" onclick="event.preventDefault(); scrollToSection('pricing')">Тарифы</a></li><li><a href="#tool" onclick="event.preventDefault(); scrollToSection('tool')">Инструмент</a></li></ul></div>
+  <div class="footer-col"><h4>Компания</h4><ul><li><a href="#reviews" onclick="event.preventDefault(); scrollToSection('reviews')">Отзывы</a></li><li><a href="#faq" onclick="event.preventDefault(); scrollToSection('faq')">FAQ</a></li></ul></div>
+  <div class="footer-col"><h4>Поддержка</h4><ul><li><a href="https://t.me/PhotoBoosts" target="_blank">Telegram: @PhotoBoosts</a></li><li><a href="https://vk.ru/art_akrilll" target="_blank">ВКонтакте</a></li><li><a href="#" onclick="openModal('privacyModal'); return false;">Политика конфиденциальности</a></li><li><a href="#" onclick="openModal('termsModal'); return false;">Условия использования</a></li></ul></div>
+</div>
+<div class="footer-bottom"><div>© 2024 PhotoBoost</div><div>Сделано с ❤️</div></div></footer>
 
 <!-- ВХОД -->
-<div class="modal-overlay" id="loginModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon">🔐</div><h2>Вход</h2><p class="modal-subtitle">Рады видеть вас!</p></div>
-        <div class="modal-body">
-            <div class="oauth-buttons">
-                <button class="oauth-btn" onclick="oauthLogin('yandex')"><div class="oauth-icon yandex">Я</div><span>Войти через Яндекс</span></button>
-                <button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Войти через Google</span></button>
-                <button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Войти через ВК</span></button>
-            </div>
-            <div class="oauth-divider">или через email</div>
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="your@email.com"></div>
-                <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div>
-                <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Войти</button>
-            </form>
-            <div class="form-footer"><a onclick="switchModal('loginModal','resetModal')">Забыли пароль?</a> • <a onclick="switchModal('loginModal','registerModal')">Создать аккаунт</a></div>
-        </div>
+<div class="modal-overlay" id="loginModal"><div class="modal">
+  <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+  <div class="modal-header"><div class="modal-icon">🔐</div><h2>Вход</h2><p class="modal-subtitle">Рады видеть вас!</p></div>
+  <div class="modal-body">
+    <div class="oauth-buttons">
+      <button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Войти через Google</span></button>
+      <button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Войти через ВК</span></button>
     </div>
-</div>
+    <div class="oauth-divider">или через email</div>
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="your@email.com"></div>
+      <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div>
+      <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Войти</button>
+    </form>
+    <div class="form-footer"><a onclick="switchModal('loginModal','resetModal')">Забыли пароль?</a> • <a onclick="switchModal('loginModal','registerModal')">Создать аккаунт</a></div>
+  </div>
+</div></div>
 
 <!-- РЕГИСТРАЦИЯ -->
-<div class="modal-overlay" id="registerModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon">✨</div><h2>Регистрация</h2><p class="modal-subtitle">Присоединяйтесь!</p></div>
-        <div class="modal-body">
-            <div class="oauth-buttons">
-                <button class="oauth-btn" onclick="oauthLogin('yandex')"><div class="oauth-icon yandex">Я</div><span>Через Яндекс</span></button>
-                <button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Через Google</span></button>
-                <button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Через ВК</span></button>
-            </div>
-            <div class="oauth-divider">или стандартная</div>
-            <form onsubmit="handleRegister(event)">
-                <div class="form-group"><label class="form-label">Имя</label><input type="text" class="form-input" id="regName" required placeholder="Иван"></div>
-                <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail" required placeholder="your@email.com"></div>
-                <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="regPassword" required minlength="6" placeholder="Минимум 6 символов"></div>
-                <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Создать аккаунт</button>
-            </form>
-            <div class="form-footer">Есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a></div>
-        </div>
+<div class="modal-overlay" id="registerModal"><div class="modal">
+  <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+  <div class="modal-header"><div class="modal-icon">✨</div><h2>Регистрация</h2><p class="modal-subtitle">Присоединяйтесь!</p></div>
+  <div class="modal-body">
+    <div class="oauth-buttons">
+      <button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Через Google</span></button>
+      <button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Через ВК</span></button>
     </div>
-</div>
+    <div class="oauth-divider">или стандартная</div>
+    <form onsubmit="handleRegister(event)">
+      <div class="form-group"><label class="form-label">Имя</label><input type="text" class="form-input" id="regName" required placeholder="Иван"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail" required placeholder="your@email.com"></div>
+      <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="regPassword" required minlength="6" placeholder="Минимум 6 символов"></div>
+      <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Создать аккаунт</button>
+    </form>
+    <div class="form-footer">Есть аккаунт? <a onclick="switchModal('registerModal','loginModal')">Войти</a></div>
+  </div>
+</div></div>
 
 <!-- СБРОС -->
-<div class="modal-overlay" id="resetModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon">🔑</div><h2>Сброс пароля</h2></div>
-        <div class="modal-body">
-            <div id="resetStep1">
-                <form onsubmit="handleResetStep1(event)">
-                    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required></div>
-                    <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Продолжить</button>
-                </form>
-            </div>
-            <div id="resetStep2" style="display:none;">
-                <form onsubmit="handleResetStep2(event)">
-                    <div class="form-group"><label class="form-label">Новый пароль</label><input type="password" class="form-input" id="newPassword" required minlength="6"></div>
-                    <div class="form-group"><label class="form-label">Повторите</label><input type="password" class="form-input" id="confirmPassword" required minlength="6"></div>
-                    <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Сохранить</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<div class="modal-overlay" id="resetModal"><div class="modal">
+  <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
+  <div class="modal-header"><div class="modal-icon">🔑</div><h2>Сброс пароля</h2></div>
+  <div class="modal-body">
+    <div id="resetStep1"><form onsubmit="handleResetStep1(event)"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required></div><button type="submit" class="btn btn-primary btn-large" style="width:100%;">Продолжить</button></form></div>
+    <div id="resetStep2" style="display:none;"><form onsubmit="handleResetStep2(event)"><div class="form-group"><label class="form-label">Новый пароль</label><input type="password" class="form-input" id="newPassword" required minlength="6"></div><div class="form-group"><label class="form-label">Повторите</label><input type="password" class="form-input" id="confirmPassword" required minlength="6"></div><button type="submit" class="btn btn-primary btn-large" style="width:100%;">Сохранить</button></form></div>
+  </div>
+</div></div>
 
 <!-- ОПЛАТА -->
-<div class="modal-overlay" id="paymentModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
-        <div class="modal-header"><div class="modal-icon gold">💎</div><h2>Оплата PRO-подписки</h2><p class="modal-subtitle">1500 ₽ / месяц • без автосписаний</p></div>
-        <div class="modal-body">
-            <div style="background: #f8fafc; padding: 20px; border-radius: 12px; margin-bottom: 16px;">
-                <p style="font-weight: 600; margin-bottom: 14px;">💳 Реквизиты для перевода:</p>
-                <div style="margin-bottom: 10px;"><span style="color: var(--text-muted); font-size: 0.85rem;">Банк:</span> <strong>Альфа-Банк Республики Беларусь</strong></div>
-                <div style="margin-bottom: 10px;"><span style="color: var(--text-muted); font-size: 0.85rem;">Карта:</span> <strong style="font-family: monospace; font-size: 1.1rem;">9112 3810 1954 7066</strong></div>
-                <div style="margin-bottom: 10px;"><span style="color: var(--text-muted); font-size: 0.85rem;">Держатель:</span> <strong>KRYSTSINA STRYHA</strong></div>
-                <div><span style="color: var(--text-muted); font-size: 0.85rem;">Срок:</span> <strong>02/31</strong></div>
-                <div class="sber-notice"><strong>📌 Для Сбербанка:</strong> в разделе стран для отправления выбирайте «Другая страна» и там уже Беларусь.</div>
-            </div>
-            <div class="receipt-box"><p>⚠️ Обязательно сохраните чек об оплате! Он понадобится для получения кода активации.</p></div>
-
-            <!-- КНОПКА Я ОПЛАТИЛ -->
-            <button id="paidBtn" class="btn btn-primary btn-large" style="width:100%;" onclick="markPaid()">✅ Я оплатил(а)</button>
-
-            <!-- КОНТАКТЫ (появляются после "Я оплатил") -->
-            <div id="paymentContacts" style="display:none;">
-                <div style="background: #eff6ff; padding: 16px; border-radius: 12px; margin-bottom: 16px;">
-                    <p style="font-size: 0.95rem; color: #1e40af; margin: 0; line-height: 1.6;">📲 Отлично! Теперь напишите нам, <strong>прикрепите чек</strong> — и в ответ получите персональный код активации PRO на 1 месяц.</p>
-                </div>
-                <div class="contact-buttons">
-                    <a href="https://t.me/PhotoBoosts" target="_blank" class="btn btn-primary" style="text-decoration: none;">✈️ Написать в Telegram</a>
-                    <a href="https://vk.ru/art_akrilll" target="_blank" class="btn btn-secondary" style="text-decoration: none;">💬 Написать ВКонтакте</a>
-                </div>
-                <p style="text-align:center; font-size: 0.85rem; color: var(--text-muted);">После получения кода введите его в личном кабинете → вкладка «Подписка»</p>
-            </div>
-        </div>
+<div class="modal-overlay" id="paymentModal"><div class="modal">
+  <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
+  <div class="modal-header"><div class="modal-icon gold">💎</div><h2>Оплата PRO-подписки</h2><p class="modal-subtitle">1500 ₽ / месяц • без автосписаний</p></div>
+  <div class="modal-body">
+    <div style="background:#f8fafc; padding:20px; border-radius:12px; margin-bottom:16px;">
+      <p style="font-weight:600; margin-bottom:14px;">💳 Реквизиты для перевода:</p>
+      <div style="margin-bottom:10px;"><span style="color:var(--text-muted); font-size:0.85rem;">Банк:</span> <strong>Альфа-Банк Республики Беларусь</strong></div>
+      <div style="margin-bottom:10px;"><span style="color:var(--text-muted); font-size:0.85rem;">Карта:</span> <strong style="font-family:monospace; font-size:1.1rem;">9112 3810 1954 7066</strong></div>
+      <div style="margin-bottom:10px;"><span style="color:var(--text-muted); font-size:0.85rem;">Держатель:</span> <strong>KRYSTSINA STRYHA</strong></div>
+      <div><span style="color:var(--text-muted); font-size:0.85rem;">Срок:</span> <strong>02/31</strong></div>
+      <div class="sber-notice"><strong>📌 Для Сбербанка:</strong> в разделе стран выбирайте «Другая страна» и там уже Беларусь.</div>
     </div>
-</div>
+    <div class="receipt-box"><p>⚠️ Обязательно сохраните чек об оплате!</p></div>
+    <button id="paidBtn" class="btn btn-primary btn-large" style="width:100%;" onclick="markPaid()">✅ Я оплатил(а)</button>
+    <div id="paymentContacts" style="display:none;">
+      <div style="background:#eff6ff; padding:16px; border-radius:12px; margin-bottom:16px;"><p style="font-size:0.95rem; color:#1e40af; margin:0;">📲 Напишите нам, прикрепите чек — и получите код активации PRO.</p></div>
+      <div class="contact-buttons">
+        <a href="https://t.me/PhotoBoosts" target="_blank" class="btn btn-primary" style="text-decoration:none;">✈️ Написать в Telegram</a>
+        <a href="https://vk.ru/art_akrilll" target="_blank" class="btn btn-secondary" style="text-decoration:none;">💬 Написать ВКонтакте</a>
+      </div>
+      <p style="text-align:center; font-size:0.85rem; color:var(--text-muted);">Код вводится в личном кабинете → «Подписка»</p>
+    </div>
+  </div>
+</div></div>
+
+<!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
+<div class="modal-overlay" id="privacyModal"><div class="modal" style="max-width: 700px;">
+  <button class="modal-close" onclick="closeModal('privacyModal')">✕</button>
+  <div class="modal-header"><h2>Политика конфиденциальности</h2></div>
+  <div class="modal-body" style="text-align: left; font-size: 0.95rem; line-height: 1.6;">
+    <p>Сервис PhotoBoost уважает вашу приватность. Мы обрабатываем только имя и email для создания аккаунта. Все фотографии обрабатываются локально в вашем браузере и не загружаются на наши серверы.</p>
+    <h3 style="margin-top: 16px;">1. Сбор данных</h3>
+    <p>Мы собираем только те данные, которые вы предоставляете при регистрации (имя, email). История обработок хранится локально в вашем браузере (localStorage).</p>
+    <h3 style="margin-top: 16px;">2. Использование данных</h3>
+    <p>Данные используются исключительно для работы сервиса: создание аккаунта, активация подписки и техническая поддержка.</p>
+    <h3 style="margin-top: 16px;">3. Ваши права</h3>
+    <p>Вы можете в любой момент удалить аккаунт и очистить локальные данные через настройки браузера.</p>
+  </div>
+</div></div>
+
+<!-- УСЛОВИЯ ИСПОЛЬЗОВАНИЯ -->
+<div class="modal-overlay" id="termsModal"><div class="modal" style="max-width: 700px;">
+  <button class="modal-close" onclick="closeModal('termsModal')">✕</button>
+  <div class="modal-header"><h2>Условия использования</h2></div>
+  <div class="modal-body" style="text-align: left; font-size: 0.95rem; line-height: 1.6;">
+    <p>Используя сервис PhotoBoost, вы соглашаетесь с настоящими условиями.</p>
+    <h3 style="margin-top: 16px;">1. О сервисе</h3>
+    <p>PhotoBoost — это инструмент для оптимизации изображений, работающий локально в браузере.</p>
+    <h3 style="margin-top: 16px;">2. Тарифы и оплата</h3>
+    <p>Доступен бесплатный тариф (2 обработки) и платный PRO (1500 ₽ / месяц). Оплата производится переводом по реквизитам. PRO-подписка активируется персональным кодом после подтверждения оплаты. Автосписания отсутствуют.</p>
+    <h3 style="margin-top: 16px;">3. Ответственность</h3>
+    <p>Вы гарантируете, что загружаемые изображения принадлежат вам и не нарушают права третьих лиц. Сервис предоставляется «как есть».</p>
+  </div>
+</div></div>
 
 <canvas id="canvas" style="display:none;"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="common.js"></script>
-<script src="index.js"></script>
+<script>
+// ===== OAUTH (реальные ключи) =====
+const OAUTH_CONFIG = {
+  google: { clientId: '938930174463-le06589paorc08mic9lcqc7rudqcmumv.apps.googleusercontent.com', name: 'Google' },
+  vk: { clientId: '54754760', name: 'ВКонтакте' }
+};
+
+let state = { user: JSON.parse(localStorage.getItem('pbUser')) || null, data: null, selectedFiles: [], processedFiles: [] };
+const PRO_F = { maxBatchSize: 100 }; const FREE_F = { maxBatchSize: 1 };
+function getFeatures() { return (state.data && state.data.isPro) ? PRO_F : FREE_F; }
+function dataKey() { return 'pbData_' + (state.user ? state.user.email : 'guest'); }
+function loadUserData() {
+  const def = { history: [], freeUsage: 2, totalProcessed: 0, totalSaved: 0, isPro: false, proExpiry: null, paidClicked: false, usedCodes: [] };
+  state.data = Object.assign(def, JSON.parse(localStorage.getItem(dataKey()) || 'null') || {});
+  if (state.data.proExpiry && new Date(state.data.proExpiry) < new Date()) { state.data.isPro = false; saveUserData(); }
+}
+function saveUserData() { if (state.data) localStorage.setItem(dataKey(), JSON.stringify(state.data)); }
+function formatDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('ru-RU'); }
+
+// ===== МЕНЮ =====
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+function scrollToSection(id) { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' }); }
+function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; } }
+function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('active'); document.body.style.overflow = ''; } }
+function switchModal(a, b) { closeModal(a); setTimeout(() => openModal(b), 200); }
+function toggleFaq(el) { const item = el.parentElement; const was = item.classList.contains('active'); document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active')); if (!was) item.classList.add('active'); }
+
+// ===== НАВИГАЦИЯ =====
+function updateNav() {
+  const a = document.getElementById('navActions');
+  if (state.user) a.innerHTML = '<div class="user-badge" onclick="location.href=\'dashboard/\'"><div class="user-avatar">' + state.user.name.charAt(0).toUpperCase() + '</div><div class="user-name">' + state.user.name.split(' ')[0] + '</div></div>';
+  else a.innerHTML = '<button class="btn btn-ghost" onclick="openModal(\'loginModal\')">Войти</button><button class="btn btn-primary" onclick="openModal(\'registerModal\')">Регистрация</button>';
+}
+
+// ===== OAUTH =====
+function oauthLogin(p) {
+  const cfg = OAUTH_CONFIG[p];
+  if (!cfg || !cfg.clientId) { alert('Вход через ' + (cfg ? cfg.name : 'этот сервис') + ' сейчас настраивается.\nИспользуйте регистрацию через email.'); return; }
+  const r = encodeURIComponent(location.origin + location.pathname);
+  let u = '';
+  if (p === 'vk') u = 'https://oauth.vk.com/authorize?client_id=' + cfg.clientId + '&display=page&redirect_uri=' + r + '&response_type=token&scope=email&state=' + p;
+  if (p === 'google') u = 'https://accounts.google.com/o/oauth2/auth?response_type=token&client_id=' + cfg.clientId + '&redirect_uri=' + r + '&scope=email%20profile&state=' + p;
+  if (u) location.href = u;
+}
+function checkOAuthReturn() {
+  const h = location.hash.replace('#', ''); if (!h) return;
+  const pr = new URLSearchParams(h); const token = pr.get('access_token'); const provider = pr.get('state');
+  if (!token || !provider) return;
+  history.replaceState(null, '', location.pathname);
+  let f;
+  if (provider === 'google') f = fetch('https://www.googleapis.com/oauth2/v3/userinfo?access_token=' + token).then(r => r.json()).then(j => ({ email: j.email, name: j.name || 'Пользователь' }));
+  else if (provider === 'vk') f = fetch('https://api.vk.com/method/users.get?access_token=' + token + '&v=5.131').then(r => r.json()).then(j => { const u = j.response && j.response[0]; return { email: j.email || ('vk_' + (u ? u.id : Date.now()) + '@vk.com'), name: u ? u.first_name + ' ' + u.last_name : 'Пользователь ВК' }; });
+  if (f) { f.then(info => { if (!info.email) return; oauthCreateOrLogin(info.email, info.name); }).catch(() => alert('Ошибка входа')); }
+}
+function oauthCreateOrLogin(email, name) {
+  const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+  let user = users.find(u => u.email === email);
+  if (!user) { user = { name, email, password: '', registeredAt: new Date().toISOString() }; users.push(user); localStorage.setItem('pbUsers', JSON.stringify(users)); }
+  state.user = user; localStorage.setItem('pbUser', JSON.stringify(user)); loadUserData();
+  updateNav(); updateUI(); alert('✅ Добро пожаловать, ' + user.name + '!');
+}
+
+// ===== РЕГИСТРАЦИЯ / ВХОД =====
+function handleRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value, email = document.getElementById('regEmail').value, password = document.getElementById('regPassword').value;
+  const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+  if (users.find(u => u.email === email)) { alert('Пользователь уже существует'); return; }
+  const nu = { name, email, password, registeredAt: new Date().toISOString() };
+  users.push(nu); localStorage.setItem('pbUsers', JSON.stringify(users)); localStorage.setItem('pbUser', JSON.stringify(nu));
+  state.user = nu;
+  state.data = { history: [], freeUsage: 2, totalProcessed: 0, totalSaved: 0, isPro: false, proExpiry: null, paidClicked: false, usedCodes: [] };
+  saveUserData(); closeModal('registerModal'); updateNav(); updateUI();
+  alert('✅ Аккаунт создан! Добро пожаловать, ' + name + '!');
+}
+function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value;
+  const user = (JSON.parse(localStorage.getItem('pbUsers') || '[]')).find(u => u.email === email && u.password === password);
+  if (user) { state.user = user; localStorage.setItem('pbUser', JSON.stringify(user)); loadUserData(); closeModal('loginModal'); updateNav(); updateUI(); }
+  else alert('Неверный email или пароль');
+}
+function handleResetStep1(e) { e.preventDefault(); if ((JSON.parse(localStorage.getItem('pbUsers') || '[]')).find(u => u.email === document.getElementById('resetEmail').value)) { document.getElementById('resetStep1').style.display = 'none'; document.getElementById('resetStep2').style.display = 'block'; } else alert('Пользователь не найден'); }
+function handleResetStep2(e) { e.preventDefault(); if (document.getElementById('newPassword').value !== document.getElementById('confirmPassword').value) { alert('Пароли не совпадают'); return; } const users = JSON.parse(localStorage.getItem('pbUsers') || '[]'); const u = users.find(x => x.email === document.getElementById('resetEmail').value); if (u) { u.password = document.getElementById('newPassword').value; localStorage.setItem('pbUsers', JSON.stringify(users)); } alert('Пароль изменён!'); closeModal('resetModal'); }
+
+// ===== ОПЛАТА =====
+function openPayment() {
+  if (!state.user) { alert('Зарегистрируйтесь, чтобы купить PRO'); openModal('registerModal'); return; }
+  const paid = state.data.paidClicked;
+  document.getElementById('paidBtn').style.display = paid ? 'none' : 'block';
+  document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
+  openModal('paymentModal');
+}
+function markPaid() { state.data.paidClicked = true; saveUserData(); document.getElementById('paidBtn').style.display = 'none'; document.getElementById('paymentContacts').style.display = 'block'; }
+function activateByCode() {
+  const input = document.getElementById('activationCodeInput'); if (!input) return;
+  const code = input.value.trim().toUpperCase();
+  if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { alert('❌ Формат: WB-A1B2-C3D4'); return; }
+  const valid = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+  if (valid.length > 0 && !valid.includes(code)) { alert('❌ Код не найден'); return; }
+  if (valid.length > 0) localStorage.setItem('pbValidCodes', JSON.stringify(valid.filter(c => c !== code)));
+  if (state.data.usedCodes.includes(code)) { alert('❌ Код уже использован'); return; }
+  state.data.usedCodes.push(code); state.data.isPro = true;
+  const exp = new Date(); exp.setMonth(exp.getMonth() + 1); state.data.proExpiry = exp.toISOString();
+  saveUserData(); input.value = ''; updateUI();
+  alert('🎉 PRO активирована до ' + formatDate(state.data.proExpiry) + '!');
+}
+
+// ===== UI =====
+function updateUI() {
+  const isPro = state.data.isPro;
+  document.getElementById('statusDot').classList.toggle('active', isPro);
+  document.getElementById('statusText').innerHTML = isPro ? '<strong style="color:#10b981;">⭐ PRO</strong> — безлимит' : 'Бесплатно: <strong>' + state.data.freeUsage + '</strong> фото';
+  document.getElementById('zipLock').style.display = isPro ? 'none' : 'inline';
+  ['formatSetting','watermarkSetting','dpiSetting'].forEach(id => { const el = document.getElementById(id); const inp = el.querySelector('select,input'); if (isPro) { el.classList.remove('disabled'); inp.disabled = false; } else { el.classList.add('disabled'); inp.disabled = true; } });
+  document.getElementById('processBtn').disabled = state.selectedFiles.length === 0 || (!isPro && state.data.freeUsage <= 0);
+}
+
+// ===== ИНСТРУМЕНТ =====
+const zone = document.getElementById('uploadZone'); const fileInput = document.getElementById('fileInput');
+zone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+function handleFiles(files) {
+  const max = getFeatures().maxBatchSize;
+  const all = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!all.length) return;
+  if (all.length > max) { alert('Максимум ' + max + ' фото'); state.selectedFiles = all.slice(0, max); } else state.selectedFiles = all;
+  zone.innerHTML = '<div class="upload-icon-big">✓</div><h3>Выбрано: ' + state.selectedFiles.length + '</h3>';
+  updateUI();
+}
+document.getElementById('processBtn').addEventListener('click', async () => {
+  if (!state.selectedFiles.length) return;
+  if (!state.data.isPro && state.data.freeUsage <= 0) { openPayment(); return; }
+  const btn = document.getElementById('processBtn'); btn.disabled = true; btn.textContent = 'Обработка...';
+  document.getElementById('resultsArea').innerHTML = ''; state.processedFiles = [];
+  const s = { marketplace: document.getElementById('marketplace').value, quality: document.getElementById('quality').value, maxSize: parseInt(document.getElementById('maxSize').value), outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg', watermark: state.data.isPro ? document.getElementById('watermarkText').value : '' };
+  for (const f of state.selectedFiles) { const r = await processImage(f, s); state.processedFiles.push(r); displayResult(r, state.processedFiles.length - 1); state.data.history.unshift({ name: f.name, date: new Date().toISOString(), optimizedSize: r.optimizedSize, thumbnail: r.optimizedData, data: r.optimizedData }); }
+  if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
+  state.data.totalProcessed += state.selectedFiles.length;
+  saveUserData(); btn.disabled = false; btn.textContent = 'Обработать фото';
+  if (state.processedFiles.length > 1) document.getElementById('downloadAllBtn').style.display = 'block';
+  updateUI();
+});
+function processImage(file, s) {
+  return new Promise(res => { const rd = new FileReader(); rd.onload = ev => { const img = new Image(); img.onload = () => {
+    let W = 900, H = 1200; if (s.marketplace === 'avito') { W = 1200; H = 900; }
+    const c = document.getElementById('canvas'); c.width = W; c.height = H;
+    const ctx = c.getContext('2d'); const sc = Math.max(W / img.width, H / img.height);
+    ctx.drawImage(img, (W/2)-(img.width/2)*sc, (H/2)-(img.height/2)*sc, img.width*sc, img.height*sc);
+    if (s.watermark) { ctx.font = 'bold 24px Arial'; ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(s.watermark, W-20, H-20); }
+    let q = s.quality === 'high' ? 0.9 : s.quality === 'low' ? 0.5 : 0.7;
+    let mime = 'image/jpeg', ext = 'jpg';
+    if (s.outputFormat === 'png') { mime = 'image/png'; ext = 'png'; } else if (s.outputFormat === 'webp') { mime = 'image/webp'; ext = 'webp'; }
+    let url = c.toDataURL(mime, q); let size = url.length * 0.75;
+    while (size > s.maxSize * 1024 && q > 0.1 && ext !== 'png') { q -= 0.05; url = c.toDataURL(mime, q); size = url.length * 0.75; }
+    res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext });
+  }; img.src = ev.target.result; }; rd.readAsDataURL(file); });
+}
+function displayResult(r, i) {
+  const sv = ((1 - r.optimizedSize / r.originalSize) * 100).toFixed(1);
+  const d = document.createElement('div'); d.className = 'result-item';
+  d.innerHTML = '<img src="' + r.optimizedData + '" class="result-preview"><div class="result-info"><h4>' + r.originalName + '</h4><div class="result-metrics"><div><div class="metric-label">Размер</div><div class="metric-value">' + (r.originalSize/1024).toFixed(1) + ' → ' + (r.optimizedSize/1024).toFixed(1) + ' КБ</div></div><div><div class="metric-label">Сжатие</div><div class="metric-value">-' + sv + '%</div></div></div></div><button class="btn btn-primary" onclick="downloadFile(' + i + ')">Скачать</button>';
+  document.getElementById('resultsArea').appendChild(d);
+}
+function downloadFile(i) { const r = state.processedFiles[i]; const a = document.createElement('a'); a.download = 'optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '.' + r.ext; a.href = r.optimizedData; a.click(); }
+document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+  if (!state.data.isPro) { openPayment(); return; }
+  const zip = new JSZip();
+  state.processedFiles.forEach((r, i) => zip.file('optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '_' + (i+1) + '.' + r.ext, r.optimizedData.split(',')[1], { base64: true }));
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a'); a.download = 'photoboost.zip'; a.href = URL.createObjectURL(blob); a.click();
+});
+
+// ===== ОТЗЫВЫ =====
+function renderUserReviews() {
+  const c = document.getElementById('userReviewsContainer'); const rv = JSON.parse(localStorage.getItem('pbUserReviews') || '[]');
+  if (!rv.length) { c.innerHTML = ''; return; }
+  c.innerHTML = rv.map(r => '<div class="testimonial-card"><div class="stars">' + '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) + '</div><p class="testimonial-text">' + r.text + '</p><div class="testimonial-author"><div class="testimonial-author-photo" style="background:var(--gradient-purple); display:flex; align-items:center; justify-content:center; color:white; font-weight:700;">' + r.name.charAt(0).toUpperCase() + '</div><div class="testimonial-author-info"><h4>' + r.name + '</h4><p>' + (r.position || 'Пользователь') + '</p></div></div></div>').join('');
+}
+
+// ===== ЗАПУСК =====
+loadUserData(); checkOAuthReturn();
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) { o.classList.remove('active'); document.body.style.overflow = ''; } }));
+updateNav(); updateUI(); renderUserReviews();
+</script>
 </body>
 </html>
