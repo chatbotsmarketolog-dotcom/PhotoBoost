@@ -380,11 +380,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
 <div class="modal-header"><div class="modal-icon">🔐</div><h2>Вход</h2><p class="modal-subtitle">Рады видеть вас!</p></div>
 <div class="modal-body">
-<div class="oauth-buttons">
-<button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Войти через Google</span></button>
-<button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Войти через ВК</span></button>
-</div>
-<div class="oauth-divider">или через email</div>
 <form onsubmit="handleLogin(event)">
 <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="your@email.com"></div>
 <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div>
@@ -398,11 +393,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
 <div class="modal-header"><div class="modal-icon">✨</div><h2>Регистрация</h2><p class="modal-subtitle">Присоединяйтесь!</p></div>
 <div class="modal-body">
-<div class="oauth-buttons">
-<button class="oauth-btn" onclick="oauthLogin('google')"><div class="oauth-icon google">G</div><span>Через Google</span></button>
-<button class="oauth-btn" onclick="oauthLogin('vk')"><div class="oauth-icon vk">VK</div><span>Через ВК</span></button>
-</div>
-<div class="oauth-divider">или стандартная</div>
 <form onsubmit="handleRegister(event)">
 <div class="form-group"><label class="form-label">Имя</label><input type="text" class="form-input" id="regName" required placeholder="Иван"></div>
 <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail" required placeholder="your@email.com"></div>
