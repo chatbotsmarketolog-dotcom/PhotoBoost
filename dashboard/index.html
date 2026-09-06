@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Личный кабинет — PhotoBoost</title>
-<!-- Подключаем JSZip сразу, чтобы архивы скачивались мгновенно -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -47,20 +46,46 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .code-input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1.1rem; text-transform: uppercase; text-align: center; font-weight: 700; letter-spacing: 2px; margin-bottom: 12px; font-family: inherit; }
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
-/* Адаптация под телефоны */
+/* Инструмент */
+.upload-zone { border: 2px dashed #cbd5e1; border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; background: #faf9ff; margin-bottom: 20px; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.upload-zone:hover { border-color: var(--primary); background: #f3f0ff; }
+.settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.setting-item label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; }
+.setting-item select, .setting-item input[type="text"] { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; background: white; font-family: inherit; }
+.setting-item.disabled { opacity: 0.5; pointer-events: none; }
+.pro-lock { font-size: 0.7rem; color: var(--gold); font-weight: 600; margin-left: 4px; }
+.result-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #faf9ff; border-radius: 10px; margin-bottom: 8px; border: 1px solid #e2e8f0; }
+.result-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.result-info { flex: 1; min-width: 0; }
+.result-info div:first-child { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.result-info div:last-child { font-size: 0.8rem; color: var(--success); }
+/* Отзывы */
+.review-form { background: #faf9ff; padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+.review-form label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; }
+.review-form input, .review-form textarea { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.9rem; background: white; font-family: inherit; margin-bottom: 12px; }
+.review-form textarea { min-height: 100px; resize: vertical; }
+.star-rating { display: flex; gap: 4px; margin-bottom: 12px; }
+.star-rating .star { font-size: 1.8rem; cursor: pointer; color: #e2e8f0; transition: 0.2s; }
+.star-rating .star.active { color: var(--gold); }
+.review-item { background: #faf9ff; padding: 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #e2e8f0; position: relative; }
+.review-item .stars { color: var(--gold); margin-bottom: 8px; }
+.review-item .text { font-size: 0.9rem; margin-bottom: 8px; }
+.review-item .meta { font-size: 0.8rem; color: var(--text-muted); }
+.review-item .delete-btn { position: absolute; top: 12px; right: 12px; background: rgba(239,68,68,0.1); color: var(--danger); border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
+.review-item .delete-btn:hover { background: var(--danger); color: white; }
 @media (max-width: 640px) {
   .container { padding: 90px 16px 30px; }
   .card { padding: 20px; }
-  .history-item { flex-wrap: wrap; }
-  .history-item .btn { width: 100%; margin-top: 8px; }
+  .history-item, .result-item { flex-wrap: wrap; }
+  .history-item .btn, .result-item .btn { width: 100%; margin-top: 8px; }
   .info-row { flex-direction: column; gap: 4px; }
+  .settings-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 <nav class="nav">
   <div class="nav-container">
-    <!-- Ссылка "../" ведёт в корень сайта (чистый URL) -->
     <a href="../" class="logo">📸 Photo<span>Boost</span></a>
     <button class="btn btn-ghost" onclick="handleLogout()">← На сайт</button>
   </div>
@@ -70,29 +95,94 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <h1 style="margin-bottom:24px;">Личный кабинет</h1>
 
   <div class="dash-tabs">
-    <button class="dash-tab active" onclick="switchTab('subscription', this)">📋 Подписка</button>
+    <button class="dash-tab active" onclick="switchTab('tool', this)">🛠️ Инструмент</button>
+    <button class="dash-tab" onclick="switchTab('subscription', this)">📋 Подписка</button>
     <button class="dash-tab" onclick="switchTab('history', this)">🖼️ История</button>
+    <button class="dash-tab" onclick="switchTab('review', this)">⭐ Отзывы</button>
     <button class="dash-tab" onclick="switchTab('profile', this)">👤 Профиль</button>
   </div>
 
+  <!-- ВКЛАДКА ИНСТРУМЕНТ -->
+  <div class="dash-content active" id="tab-tool">
+    <div class="card">
+      <div class="upload-zone" id="uploadZone">
+        <div style="font-size:2.5rem; margin-bottom:10px;">📸</div>
+        <p>Нажмите или перетащите фото</p>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+      <div class="settings-grid">
+        <div class="setting-item">
+          <label>Маркетплейс</label>
+          <select id="marketplace">
+            <option value="wb">Wildberries (900×1200)</option>
+            <option value="ozon">Ozon (900×1200)</option>
+            <option value="avito">Avito (1200×900)</option>
+            <option value="ym">Я.Маркет (900×1200)</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Качество</label>
+          <select id="quality">
+            <option value="high">Высокое</option>
+            <option value="medium" selected>Среднее</option>
+            <option value="low">Низкое</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Макс. размер</label>
+          <select id="maxSize">
+            <option value="100" selected>100 КБ</option>
+            <option value="200">200 КБ</option>
+            <option value="500">500 КБ</option>
+            <option value="1000">1 МБ</option>
+          </select>
+        </div>
+        <div class="setting-item" id="formatSetting">
+          <label>Формат <span class="pro-lock">🔒 PRO</span></label>
+          <select id="outputFormat" disabled>
+            <option value="jpg">JPG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </div>
+        <div class="setting-item" id="watermarkSetting">
+          <label>Водяной знак <span class="pro-lock">🔒 PRO</span></label>
+          <input type="text" id="watermarkText" placeholder="Текст" disabled>
+        </div>
+        <div class="setting-item" id="dpiSetting">
+          <label>DPI <span class="pro-lock">🔒 PRO</span></label>
+          <select id="dpiValue" disabled>
+            <option value="72">72</option>
+            <option value="150">150</option>
+            <option value="300" selected>300</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:#faf9ff; border-radius:12px; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+        <div id="statusText" style="font-weight:600;">Бесплатно: <strong>2</strong> фото</div>
+        <button class="btn btn-primary" id="processBtn" disabled>Обработать фото</button>
+      </div>
+      <div id="resultsArea"></div>
+      <button class="btn btn-gold" id="downloadAllBtn" style="width:100%; margin-top:16px; display:none;">📦 Скачать архивом</button>
+    </div>
+  </div>
+
   <!-- ВКЛАДКА ПОДПИСКА -->
-  <div class="dash-content active" id="tab-subscription">
+  <div class="dash-content" id="tab-subscription">
     <div id="activateCodeBox" class="code-box" style="display:none;">
       <h3 style="margin-bottom:12px; color:var(--primary);">🔑 Активация PRO-подписки</h3>
       <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">Введите код, полученный после оплаты</p>
       <input type="text" class="code-input" id="activationCode" placeholder="WB-XXXX-XXXX">
       <button class="btn btn-primary" style="width:100%" onclick="activateByCode()">Активировать</button>
     </div>
-
     <div class="card" id="subCard">
       <h3 id="subTitle" style="margin-bottom:16px;">Бесплатный тариф</h3>
       <div class="info-row"><span class="info-label">Статус</span><span class="info-value" id="dashStatus">Free</span></div>
       <div class="info-row"><span class="info-label">Осталось обработок</span><span class="info-value" id="dashRemaining">2</span></div>
       <div class="info-row"><span class="info-label">Всего обработано</span><span class="info-value" id="dashProcessed">0</span></div>
     </div>
-
     <button id="buyProBtn" class="btn btn-gold" style="width:100%;" onclick="openPayment()">Купить PRO за 1500 ₽</button>
-    <button id="renewProBtn" class="btn btn-gold" style="width:100%; display:none;" onclick="openPayment()">Продлить PRO</div>
+    <button id="renewProBtn" class="btn btn-gold" style="width:100%; display:none;" onclick="openPayment()">Продлить PRO</button>
   </div>
 
   <!-- ВКЛАДКА ИСТОРИЯ -->
@@ -102,6 +192,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <button class="btn btn-danger" onclick="clearHistory()">🗑️ Очистить историю</button>
     </div>
     <div id="historyList"></div>
+  </div>
+
+  <!-- ВКЛАДКА ОТЗЫВЫ -->
+  <div class="dash-content" id="tab-review">
+    <div class="review-form">
+      <h3 style="margin-bottom:16px;">⭐ Оставить отзыв</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Ваш отзыв появится на главной странице сайта. Фото из профиля будет использовано как аватар.</p>
+      <div class="star-rating" id="starRating">
+        <span class="star" data-value="1" onclick="setRating(1)">★</span>
+        <span class="star" data-value="2" onclick="setRating(2)">★</span>
+        <span class="star" data-value="3" onclick="setRating(3)">★</span>
+        <span class="star" data-value="4" onclick="setRating(4)">★</span>
+        <span class="star" data-value="5" onclick="setRating(5)">★</span>
+      </div>
+      <label>Должность / род деятельности</label>
+      <input type="text" id="reviewPosition" placeholder="Например: Селлер WB, 150+ SKU">
+      <label>Текст отзыва *</label>
+      <textarea id="reviewText" placeholder="Расскажите о вашем опыте..." minlength="20" maxlength="1000"></textarea>
+      <div style="font-size:0.8rem; color:var(--text-muted); text-align:right; margin-bottom:12px;"><span id="reviewCharCount">0</span>/1000</div>
+      <button class="btn btn-primary" style="width:100%;" onclick="submitReview()">🚀 Опубликовать отзыв</button>
+    </div>
+    <h3 style="margin-bottom:12px;">📝 Ваши отзывы</h3>
+    <div id="myReviewsList"></div>
   </div>
 
   <!-- ВКЛАДКА ПРОФИЛЬ -->
@@ -142,11 +255,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
+<canvas id="canvas" style="display:none;"></canvas>
+
 <script>
-// ===== УНИФИЦИРОВАННОЕ СОСТОЯНИЕ (как в index.html) =====
 let state = {
   user: JSON.parse(localStorage.getItem('pbUser')) || null,
-  data: null
+  data: null,
+  selectedFiles: [],
+  processedFiles: [],
+  reviewRating: 5
 };
 
 function dataKey() { return 'pbData_' + (state.user ? state.user.email : 'guest'); }
@@ -164,7 +281,6 @@ function saveUserData() {
   if (state.data) localStorage.setItem(dataKey(), JSON.stringify(state.data)); 
 }
 
-// Защита: если не вошёл, кидаем на главную
 if (!state.user) location.href = '../';
 loadUserData();
 
@@ -176,15 +292,137 @@ function switchTab(tab, btn) {
   if (tab === 'history') renderHistory();
   if (tab === 'profile') renderProfile();
   if (tab === 'subscription') renderSubscription();
+  if (tab === 'review') renderMyReviews();
 }
 
+// ===== ИНСТРУМЕНТ =====
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+uploadZone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  const max = state.data.isPro ? 100 : 1;
+  const all = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!all.length) return;
+  if (all.length > max) { alert('Максимум ' + max + ' фото'); state.selectedFiles = all.slice(0, max); } 
+  else state.selectedFiles = all;
+  uploadZone.innerHTML = '<div style="font-size:2rem;">✓</div><h3>Выбрано: ' + state.selectedFiles.length + '</h3>';
+  updateUI();
+}
+
+function updateUI() {
+  const isPro = state.data.isPro;
+  const statusText = document.getElementById('statusText');
+  const processBtn = document.getElementById('processBtn');
+  statusText.innerHTML = isPro ? '<strong style="color:#10b981;">⭐ PRO</strong> — безлимит' : 'Бесплатно: <strong>' + state.data.freeUsage + '</strong> фото';
+  ['formatSetting','watermarkSetting','dpiSetting'].forEach(id => { 
+    const el = document.getElementById(id); 
+    const inp = el.querySelector('select,input'); 
+    if (isPro) { el.classList.remove('disabled'); inp.disabled = false; } 
+    else { el.classList.add('disabled'); inp.disabled = true; } 
+  });
+  processBtn.disabled = state.selectedFiles.length === 0 || (!isPro && state.data.freeUsage <= 0);
+}
+
+document.getElementById('processBtn').addEventListener('click', async () => {
+  if (!state.selectedFiles.length) return;
+  if (!state.data.isPro && state.data.freeUsage <= 0) { alert('Лимит исчерпан'); return; }
+  const btn = document.getElementById('processBtn'); 
+  btn.disabled = true; btn.textContent = 'Обработка...';
+  document.getElementById('resultsArea').innerHTML = ''; 
+  state.processedFiles = [];
+  const s = { 
+    marketplace: document.getElementById('marketplace').value, 
+    quality: document.getElementById('quality').value, 
+    maxSize: parseInt(document.getElementById('maxSize').value), 
+    outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg', 
+    watermark: state.data.isPro ? document.getElementById('watermarkText').value : '' 
+  };
+  for (const f of state.selectedFiles) { 
+    const r = await processImage(f, s); 
+    state.processedFiles.push(r); 
+    displayResult(r, state.processedFiles.length - 1); 
+    state.data.history.unshift({ name: f.name, date: new Date().toISOString(), originalSize: r.originalSize, optimizedSize: r.optimizedSize, thumbnail: r.optimizedData, data: r.optimizedData }); 
+  }
+  if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
+  state.data.totalProcessed += state.selectedFiles.length;
+  saveUserData(); 
+  btn.disabled = false; btn.textContent = 'Обработать фото';
+  if (state.processedFiles.length > 1) document.getElementById('downloadAllBtn').style.display = 'block';
+  updateUI();
+});
+
+function processImage(file, s) {
+  return new Promise(res => { 
+    const rd = new FileReader(); 
+    rd.onload = ev => { 
+      const img = new Image(); 
+      img.onload = () => {
+        let W = 900, H = 1200; 
+        if (s.marketplace === 'avito') { W = 1200; H = 900; }
+        const c = document.getElementById('canvas'); 
+        c.width = W; c.height = H;
+        const ctx = c.getContext('2d'); 
+        const sc = Math.max(W / img.width, H / img.height);
+        ctx.drawImage(img, (W/2)-(img.width/2)*sc, (H/2)-(img.height/2)*sc, img.width*sc, img.height*sc);
+        if (s.watermark) { 
+          ctx.font = 'bold 24px Arial'; 
+          ctx.fillStyle = 'rgba(255,255,255,0.7)'; 
+          ctx.textAlign = 'right'; 
+          ctx.textBaseline = 'bottom'; 
+          ctx.fillText(s.watermark, W-20, H-20); 
+        }
+        let q = s.quality === 'high' ? 0.9 : s.quality === 'low' ? 0.5 : 0.7;
+        let mime = 'image/jpeg', ext = 'jpg';
+        if (s.outputFormat === 'png') { mime = 'image/png'; ext = 'png'; } 
+        else if (s.outputFormat === 'webp') { mime = 'image/webp'; ext = 'webp'; }
+        let url = c.toDataURL(mime, q); 
+        let size = url.length * 0.75;
+        while (size > s.maxSize * 1024 && q > 0.1 && ext !== 'png') { 
+          q -= 0.05; url = c.toDataURL(mime, q); size = url.length * 0.75; 
+        }
+        res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext });
+      }; 
+      img.src = ev.target.result; 
+    }; 
+    rd.readAsDataURL(file); 
+  });
+}
+
+function displayResult(r, i) {
+  const sv = ((1 - r.optimizedSize / r.originalSize) * 100).toFixed(1);
+  const d = document.createElement('div'); 
+  d.className = 'result-item';
+  d.innerHTML = '<img src="' + r.optimizedData + '" class="result-thumb"><div class="result-info"><div>' + r.originalName + '</div><div>-' + sv + '% сжатие</div></div><button class="btn btn-primary" style="padding:8px 12px; font-size:0.85rem;" onclick="downloadFile(' + i + ')">Скачать</button>';
+  document.getElementById('resultsArea').appendChild(d);
+}
+
+function downloadFile(i) { 
+  const r = state.processedFiles[i]; 
+  const a = document.createElement('a'); 
+  a.download = 'optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '.' + r.ext; 
+  a.href = r.optimizedData; 
+  a.click(); 
+}
+
+document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+  if (!state.data.isPro) { alert('ZIP только в PRO'); return; }
+  const zip = new JSZip();
+  state.processedFiles.forEach((r, i) => zip.file('optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '_' + (i+1) + '.' + r.ext, r.optimizedData.split(',')[1], { base64: true }));
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a'); 
+  a.download = 'photoboost.zip'; 
+  a.href = URL.createObjectURL(blob); 
+  a.click();
+});
+
+// ===== ПОДПИСКА =====
 function renderSubscription() {
   const activateBox = document.getElementById('activateCodeBox');
   const buyBtn = document.getElementById('buyProBtn');
   const renewBtn = document.getElementById('renewProBtn');
-  
   document.getElementById('dashProcessed').textContent = state.data.totalProcessed;
-  
   if (state.data.isPro) {
     activateBox.style.display = 'none';
     buyBtn.style.display = 'none';
@@ -198,104 +436,8 @@ function renderSubscription() {
     document.getElementById('subTitle').textContent = 'Бесплатный тариф';
     document.getElementById('dashStatus').textContent = 'Free';
     document.getElementById('dashRemaining').textContent = state.data.freeUsage;
-    // Показываем поле ввода кода, если пользователь уже нажал "Я оплатил"
     activateBox.style.display = state.data.paidClicked ? 'block' : 'none';
   }
-}
-
-function renderProfile() {
-  document.getElementById('profileName').textContent = state.user.name;
-  document.getElementById('profileEmail').textContent = state.user.email;
-  document.getElementById('profileDate').textContent = new Date(state.user.registeredAt).toLocaleDateString('ru-RU');
-  
-  const avatarImg = document.getElementById('profileAvatar');
-  if (state.user.avatar) {
-    avatarImg.src = state.user.avatar;
-  } else {
-    avatarImg.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e2e8f0"/><text x="50" y="50" font-size="40" fill="%2364748b" text-anchor="middle" dy=".3em">' + state.user.name.charAt(0).toUpperCase() + '</text></svg>';
-  }
-}
-
-document.getElementById('avatarInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (!file.type.startsWith('image/')) { alert('Выберите изображение'); return; }
-  if (file.size > 2 * 1024 * 1024) { alert('Максимум 2 МБ'); return; }
-  
-  const reader = new FileReader();
-  reader.onload = function(event) {
-    state.user.avatar = event.target.result;
-    localStorage.setItem('pbUser', JSON.stringify(state.user));
-    
-    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-    const idx = users.findIndex(u => u.email === state.user.email);
-    if (idx !== -1) {
-      users[idx].avatar = state.user.avatar;
-      localStorage.setItem('pbUsers', JSON.stringify(users));
-    }
-    renderProfile();
-    alert('✅ Аватар успешно обновлен!');
-  };
-  reader.readAsDataURL(file);
-});
-
-function renderHistory() {
-  const list = document.getElementById('historyList');
-  if (state.data.history.length === 0) {
-    list.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:40px;">История пуста</p>';
-    return;
-  }
-  list.innerHTML = state.data.history.map((item, i) => 
-    `<div class="history-item">
-      <input type="checkbox" class="history-check" data-index="${i}">
-      <img src="${item.thumbnail}" class="history-thumb">
-      <div class="history-info">
-        <div>${item.name}</div>
-        <div>${new Date(item.date).toLocaleDateString('ru-RU')} • ${(item.optimizedSize/1024).toFixed(1)} КБ</div>
-      </div>
-      <button class="btn btn-primary" style="padding:8px 12px; font-size:0.85rem;" onclick="downloadHistoryItem(${i})">Скачать</button>
-    </div>`
-  ).join('');
-}
-
-function downloadHistoryItem(i) {
-  const item = state.data.history[i];
-  const a = document.createElement('a');
-  a.download = 'optimized_' + item.name;
-  a.href = item.data;
-  a.click();
-}
-
-function getSelectedIndexes() {
-  return Array.from(document.querySelectorAll('.history-check:checked')).map(c => parseInt(c.dataset.index));
-}
-
-function downloadSelectedZip() {
-  const idx = getSelectedIndexes();
-  if (idx.length === 0) { alert('Отметьте галочками фото для скачивания'); return; }
-  if (!state.data.isPro) { alert('Скачивание ZIP доступно только в PRO'); return; }
-  
-  const zip = new JSZip();
-  idx.forEach(i => {
-    const item = state.data.history[i];
-    const base64 = item.data.split(',')[1];
-    const name = 'optimized_' + item.name.replace(/\.[^/.]+$/, '') + '_' + (i+1) + '.jpg';
-    zip.file(name, base64, { base64: true });
-  });
-  zip.generateAsync({ type: 'blob' }).then(content => {
-    const a = document.createElement('a');
-    a.download = 'photoboost_selected.zip';
-    a.href = URL.createObjectURL(content);
-    a.click();
-  });
-}
-
-function clearHistory() {
-  if (!confirm('Очистить всю историю?')) return;
-  state.data.history = [];
-  saveUserData();
-  renderHistory();
-  renderSubscription();
 }
 
 function openPayment() {
@@ -310,45 +452,174 @@ function markPaid() {
   saveUserData();
   document.getElementById('paidBtn').style.display = 'none';
   document.getElementById('paymentContacts').style.display = 'block';
-  renderSubscription();
 }
 
 function activateByCode() {
   const input = document.getElementById('activationCode');
   const code = input.value.trim().toUpperCase();
-  
-  if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { 
-    alert('❌ Неверный формат. Пример: WB-A1B2-C3D4'); 
-    return; 
-  }
-  
+  if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { alert('❌ Неверный формат. Пример: WB-A1B2-C3D4'); return; }
   const validCodes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-  if (validCodes.length === 0) {
-    alert('⚠️ Список кодов пуст. Обратитесь к администратору.');
-    return;
-  }
-  if (!validCodes.includes(code)) {
-    alert('❌ Код не найден в списке валидных.');
-    return;
-  }
-  if (state.data.isPro) {
-    alert('⚠️ У вас уже активен PRO.');
-    return;
-  }
-
+  if (validCodes.length === 0) { alert('⚠️ Список кодов пуст. Обратитесь к администратору.'); return; }
+  if (!validCodes.includes(code)) { alert('❌ Код не найден.'); return; }
+  if (state.data.isPro) { alert('⚠️ У вас уже активен PRO.'); return; }
   const updatedCodes = validCodes.filter(c => c !== code);
   localStorage.setItem('pbValidCodes', JSON.stringify(updatedCodes));
-  
   state.data.isPro = true;
   const exp = new Date();
   exp.setMonth(exp.getMonth() + 1);
   state.data.proExpiry = exp.toISOString();
   saveUserData();
-  
   input.value = '';
   alert('🎉 PRO активирован до ' + exp.toLocaleDateString('ru-RU') + '!');
   renderSubscription();
+  updateUI();
 }
+
+// ===== ИСТОРИЯ =====
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (state.data.history.length === 0) {
+    list.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:40px;">История пуста</p>';
+    return;
+  }
+  list.innerHTML = state.data.history.map((item, i) => 
+    '<div class="history-item"><input type="checkbox" class="history-check" data-index="' + i + '"><img src="' + item.thumbnail + '" class="history-thumb"><div class="history-info"><div>' + item.name + '</div><div>' + new Date(item.date).toLocaleDateString('ru-RU') + ' • ' + (item.optimizedSize/1024).toFixed(1) + ' КБ</div></div><button class="btn btn-primary" style="padding:8px 12px; font-size:0.85rem;" onclick="downloadHistoryItem(' + i + ')">Скачать</button></div>'
+  ).join('');
+}
+
+function downloadHistoryItem(i) {
+  const item = state.data.history[i];
+  const a = document.createElement('a');
+  a.download = 'optimized_' + item.name;
+  a.href = item.data;
+  a.click();
+}
+
+function downloadSelectedZip() {
+  const idx = Array.from(document.querySelectorAll('.history-check:checked')).map(c => parseInt(c.dataset.index));
+  if (idx.length === 0) { alert('Отметьте галочками фото'); return; }
+  if (!state.data.isPro) { alert('ZIP только в PRO'); return; }
+  const zip = new JSZip();
+  idx.forEach(i => {
+    const item = state.data.history[i];
+    zip.file('optimized_' + item.name.replace(/\.[^/.]+$/, '') + '_' + (i+1) + '.jpg', item.data.split(',')[1], { base64: true });
+  });
+  zip.generateAsync({ type: 'blob' }).then(content => {
+    const a = document.createElement('a');
+    a.download = 'photoboost_selected.zip';
+    a.href = URL.createObjectURL(content);
+    a.click();
+  });
+}
+
+function clearHistory() {
+  if (!confirm('Очистить историю?')) return;
+  state.data.history = [];
+  saveUserData();
+  renderHistory();
+}
+
+// ===== ОТЗЫВЫ =====
+function setRating(value) {
+  state.reviewRating = value;
+  document.querySelectorAll('#starRating .star').forEach((s, i) => {
+    if (i < value) s.classList.add('active');
+    else s.classList.remove('active');
+  });
+}
+
+document.getElementById('reviewText').addEventListener('input', function() {
+  document.getElementById('reviewCharCount').textContent = this.value.length;
+});
+
+function submitReview() {
+  const text = document.getElementById('reviewText').value.trim();
+  const position = document.getElementById('reviewPosition').value.trim();
+  if (!text || text.length < 20) { alert('Минимум 20 символов'); return; }
+  const reviews = JSON.parse(localStorage.getItem('pbUserReviews') || '[]');
+  reviews.unshift({
+    id: Date.now(),
+    authorEmail: state.user.email,
+    name: state.user.name,
+    position: position || 'Пользователь PhotoBoost',
+    text: text,
+    rating: state.reviewRating,
+    date: new Date().toISOString()
+  });
+  localStorage.setItem('pbUserReviews', JSON.stringify(reviews));
+  document.getElementById('reviewText').value = '';
+  document.getElementById('reviewPosition').value = '';
+  document.getElementById('reviewCharCount').textContent = '0';
+  state.reviewRating = 5;
+  document.querySelectorAll('#starRating .star').forEach(s => s.classList.remove('active'));
+  alert('✅ Отзыв опубликован!');
+  renderMyReviews();
+}
+
+function renderMyReviews() {
+  const list = document.getElementById('myReviewsList');
+  const reviews = JSON.parse(localStorage.getItem('pbUserReviews') || '[]').filter(r => r.authorEmail === state.user.email);
+  if (reviews.length === 0) {
+    list.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">У вас пока нет отзывов</p>';
+    return;
+  }
+  list.innerHTML = reviews.map(r => 
+    '<div class="review-item"><button class="delete-btn" onclick="deleteReview(' + r.id + ')">Удалить</button><div class="stars">' + '★'.repeat(r.rating) + '☆'.repeat(5-r.rating) + '</div><div class="text">' + r.text + '</div><div class="meta">' + new Date(r.date).toLocaleDateString('ru-RU') + (r.position ? ' • ' + r.position : '') + '</div></div>'
+  ).join('');
+}
+
+function deleteReview(id) {
+  if (!confirm('Удалить отзыв?')) return;
+  let reviews = JSON.parse(localStorage.getItem('pbUserReviews') || '[]');
+  reviews = reviews.filter(r => r.id !== id);
+  localStorage.setItem('pbUserReviews', JSON.stringify(reviews));
+  renderMyReviews();
+}
+
+// ===== ПРОФИЛЬ =====
+function renderProfile() {
+  document.getElementById('profileName').textContent = state.user.name;
+  document.getElementById('profileEmail').textContent = state.user.email;
+  document.getElementById('profileDate').textContent = new Date(state.user.registeredAt).toLocaleDateString('ru-RU');
+  const avatarImg = document.getElementById('profileAvatar');
+  if (state.user.avatar) {
+    avatarImg.src = state.user.avatar;
+  } else {
+    avatarImg.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e2e8f0"/><text x="50" y="50" font-size="40" fill="%2364748b" text-anchor="middle" dy=".3em">' + state.user.name.charAt(0).toUpperCase() + '</text></svg>';
+  }
+}
+
+document.getElementById('avatarInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('Выберите изображение'); return; }
+  if (file.size > 2 * 1024 * 1024) { alert('Максимум 2 МБ'); return; }
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200; canvas.height = 200;
+      const ctx = canvas.getContext('2d');
+      const scale = Math.min(200 / img.width, 200 / img.height);
+      const x = (200 - img.width * scale) / 2;
+      const y = (200 - img.height * scale) / 2;
+      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+      state.user.avatar = canvas.toDataURL('image/jpeg', 0.8);
+      localStorage.setItem('pbUser', JSON.stringify(state.user));
+      const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+      const idx = users.findIndex(u => u.email === state.user.email);
+      if (idx !== -1) {
+        users[idx].avatar = state.user.avatar;
+        localStorage.setItem('pbUsers', JSON.stringify(users));
+      }
+      renderProfile();
+      alert('✅ Аватар обновлён!');
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+});
 
 function handleLogout() {
   localStorage.removeItem('pbUser');
@@ -359,12 +630,14 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('active');
 }
 
-// Закрытие модалки по клику на фон
 document.getElementById('paymentModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal('paymentModal');
 });
 
 renderSubscription();
+renderProfile();
+renderMyReviews();
+updateUI();
 </script>
 </body>
 </html>
