@@ -4,10 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Личный кабинет — PhotoBoost</title>
+<!-- Подключаем JSZip сразу, чтобы архивы скачивались мгновенно -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-:root { --bg-light: #faf9ff; --primary: #7c3aed; --gold: #fbbf24; --success: #10b981; --danger: #ef4444; --text-dark: #0f0f1e; --text-muted: #64748b; --gradient-purple: linear-gradient(135deg,#7c3aed 0%,#ec4899 100%); --gradient-gold: linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%); }
-body { font-family: -apple-system, sans-serif; background: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+:root { 
+  --bg-light: #faf9ff; --primary: #7c3aed; --gold: #fbbf24; 
+  --success: #10b981; --danger: #ef4444; --text-dark: #0f0f1e; 
+  --text-muted: #64748b; 
+  --gradient-purple: linear-gradient(135deg,#7c3aed 0%,#ec4899 100%); 
+  --gradient-gold: linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%); 
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10,10,26,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
 .nav-container { max-width: 1000px; margin: 0 auto; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
 .logo { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; color: white; text-decoration: none; }
@@ -19,120 +27,146 @@ body { font-family: -apple-system, sans-serif; background: var(--bg-light); colo
 .btn-ghost { background: transparent; color: white; border: 1px solid rgba(255,255,255,0.2); }
 .container { max-width: 800px; margin: 0 auto; padding: 100px 20px 40px; }
 .card { background: white; border-radius: 20px; padding: 30px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
-.dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; }
-.dash-tab { padding: 12px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: var(--text-muted); font-family: inherit; }
+.dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; overflow-x: auto; }
+.dash-tab { padding: 12px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: var(--text-muted); font-family: inherit; white-space: nowrap; }
 .dash-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 .dash-content { display: none; }
 .dash-content.active { display: block; }
-/* ✅ СТИЛИ ДЛЯ АВАТАРА */
 .avatar-section { text-align: center; margin-bottom: 24px; }
 .avatar-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; background: #e2e8f0; margin-bottom: 12px; border: 3px solid var(--primary); }
 .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f5f9; }
 .info-label { color: var(--text-muted); }
 .info-value { font-weight: 600; }
 .history-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #faf9ff; border-radius: 10px; margin-bottom: 8px; border: 1px solid #e2e8f0; }
-.history-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-.history-thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
-.history-info { flex: 1; }
+.history-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
+.history-thumb { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+.history-info { flex: 1; min-width: 0; }
+.history-info div:first-child { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-info div:last-child { font-size: 0.8rem; color: var(--text-muted); }
 .code-box { background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(236,72,153,0.08)); border: 2px dashed var(--primary); padding: 24px; border-radius: 16px; text-align: center; margin-bottom: 20px; }
 .code-input { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1.1rem; text-transform: uppercase; text-align: center; font-weight: 700; letter-spacing: 2px; margin-bottom: 12px; font-family: inherit; }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+.modal-overlay.active { display: flex; }
+/* Адаптация под телефоны */
+@media (max-width: 640px) {
+  .container { padding: 90px 16px 30px; }
+  .card { padding: 20px; }
+  .history-item { flex-wrap: wrap; }
+  .history-item .btn { width: 100%; margin-top: 8px; }
+  .info-row { flex-direction: column; gap: 4px; }
+}
 </style>
 </head>
 <body>
 <nav class="nav">
-<div class="nav-container">
-<a href="../" class="logo">📸 Photo<span>Boost</span></a>
-<button class="btn btn-ghost" onclick="handleLogout()">← На сайт</button>
-</div>
+  <div class="nav-container">
+    <!-- Ссылка "../" ведёт в корень сайта (чистый URL) -->
+    <a href="../" class="logo">📸 Photo<span>Boost</span></a>
+    <button class="btn btn-ghost" onclick="handleLogout()">← На сайт</button>
+  </div>
 </nav>
 
 <div class="container">
-<h1 style="margin-bottom:24px;">Личный кабинет</h1>
+  <h1 style="margin-bottom:24px;">Личный кабинет</h1>
 
-<div class="dash-tabs">
-<button class="dash-tab active" onclick="switchTab('subscription', this)">📋 Подписка</button>
-<button class="dash-tab" onclick="switchTab('history', this)">🖼️ История</button>
-<button class="dash-tab" onclick="switchTab('profile', this)">👤 Профиль</button>
-</div>
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="switchTab('subscription', this)">📋 Подписка</button>
+    <button class="dash-tab" onclick="switchTab('history', this)">🖼️ История</button>
+    <button class="dash-tab" onclick="switchTab('profile', this)">👤 Профиль</button>
+  </div>
 
-<!-- ВКЛАДКА ПОДПИСКА -->
-<div class="dash-content active" id="tab-subscription">
-<div id="activateCodeBox" class="code-box" style="display:none;">
-<h3 style="margin-bottom:12px; color:var(--primary);">🔑 Активация PRO-подписки</h3>
-<p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">Введите код, полученный после оплаты</p>
-<input type="text" class="code-input" id="activationCode" placeholder="WB-XXXX-XXXX">
-<button class="btn btn-primary" style="width:100%" onclick="activateByCode()">Активировать</button>
-</div>
+  <!-- ВКЛАДКА ПОДПИСКА -->
+  <div class="dash-content active" id="tab-subscription">
+    <div id="activateCodeBox" class="code-box" style="display:none;">
+      <h3 style="margin-bottom:12px; color:var(--primary);">🔑 Активация PRO-подписки</h3>
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">Введите код, полученный после оплаты</p>
+      <input type="text" class="code-input" id="activationCode" placeholder="WB-XXXX-XXXX">
+      <button class="btn btn-primary" style="width:100%" onclick="activateByCode()">Активировать</button>
+    </div>
 
-<div class="card" id="subCard">
-<h3 id="subTitle" style="margin-bottom:16px;">Бесплатный тариф</h3>
-<div class="info-row"><span class="info-label">Статус</span><span class="info-value" id="dashStatus">Free</span></div>
-<div class="info-row"><span class="info-label">Осталось обработок</span><span class="info-value" id="dashRemaining">2</span></div>
-<div class="info-row"><span class="info-label">Всего обработано</span><span class="info-value" id="dashProcessed">0</span></div>
-</div>
+    <div class="card" id="subCard">
+      <h3 id="subTitle" style="margin-bottom:16px;">Бесплатный тариф</h3>
+      <div class="info-row"><span class="info-label">Статус</span><span class="info-value" id="dashStatus">Free</span></div>
+      <div class="info-row"><span class="info-label">Осталось обработок</span><span class="info-value" id="dashRemaining">2</span></div>
+      <div class="info-row"><span class="info-label">Всего обработано</span><span class="info-value" id="dashProcessed">0</span></div>
+    </div>
 
-<button id="buyProBtn" class="btn btn-gold" style="width:100%;" onclick="openPayment()">Купить PRO за 1500 ₽</button>
-<button id="renewProBtn" class="btn btn-gold" style="width:100%; display:none;" onclick="openPayment()">Продлить PRO</button>
-</div>
+    <button id="buyProBtn" class="btn btn-gold" style="width:100%;" onclick="openPayment()">Купить PRO за 1500 ₽</button>
+    <button id="renewProBtn" class="btn btn-gold" style="width:100%; display:none;" onclick="openPayment()">Продлить PRO</div>
+  </div>
 
-<!-- ВКЛАДКА ИСТОРИЯ -->
-<div class="dash-content" id="tab-history">
-<div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
-<button class="btn btn-primary" onclick="downloadSelectedZip()">📦 Скачать выбранные ZIP</button>
-<button class="btn btn-danger" onclick="clearHistory()">🗑️ Очистить историю</button>
-</div>
-<div id="historyList"></div>
-</div>
+  <!-- ВКЛАДКА ИСТОРИЯ -->
+  <div class="dash-content" id="tab-history">
+    <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="downloadSelectedZip()">📦 Скачать выбранные ZIP</button>
+      <button class="btn btn-danger" onclick="clearHistory()">🗑️ Очистить историю</button>
+    </div>
+    <div id="historyList"></div>
+  </div>
 
-<!-- ВКЛАДКА ПРОФИЛЬ -->
-<div class="dash-content" id="tab-profile">
-<div class="card">
-<!-- ✅ ЗАГРУЗКА АВАТАРА -->
-<div class="avatar-section">
-<img id="profileAvatar" class="avatar-preview" src="">
-<br>
-<input type="file" id="avatarInput" accept="image/*" style="display:none;">
-<button class="btn btn-ghost" style="color:var(--text-dark); border-color:#e2e8f0;" onclick="document.getElementById('avatarInput').click()">📷 Изменить фото профиля</button>
-</div>
-<div class="info-row"><span class="info-label">Имя</span><span class="info-value" id="profileName">—</span></div>
-<div class="info-row"><span class="info-label">Email</span><span class="info-value" id="profileEmail">—</span></div>
-<div class="info-row"><span class="info-label">Дата регистрации</span><span class="info-value" id="profileDate">—</span></div>
-</div>
-<button class="btn btn-dark" style="width:100%;" onclick="handleLogout()">Выйти из аккаунта</button>
-</div>
+  <!-- ВКЛАДКА ПРОФИЛЬ -->
+  <div class="dash-content" id="tab-profile">
+    <div class="card">
+      <div class="avatar-section">
+        <img id="profileAvatar" class="avatar-preview" src="">
+        <br>
+        <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+        <button class="btn btn-ghost" style="color:var(--text-dark); border-color:#e2e8f0;" onclick="document.getElementById('avatarInput').click()">📷 Изменить фото</button>
+      </div>
+      <div class="info-row"><span class="info-label">Имя</span><span class="info-value" id="profileName">—</span></div>
+      <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="profileEmail">—</span></div>
+      <div class="info-row"><span class="info-label">Дата регистрации</span><span class="info-value" id="profileDate">—</span></div>
+    </div>
+    <button class="btn btn-dark" style="width:100%;" onclick="handleLogout()">Выйти из аккаунта</button>
+  </div>
 </div>
 
 <!-- МОДАЛКА ОПЛАТЫ -->
-<div class="modal-overlay" id="paymentModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center;">
-<div class="card" style="max-width:500px; width:90%; position:relative;">
-<button class="modal-close" onclick="closeModal('paymentModal')" style="position:absolute; top:15px; right:15px; width:32px; height:32px; border-radius:50%; background:#f1f5f9; border:none; cursor:pointer; font-size:1.2rem;">✕</button>
-<h2 style="text-align:center; margin-bottom:20px;">Оплата PRO</h2>
-<div style="background:#f8fafc; padding:20px; border-radius:12px; margin-bottom:16px;">
-<p style="font-weight:600; margin-bottom:14px;">💳 Реквизиты:</p>
-<p><strong>Альфа-Банк РБ</strong></p>
-<p style="font-family:monospace; font-size:1.1rem; font-weight:700;">9112 3810 1954 7066</p>
-<p>KRYSTSINA STRYHA • 02/31</p>
-<p style="font-size:0.85rem; color:#1e40af; margin-top:12px; background:#eff6ff; padding:10px; border-radius:8px;">📌 Для Сбера: выбирайте «Другая страна» → Беларусь</p>
-</div>
-<button id="paidBtn" class="btn btn-primary" style="width:100%;" onclick="markPaid()">✅ Я оплатил(а)</button>
-<div id="paymentContacts" style="display:none; margin-top:16px;">
-<p style="text-align:center; margin-bottom:12px; color:#1e40af;">📲 Напишите нам с чеком, чтобы получить код:</p>
-<a href="https://t.me/PhotoBoosts" target="_blank" class="btn btn-primary" style="width:100%; margin-bottom:8px; text-decoration:none;">✈️ Telegram</a>
-<a href="https://vk.ru/art_akrilll" target="_blank" class="btn btn-ghost" style="width:100%; color:var(--text-dark); border-color:#e2e8f0; text-decoration:none;">💬 ВКонтакте</div>
-</div>
-</div>
+<div class="modal-overlay" id="paymentModal">
+  <div class="card" style="max-width:500px; width:100%; position:relative;">
+    <button class="modal-close" onclick="closeModal('paymentModal')" style="position:absolute; top:15px; right:15px; width:32px; height:32px; border-radius:50%; background:#f1f5f9; border:none; cursor:pointer; font-size:1.2rem;">✕</button>
+    <h2 style="text-align:center; margin-bottom:20px;">Оплата PRO</h2>
+    <div style="background:#f8fafc; padding:20px; border-radius:12px; margin-bottom:16px;">
+      <p style="font-weight:600; margin-bottom:14px;">💳 Реквизиты:</p>
+      <p><strong>Альфа-Банк РБ</strong></p>
+      <p style="font-family:monospace; font-size:1.1rem; font-weight:700;">9112 3810 1954 7066</p>
+      <p>KRYSTSINA STRYHA • 02/31</p>
+      <p style="font-size:0.85rem; color:#1e40af; margin-top:12px; background:#eff6ff; padding:10px; border-radius:8px;">📌 Для Сбера: выбирайте «Другая страна» → Беларусь</p>
+    </div>
+    <button id="paidBtn" class="btn btn-primary" style="width:100%;" onclick="markPaid()">✅ Я оплатил(а)</button>
+    <div id="paymentContacts" style="display:none; margin-top:16px;">
+      <p style="text-align:center; margin-bottom:12px; color:#1e40af;">📲 Напишите нам с чеком, чтобы получить код:</p>
+      <a href="https://t.me/PhotoBoosts" target="_blank" class="btn btn-primary" style="width:100%; margin-bottom:8px; text-decoration:none;">✈️ Telegram</a>
+      <a href="https://vk.ru/art_akrilll" target="_blank" class="btn btn-ghost" style="width:100%; color:var(--text-dark); border-color:#e2e8f0; text-decoration:none;">💬 ВКонтакте</a>
+    </div>
+  </div>
 </div>
 
 <script>
+// ===== УНИФИЦИРОВАННОЕ СОСТОЯНИЕ (как в index.html) =====
 let state = {
   user: JSON.parse(localStorage.getItem('pbUser')) || null,
-  freeUsage: parseInt(localStorage.getItem('pbFreeUsage')) || 2,
-  isPro: localStorage.getItem('pbIsPro') === 'true',
-  proExpiry: localStorage.getItem('pbProExpiry') || null,
-  history: JSON.parse(localStorage.getItem('pbHistory')) || []
+  data: null
 };
 
+function dataKey() { return 'pbData_' + (state.user ? state.user.email : 'guest'); }
+
+function loadUserData() {
+  const def = { history: [], freeUsage: 2, totalProcessed: 0, totalSaved: 0, isPro: false, proExpiry: null, paidClicked: false, usedCodes: [] };
+  state.data = Object.assign(def, JSON.parse(localStorage.getItem(dataKey()) || 'null') || {});
+  if (state.data.proExpiry && new Date(state.data.proExpiry) < new Date()) { 
+    state.data.isPro = false; 
+    saveUserData(); 
+  }
+}
+
+function saveUserData() { 
+  if (state.data) localStorage.setItem(dataKey(), JSON.stringify(state.data)); 
+}
+
+// Защита: если не вошёл, кидаем на главную
 if (!state.user) location.href = '../';
+loadUserData();
 
 function switchTab(tab, btn) {
   document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
@@ -149,28 +183,26 @@ function renderSubscription() {
   const buyBtn = document.getElementById('buyProBtn');
   const renewBtn = document.getElementById('renewProBtn');
   
-  document.getElementById('dashProcessed').textContent = state.history.length;
+  document.getElementById('dashProcessed').textContent = state.data.totalProcessed;
   
-  if (state.isPro) {
+  if (state.data.isPro) {
     activateBox.style.display = 'none';
     buyBtn.style.display = 'none';
     renewBtn.style.display = 'block';
     document.getElementById('subTitle').textContent = '⭐ PRO подписка';
-    document.getElementById('dashStatus').textContent = 'Активна до ' + new Date(state.proExpiry).toLocaleDateString('ru-RU');
+    document.getElementById('dashStatus').textContent = 'Активна до ' + new Date(state.data.proExpiry).toLocaleDateString('ru-RU');
     document.getElementById('dashRemaining').textContent = '∞';
   } else {
     buyBtn.style.display = 'block';
     renewBtn.style.display = 'none';
     document.getElementById('subTitle').textContent = 'Бесплатный тариф';
     document.getElementById('dashStatus').textContent = 'Free';
-    document.getElementById('dashRemaining').textContent = state.freeUsage;
+    document.getElementById('dashRemaining').textContent = state.data.freeUsage;
     // Показываем поле ввода кода, если пользователь уже нажал "Я оплатил"
-    const paidClicked = localStorage.getItem('pbPaidClicked') === 'true';
-    activateBox.style.display = paidClicked ? 'block' : 'none';
+    activateBox.style.display = state.data.paidClicked ? 'block' : 'none';
   }
 }
 
-// ✅ 4. ЗАГРУЗКА АВАТАРА В ПРОФИЛЬ
 function renderProfile() {
   document.getElementById('profileName').textContent = state.user.name;
   document.getElementById('profileEmail').textContent = state.user.email;
@@ -192,18 +224,15 @@ document.getElementById('avatarInput').addEventListener('change', function(e) {
   
   const reader = new FileReader();
   reader.onload = function(event) {
-    // ✅ Сохраняем аватар в данные пользователя
     state.user.avatar = event.target.result;
     localStorage.setItem('pbUser', JSON.stringify(state.user));
     
-    // Обновляем список всех пользователей, чтобы аватар не слетел при следующем входе
     const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
     const idx = users.findIndex(u => u.email === state.user.email);
     if (idx !== -1) {
       users[idx].avatar = state.user.avatar;
       localStorage.setItem('pbUsers', JSON.stringify(users));
     }
-    
     renderProfile();
     alert('✅ Аватар успешно обновлен!');
   };
@@ -212,17 +241,17 @@ document.getElementById('avatarInput').addEventListener('change', function(e) {
 
 function renderHistory() {
   const list = document.getElementById('historyList');
-  if (state.history.length === 0) {
+  if (state.data.history.length === 0) {
     list.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:40px;">История пуста</p>';
     return;
   }
-  list.innerHTML = state.history.map((item, i) => 
+  list.innerHTML = state.data.history.map((item, i) => 
     `<div class="history-item">
       <input type="checkbox" class="history-check" data-index="${i}">
       <img src="${item.thumbnail}" class="history-thumb">
       <div class="history-info">
-        <div style="font-weight:600; font-size:0.9rem;">${item.name}</div>
-        <div style="font-size:0.8rem; color:var(--text-muted);">${new Date(item.date).toLocaleDateString('ru-RU')}</div>
+        <div>${item.name}</div>
+        <div>${new Date(item.date).toLocaleDateString('ru-RU')} • ${(item.optimizedSize/1024).toFixed(1)} КБ</div>
       </div>
       <button class="btn btn-primary" style="padding:8px 12px; font-size:0.85rem;" onclick="downloadHistoryItem(${i})">Скачать</button>
     </div>`
@@ -230,7 +259,7 @@ function renderHistory() {
 }
 
 function downloadHistoryItem(i) {
-  const item = state.history[i];
+  const item = state.data.history[i];
   const a = document.createElement('a');
   a.download = 'optimized_' + item.name;
   a.href = item.data;
@@ -241,27 +270,14 @@ function getSelectedIndexes() {
   return Array.from(document.querySelectorAll('.history-check:checked')).map(c => parseInt(c.dataset.index));
 }
 
-// ✅ 1. ZIP СКАЧИВАЕТ ВСЕ ВЫБРАННЫЕ ФАЙЛЫ
 function downloadSelectedZip() {
   const idx = getSelectedIndexes();
   if (idx.length === 0) { alert('Отметьте галочками фото для скачивания'); return; }
-  if (!state.isPro) { alert('Скачивание ZIP доступно только в PRO'); return; }
+  if (!state.data.isPro) { alert('Скачивание ZIP доступно только в PRO'); return; }
   
-  // Подключаем JSZip динамически, если его нет
-  if (typeof JSZip === 'undefined') {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-    script.onload = () => createZip(idx);
-    document.head.appendChild(script);
-  } else {
-    createZip(idx);
-  }
-}
-
-function createZip(idx) {
   const zip = new JSZip();
   idx.forEach(i => {
-    const item = state.history[i];
+    const item = state.data.history[i];
     const base64 = item.data.split(',')[1];
     const name = 'optimized_' + item.name.replace(/\.[^/.]+$/, '') + '_' + (i+1) + '.jpg';
     zip.file(name, base64, { base64: true });
@@ -276,27 +292,27 @@ function createZip(idx) {
 
 function clearHistory() {
   if (!confirm('Очистить всю историю?')) return;
-  state.history = [];
-  localStorage.setItem('pbHistory', JSON.stringify(state.history));
+  state.data.history = [];
+  saveUserData();
   renderHistory();
   renderSubscription();
 }
 
 function openPayment() {
-  const paid = localStorage.getItem('pbPaidClicked') === 'true';
+  const paid = state.data.paidClicked;
   document.getElementById('paidBtn').style.display = paid ? 'none' : 'block';
   document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
-  document.getElementById('paymentModal').style.display = 'flex';
+  document.getElementById('paymentModal').classList.add('active');
 }
 
 function markPaid() {
-  localStorage.setItem('pbPaidClicked', 'true');
+  state.data.paidClicked = true;
+  saveUserData();
   document.getElementById('paidBtn').style.display = 'none';
   document.getElementById('paymentContacts').style.display = 'block';
   renderSubscription();
 }
 
-// ✅ 3. ПРОВЕРКА КОДА ПО СПИСКУ ИЗ "АДМИНКИ"
 function activateByCode() {
   const input = document.getElementById('activationCode');
   const code = input.value.trim().toUpperCase();
@@ -315,21 +331,19 @@ function activateByCode() {
     alert('❌ Код не найден в списке валидных.');
     return;
   }
-  if (state.isPro) {
+  if (state.data.isPro) {
     alert('⚠️ У вас уже активен PRO.');
     return;
   }
 
-  // Удаляем использованный код
   const updatedCodes = validCodes.filter(c => c !== code);
   localStorage.setItem('pbValidCodes', JSON.stringify(updatedCodes));
   
-  state.isPro = true;
+  state.data.isPro = true;
   const exp = new Date();
   exp.setMonth(exp.getMonth() + 1);
-  state.proExpiry = exp.toISOString();
-  localStorage.setItem('pbIsPro', 'true');
-  localStorage.setItem('pbProExpiry', state.proExpiry);
+  state.data.proExpiry = exp.toISOString();
+  saveUserData();
   
   input.value = '';
   alert('🎉 PRO активирован до ' + exp.toLocaleDateString('ru-RU') + '!');
@@ -342,8 +356,13 @@ function handleLogout() {
 }
 
 function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
+  document.getElementById(id).classList.remove('active');
 }
+
+// Закрытие модалки по клику на фон
+document.getElementById('paymentModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('paymentModal');
+});
 
 renderSubscription();
 </script>
