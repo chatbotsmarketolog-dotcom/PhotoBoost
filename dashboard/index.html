@@ -80,7 +80,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .history-download { padding: 8px 14px; font-size: 0.85rem; }
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 .empty-state-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
-/* ===== ОТЗЫВЫ ===== */
+/* ===== ОТЗЫВЫ (без фото) ===== */
 .review-form-box { background: linear-gradient(135deg, rgba(124,58,237,0.05), rgba(236,72,153,0.05)); border: 1px solid #f1f5f9; padding: 24px; border-radius: 16px; margin-bottom: 24px; }
 .review-form-box h3 { margin-bottom: 16px; font-size: 1.1rem; }
 .review-form-box .form-group { margin-bottom: 16px; }
@@ -91,12 +91,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .star-rating .star { font-size: 2rem; cursor: pointer; color: #e2e8f0; transition: all 0.2s; user-select: none; }
 .star-rating .star:hover, .star-rating .star.active { color: var(--gold); transform: scale(1.1); }
 .char-counter { font-size: 0.8rem; color: var(--text-muted); text-align: right; margin-top: 4px; }
-.review-photo-upload { display: flex; align-items: center; gap: 16px; padding: 16px; background: #faf9ff; border: 2px dashed #e2e8f0; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
-.review-photo-upload:hover { border-color: var(--primary); background: #f3f0ff; }
-.review-photo-preview { width: 70px; height: 70px; border-radius: 50%; background-size: cover; background-position: center; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.review-photo-placeholder { width: 70px; height: 70px; border-radius: 50%; background: var(--gradient-purple); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.review-photo-text h4 { font-size: 0.95rem; margin-bottom: 2px; }
-.review-photo-text p { font-size: 0.8rem; color: var(--text-muted); }
 .my-reviews-list { max-height: 400px; overflow-y: auto; }
 .my-review-item { background: #faf9ff; padding: 14px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #f1f5f9; position: relative; }
 .my-review-item .stars { margin-bottom: 8px; font-size: 0.9rem; color: var(--gold); }
@@ -228,20 +222,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="historyList"></div>
 </div>
 
-<!-- ВКЛАДКА ОТЗЫВ -->
+<!-- ВКЛАДКА ОТЗЫВ (без фото) -->
 <div class="dash-tab-content" id="tab-review">
 <div class="review-form-box">
 <h3>⭐ Оставить отзыв о PhotoBoost</h3>
 <p style="font-size:0.9rem; color: var(--text-muted); margin-bottom:20px;">Ваш отзыв появится в разделе "Отзывы" на главной странице</p>
-<div class="review-photo-upload" onclick="document.getElementById('reviewPhotoInput').click()">
-<div id="reviewPhotoPreview" class="review-photo-placeholder">📷</div>
-<div class="review-photo-text">
-<h4>Загрузить фото</h4>
-<p>JPG, PNG до 2 МБ. Будет отображаться рядом с отзывом</p>
-</div>
-<input type="file" id="reviewPhotoInput" accept="image/*" style="display:none;">
-</div>
-<form onsubmit="submitReview(event)" style="margin-top: 20px;">
+<form onsubmit="submitReview(event)">
 <div class="form-group">
 <label class="form-label">Ваше имя *</label>
 <input type="text" class="form-input" id="reviewName" required placeholder="Как к вам обращаться?">
@@ -323,7 +309,6 @@ user: JSON.parse(localStorage.getItem('pbUser')) || null,
 data: null,
 selectedFiles: [],
 processedFiles: [],
-reviewPhoto: null,
 reviewRating: 5
 };
 
@@ -442,7 +427,7 @@ document.getElementById('profileEmail').textContent = state.user.email;
 document.getElementById('profileDate').textContent = formatDate(state.user.registeredAt);
 }
 
-// ===== ОТЗЫВЫ =====
+// ===== ОТЗЫВЫ (без фото) =====
 function getUserReviews() { return JSON.parse(localStorage.getItem('pbUserReviews') || '[]'); }
 function saveUserReviews(reviews) { localStorage.setItem('pbUserReviews', JSON.stringify(reviews)); }
 function renderMyReviews() {
@@ -470,37 +455,6 @@ if (index < state.reviewRating) star.classList.add('active');
 else star.classList.remove('active');
 });
 }
-// ===== ЗАГРУЗКА ФОТО ОТЗЫВА =====
-document.getElementById('reviewPhotoInput').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (!file) return;
-if (!file.type.startsWith('image/')) { alert('Выберите изображение'); return; }
-if (file.size > 2 * 1024 * 1024) { alert('Максимум 2 МБ'); return; }
-const reader = new FileReader();
-reader.onload = function(event) {
-const img = new Image();
-img.onload = function() {
-const canvas = document.createElement('canvas');
-canvas.width = 200; canvas.height = 200;
-const ctx = canvas.getContext('2d');
-const scale = Math.min(200 / img.width, 200 / img.height);
-const x = (200 - img.width * scale) / 2;
-const y = (200 - img.height * scale) / 2;
-ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-const compressed = canvas.toDataURL('image/jpeg', 0.8);
-state.reviewPhoto = compressed;
-const preview = document.getElementById('reviewPhotoPreview');
-preview.className = 'review-photo-preview';
-preview.innerHTML = '';
-preview.style.backgroundImage = 'url(' + compressed + ')';
-};
-img.src = event.target.result;
-};
-reader.readAsDataURL(file);
-});
-document.getElementById('reviewText').addEventListener('input', function() {
-document.getElementById('reviewCharCount').textContent = this.value.length;
-});
 function submitReview(e) {
 e.preventDefault();
 if (!state.user) { alert('Войдите'); return; }
@@ -517,7 +471,6 @@ name: name,
 position: position || 'Пользователь',
 text: text,
 rating: rating,
-photo: state.reviewPhoto,
 date: new Date().toISOString()
 };
 const reviews = getUserReviews();
@@ -527,11 +480,7 @@ document.getElementById('reviewName').value = '';
 document.getElementById('reviewPosition').value = '';
 document.getElementById('reviewText').value = '';
 document.getElementById('reviewCharCount').textContent = '0';
-state.reviewPhoto = null;
 state.reviewRating = 5;
-const preview = document.getElementById('reviewPhotoPreview');
-preview.className = 'review-photo-placeholder';
-preview.innerHTML = '📷';
 updateStarDisplay();
 renderMyReviews();
 alert('✅ Отзыв опубликован!');
