@@ -71,7 +71,7 @@ header h1 { font-size: 2rem; color: var(--gold); }
 
 <!-- ГЕНЕРАТОР КОДОВ -->
 <div class="section">
-<h2> Генератор активационных кодов</h2>
+<h2>Генератор активационных кодов</h2>
 <div class="code-generator">
 <div>
 <label>Количество кодов:</label>
@@ -108,7 +108,7 @@ header h1 { font-size: 2rem; color: var(--gold); }
 <div class="section">
 <h2>⚙️ Управление</h2>
 <button class="generate-btn" onclick="clearAllData()" style="background: var(--danger); margin-right: 10px;">🗑️ Очистить все данные</button>
-<button class="generate-btn" onclick="exportData()"> Экспорт данных</button>
+<button class="generate-btn" onclick="exportData()">📥 Экспорт данных</button>
 </div>
 </div>
 
@@ -117,138 +117,148 @@ header h1 { font-size: 2rem; color: var(--gold); }
 const ADMIN_PASSWORD = 'PhotoBoost2024'; // ИЗМЕНИ НА СВОЙ ПАРОЛЬ!
 
 function checkAuth() {
-const saved = localStorage.getItem('adminAuth');
-if (saved !== 'true') {
-const pass = prompt('🔐 Введите пароль администратора:');
-if (pass === ADMIN_PASSWORD) {
-localStorage.setItem('adminAuth', 'true');
-} else {
-alert('Неверный пароль!');
-location.href = './';
-}
-}
+    const saved = localStorage.getItem('adminAuth');
+    if (saved !== 'true') {
+        const pass = prompt('🔐 Введите пароль администратора:');
+        if (pass === ADMIN_PASSWORD) {
+            localStorage.setItem('adminAuth', 'true');
+        } else {
+            alert('Неверный пароль!');
+            location.href = './';
+        }
+    }
 }
 
 function logout() {
-localStorage.removeItem('adminAuth');
-location.reload();
+    localStorage.removeItem('adminAuth');
+    location.reload();
 }
 
 // ===== СТАТИСТИКА =====
 function updateStats() {
-const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-const allCodes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-const usedCodes = JSON.parse(localStorage.getItem('pbUsedCodes') || '[]');
+    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+    const activeCodes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
 
-let totalPro = 0;
-users.forEach(u => {
-const data = JSON.parse(localStorage.getItem('pbData_' + u.email) || '{}');
-if (data.isPro) totalPro++;
-});
+    let totalPro = 0;
+    users.forEach(u => {
+        const data = JSON.parse(localStorage.getItem('pbData_' + u.email) || '{}');
+        if (data.isPro) totalPro++;
+    });
 
-document.getElementById('totalUsers').textContent = users.length;
-document.getElementById('totalPro').textContent = totalPro;
-document.getElementById('totalCodes').textContent = allCodes.length + usedCodes.length;
-document.getElementById('activeCodes').textContent = allCodes.length;
+    document.getElementById('totalUsers').textContent = users.length;
+    document.getElementById('totalPro').textContent = totalPro;
+    document.getElementById('totalCodes').textContent = activeCodes.length;
+    document.getElementById('activeCodes').textContent = activeCodes.length;
 }
 
 // ===== ГЕНЕРАТОР КОДОВ =====
 function generateCodes() {
-const count = parseInt(document.getElementById('codeCount').value) || 10;
-const prefix = document.getElementById('codePrefix').value || 'WB';
-const codes = [];
+    const count = parseInt(document.getElementById('codeCount').value) || 10;
+    const prefix = document.getElementById('codePrefix').value || 'WB';
+    const newCodes = [];
 
-for (let i = 0; i < count; i++) {
-const part1 = Math.random().toString(36).substring(2, 6).toUpperCase();
-const part2 = Math.random().toString(36).substring(2, 6).toUpperCase();
-codes.push(`${prefix}-${part1}-${part2}`);
+    for (let i = 0; i < count; i++) {
+        const part1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const part2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+        newCodes.push(`${prefix}-${part1}-${part2}`);
+    }
+
+    // Сохраняем в localStorage (добавляем к существующим)
+    const existing = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+    localStorage.setItem('pbValidCodes', JSON.stringify([...existing, ...newCodes]));
+
+    // Показываем обновленный список
+    renderCodesList();
+    showAlert(`✅ Сгенерировано ${count} кодов!`, 'success');
+    updateStats();
 }
 
-// Сохраняем в localStorage
-const existing = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-localStorage.setItem('pbValidCodes', JSON.stringify([...existing, ...codes]));
+// ===== ОТРИСОВКА СПИСКА КОДОВ (ИСПРАВЛЕНИЕ: загружает коды при старте) =====
+function renderCodesList() {
+    const activeCodes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+    const list = document.getElementById('codesList');
+    
+    if (!Array.isArray(activeCodes) || activeCodes.length === 0) {
+        list.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin-top: 12px;">Нет активных кодов. Сгенерируйте новые.</p>';
+        return;
+    }
 
-// Показываем
-const list = document.getElementById('codesList');
-list.innerHTML = '<h3 style="margin-bottom: 12px;">Сгенерированные коды:</h3>' + 
-codes.map(c => `<div class="code-item"><code>${c}</code><button class="copy-btn" onclick="copyCode('${c}')">Копировать</button></div>`).join('');
-
-showAlert(`✅ Сгенерировано ${count} кодов!`, 'success');
-updateStats();
+    list.innerHTML = '<h3 style="margin-bottom: 12px;">Активные коды:</h3>' + 
+        activeCodes.map(c => `<div class="code-item"><code>${c}</code><button class="copy-btn" onclick="copyCode('${c}')">Копировать</button></div>`).join('');
 }
 
 function copyCode(code) {
-navigator.clipboard.writeText(code);
-showAlert('Код скопирован!', 'success');
+    navigator.clipboard.writeText(code);
+    showAlert('Код скопирован!', 'success');
 }
 
 // ===== СПИСОК ПОЛЬЗОВАТЕЛЕЙ =====
 function renderUsers() {
-const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-const tbody = document.getElementById('usersTable');
+    const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+    const tbody = document.getElementById('usersTable');
 
-if (users.length === 0) {
-tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Нет пользователей</td></tr>';
-return;
-}
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Нет пользователей</td></tr>';
+        return;
+    }
 
-tbody.innerHTML = users.map(u => {
-const data = JSON.parse(localStorage.getItem('pbData_' + u.email) || '{}');
-const isPro = data.isPro;
-const proExpiry = data.proExpiry ? new Date(data.proExpiry).toLocaleDateString('ru-RU') : '—';
-const processed = data.totalProcessed || 0;
-const registered = new Date(u.registeredAt).toLocaleDateString('ru-RU');
+    tbody.innerHTML = users.map(u => {
+        const data = JSON.parse(localStorage.getItem('pbData_' + u.email) || '{}');
+        const isPro = data.isPro;
+        const proExpiry = data.proExpiry ? new Date(data.proExpiry).toLocaleDateString('ru-RU') : '—';
+        const processed = data.totalProcessed || 0;
+        const registered = new Date(u.registeredAt).toLocaleDateString('ru-RU');
 
-return `<tr>
-<td>${u.email}</td>
-<td>${u.name}</td>
-<td><span class="badge ${isPro ? 'badge-pro' : 'badge-free'}">${isPro ? 'PRO' : 'Free'}</span></td>
-<td>${proExpiry}</td>
-<td>${processed}</td>
-<td>${registered}</td>
-</tr>`;
-}).join('');
+        return `<tr>
+            <td>${u.email}</td>
+            <td>${u.name}</td>
+            <td><span class="badge ${isPro ? 'badge-pro' : 'badge-free'}">${isPro ? 'PRO' : 'Free'}</span></td>
+            <td>${proExpiry}</td>
+            <td>${processed}</td>
+            <td>${registered}</td>
+        </tr>`;
+    }).join('');
 }
 
 // ===== УПРАВЛЕНИЕ =====
 function clearAllData() {
-if (confirm('⚠️ ВНИМАНИЕ! Это удалит ВСЕ данные:\n- Всех пользователей\n- Все коды\n- Всю историю\n\nПродолжить?')) {
-localStorage.clear();
-showAlert('Все данные удалены!', 'success');
-setTimeout(() => location.reload(), 1000);
-}
+    if (confirm('⚠️ ВНИМАНИЕ! Это удалит ВСЕ данные:\n- Всех пользователей\n- Все коды\n- Всю историю\n\nПродолжить?')) {
+        localStorage.clear();
+        showAlert('Все данные удалены!', 'success');
+        setTimeout(() => location.reload(), 1000);
+    }
 }
 
 function exportData() {
-const data = {
-users: JSON.parse(localStorage.getItem('pbUsers') || '[]'),
-validCodes: JSON.parse(localStorage.getItem('pbValidCodes') || '[]'),
-usedCodes: JSON.parse(localStorage.getItem('pbUsedCodes') || '[]'),
-reviews: JSON.parse(localStorage.getItem('pbUserReviews') || '[]'),
-exportedAt: new Date().toISOString()
-};
+    const data = {
+        users: JSON.parse(localStorage.getItem('pbUsers') || '[]'),
+        validCodes: JSON.parse(localStorage.getItem('pbValidCodes') || '[]'),
+        reviews: JSON.parse(localStorage.getItem('pbUserReviews') || '[]'),
+        exportedAt: new Date().toISOString()
+    };
 
-const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = `photoboost-backup-${new Date().toISOString().split('T')[0]}.json`;
-a.click();
-showAlert('Данные экспортированы!', 'success');
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `photoboost-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    showAlert('Данные экспортированы!', 'success');
 }
 
 // ===== УВЕДОМЛЕНИЯ =====
 function showAlert(msg, type) {
-const alert = document.getElementById('alert');
-alert.className = `alert alert-${type}`;
-alert.textContent = msg;
-setTimeout(() => alert.textContent = '', 3000);
+    const alert = document.getElementById('alert');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = msg;
+    setTimeout(() => alert.textContent = '', 3000);
 }
 
 // ===== ЗАПУСК =====
 checkAuth();
 updateStats();
 renderUsers();
+renderCodesList(); // <--- ВОТ ГЛАВНОЕ ИСПРАВЛЕНИЕ: список кодов теперь загружается сразу при открытии страницы
 </script>
 </body>
 </html>
