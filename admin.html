@@ -1,0 +1,599 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ-панель — PhotoBoost</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+--bg: #0f1117; --bg-card: #1a1d27; --bg-input: #252830;
+--primary: #7c3aed; --gold: #fbbf24; --success: #10b981;
+--danger: #ef4444; --warning: #f59e0b; --info: #3b82f6;
+--text: #f1f5f9; --text-muted: #94a3b8; --border: rgba(255,255,255,0.08);
+--gradient-purple: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+--gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+/* ===== НАВИГАЦИЯ ===== */
+.nav { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.nav-left { display: flex; align-items: center; gap: 16px; }
+.nav-logo { font-size: 1.2rem; font-weight: 800; color: var(--text); text-decoration: none; }
+.nav-logo span { background: var(--gradient-purple); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.nav-badge { background: var(--gradient-gold); color: #000; font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; font-weight: 700; }
+.nav-right { display: flex; gap: 10px; align-items: center; }
+.nav-right a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+.nav-right a:hover { color: var(--text); }
+
+/* ===== КОНТЕЙНЕР ===== */
+.container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+
+/* ===== ВКЛАДКИ ===== */
+.tabs { display: flex; gap: 4px; margin-bottom: 30px; background: var(--bg-card); border-radius: 14px; padding: 6px; overflow-x: auto; }
+.tab { padding: 12px 20px; background: none; border: none; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; cursor: pointer; border-radius: 10px; white-space: nowrap; transition: all 0.2s; font-family: inherit; }
+.tab.active { background: var(--primary); color: white; }
+.tab:hover:not(.active) { background: var(--bg-input); color: var(--text); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.tab-badge { background: var(--danger); color: white; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
+
+/* ===== КАРТОЧКИ ===== */
+.card { background: var(--bg-card); border-radius: 16px; padding: 24px; margin-bottom: 16px; border: 1px solid var(--border); }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+
+/* ===== СТАТИСТИКА ===== */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 30px; }
+.stat-card { background: var(--bg-card); border-radius: 14px; padding: 20px; border: 1px solid var(--border); }
+.stat-value { font-size: 2rem; font-weight: 800; }
+.stat-value.purple { color: var(--primary); }
+.stat-value.gold { color: var(--gold); }
+.stat-value.green { color: var(--success); }
+.stat-value.red { color: var(--danger); }
+.stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+/* ===== КНОПКИ ===== */
+.btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
+.btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: #6d28d9; }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: #059669; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-warning { background: var(--warning); color: #000; }
+.btn-warning:hover { background: #d97706; }
+.btn-info { background: var(--info); color: white; }
+.btn-info:hover { background: #2563eb; }
+.btn-ghost { background: var(--bg-input); color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); }
+
+/* ===== ЗАЯВКИ ===== */
+.request-card { background: var(--bg-card); border-radius: 14px; padding: 20px; margin-bottom: 12px; border: 1px solid var(--border); border-left: 4px solid var(--warning); }
+.request-card.urgent { border-left-color: var(--danger); }
+.request-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.request-user { display: flex; align-items: center; gap: 10px; }
+.request-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem; }
+.request-name { font-weight: 600; }
+.request-email { color: var(--text-muted); font-size: 0.85rem; }
+.request-time { color: var(--text-muted); font-size: 0.8rem; }
+.request-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.generated-code { background: var(--bg-input); border: 2px dashed var(--success); padding: 12px; border-radius: 10px; margin-top: 12px; text-align: center; }
+.generated-code code { font-size: 1.3rem; font-weight: 800; color: var(--success); letter-spacing: 2px; }
+
+/* ===== ПОЛЬЗОВАТЕЛИ ===== */
+.user-row { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--bg-card); border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); }
+.user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gradient-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; flex-shrink: 0; }
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-weight: 600; font-size: 0.95rem; }
+.user-email { color: var(--text-muted); font-size: 0.85rem; }
+.user-meta { display: flex; gap: 12px; margin-top: 4px; font-size: 0.8rem; color: var(--text-muted); }
+.user-badge-pro { background: var(--gradient-gold); color: #000; font-size: 0.7rem; padding: 1px 8px; border-radius: 10px; font-weight: 700; }
+.user-badge-free { background: var(--bg-input); color: var(--text-muted); font-size: 0.7rem; padding: 1px 8px; border-radius: 10px; }
+
+/* ===== ОТЗЫВЫ ===== */
+.review-card { background: var(--bg-card); border-radius: 14px; padding: 20px; margin-bottom: 12px; border: 1px solid var(--border); }
+.review-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.review-author { display: flex; align-items: center; gap: 10px; }
+.review-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem; }
+.review-stars { color: var(--gold); font-size: 0.9rem; }
+.review-text { color: var(--text); font-size: 0.9rem; line-height: 1.6; margin-bottom: 12px; }
+.review-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.review-date { color: var(--text-muted); font-size: 0.8rem; }
+.review-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.status-tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.status-tag.new { background: var(--info); color: white; }
+.status-tag.popular { background: var(--gradient-gold); color: #000; }
+.status-tag.hidden { background: var(--danger); color: white; }
+
+/* ===== ПУСТОЕ СОСТОЯНИЕ ===== */
+.empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+.empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+
+/* ===== ВХОД АДМИНА ===== */
+.login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+.login-box { background: var(--bg-card); border-radius: 20px; padding: 40px; max-width: 400px; width: 100%; border: 1px solid var(--border); text-align: center; }
+.login-box h2 { margin-bottom: 8px; }
+.login-box p { color: var(--text-muted); margin-bottom: 24px; font-size: 0.9rem; }
+.login-box input { width: 100%; padding: 14px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 1rem; margin-bottom: 16px; font-family: inherit; }
+.login-box input:focus { outline: none; border-color: var(--primary); }
+.login-box .btn { width: 100%; }
+.login-error { color: var(--danger); font-size: 0.85rem; margin-bottom: 12px; display: none; }
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 768px) {
+.container { padding: 20px 12px; }
+.tabs { gap: 2px; padding: 4px; }
+.tab { padding: 10px 14px; font-size: 0.8rem; }
+.stats-row { grid-template-columns: 1fr 1fr; }
+.card { padding: 16px; }
+.user-row { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+.stats-row { grid-template-columns: 1fr; }
+.nav-logo { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== ЭКРАН ВХОДА ===== -->
+<div id="loginScreen" class="login-screen">
+<div class="login-box">
+<h2>🔐 Админ-панель</h2>
+<p>Введите email администратора для входа</p>
+<div class="login-error" id="loginError">Неверный email администратора</div>
+<input type="email" id="adminEmail" placeholder="admin@email.com">
+<button class="btn btn-primary" onclick="adminLogin()">Войти</button>
+</div>
+</div>
+
+<!-- ===== ОСНОВНОЙ ИНТЕРФЕЙС ===== -->
+<div id="adminPanel" style="display:none;">
+<nav class="nav">
+<div class="nav-left">
+<a href="../" class="nav-logo">Photo<span>Boost</span></a>
+<span class="nav-badge">АДМИН</span>
+</div>
+<div class="nav-right">
+<a href="../">← На сайт</a>
+<button class="btn btn-ghost btn-sm" onclick="adminLogout()">Выйти</button>
+</div>
+</nav>
+
+<div class="container">
+<!-- Статистика -->
+<div class="stats-row" id="statsRow"></div>
+
+<!-- Вкладки -->
+<div class="tabs">
+<button class="tab active" onclick="switchTab('requests', this)">📩 Заявки на оплату <span class="tab-badge" id="requestsBadge">0</span></button>
+<button class="tab" onclick="switchTab('users', this)">👥 Пользователи</button>
+<button class="tab" onclick="switchTab('reviews', this)">⭐ Отзывы</button>
+</div>
+
+<!-- ВКЛАДКА: ЗАЯВКИ НА ОПЛАТУ -->
+<div class="tab-content active" id="tab-requests">
+<div id="requestsList"></div>
+</div>
+
+<!-- ВКЛАДКА: ПОЛЬЗОВАТЕЛИ -->
+<div class="tab-content" id="tab-users">
+<div id="usersList"></div>
+</div>
+
+<!-- ВКЛАДКА: ОТЗЫВЫ -->
+<div class="tab-content" id="tab-reviews">
+<div id="reviewsList"></div>
+</div>
+</div>
+</div>
+
+<script>
+// ===== КОНФИГ =====
+// Email администратора — замени на свой!
+const ADMIN_EMAIL = 'kristinastryha1987@gmail.com';
+
+// ===== АВТОРИЗАЦИЯ =====
+function adminLogin() {
+const email = document.getElementById('adminEmail').value.trim().toLowerCase();
+if (email === ADMIN_EMAIL.toLowerCase()) {
+localStorage.setItem('pbAdminAuth', 'true');
+showPanel();
+} else {
+document.getElementById('loginError').style.display = 'block';
+}
+}
+
+function adminLogout() {
+localStorage.removeItem('pbAdminAuth');
+location.reload();
+}
+
+function showPanel() {
+document.getElementById('loginScreen').style.display = 'none';
+document.getElementById('adminPanel').style.display = 'block';
+renderStats();
+renderRequests();
+renderUsers();
+renderReviews();
+}
+
+// Проверка авторизации при загрузке
+if (localStorage.getItem('pbAdminAuth') === 'true') {
+showPanel();
+}
+
+// ===== ВКЛАДКИ =====
+function switchTab(tab, btn) {
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+btn.classList.add('active');
+document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// ===== ДАННЫЕ =====
+function getPaymentRequests() {
+return JSON.parse(localStorage.getItem('pbPaymentRequests') || '[]');
+}
+function savePaymentRequests(list) {
+localStorage.setItem('pbPaymentRequests', JSON.stringify(list));
+}
+function getUsers() {
+return JSON.parse(localStorage.getItem('pbUsers') || '[]');
+}
+function saveUsers(users) {
+localStorage.setItem('pbUsers', JSON.stringify(users));
+}
+function getReviews() {
+return JSON.parse(localStorage.getItem('pbUserReviews') || '[]');
+}
+function saveReviews(reviews) {
+localStorage.setItem('pbUserReviews', JSON.stringify(reviews));
+}
+function getUserData(email) {
+const key = 'pbData_' + email;
+return JSON.parse(localStorage.getItem(key) || '{}');
+}
+
+// ===== ГЕНЕРАЦИЯ КОДА =====
+function generateCode() {
+const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+let code = 'WB-';
+for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+code += '-';
+for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+return code;
+}
+
+// ===== СТАТИСТИКА =====
+function renderStats() {
+const users = getUsers();
+const requests = getPaymentRequests();
+const reviews = getReviews();
+const pendingRequests = requests.filter(r => r.status === 'pending').length;
+const proUsers = users.filter(u => {
+const data = getUserData(u.email);
+return data.isPro;
+}).length;
+
+document.getElementById('statsRow').innerHTML = `
+<div class="stat-card"><div class="stat-value purple">${users.length}</div><div class="stat-label">Пользователей</div></div>
+<div class="stat-card"><div class="stat-value gold">${proUsers}</div><div class="stat-label">PRO-подписок</div></div>
+<div class="stat-card"><div class="stat-value red">${pendingRequests}</div><div class="stat-label">Заявок на оплату</div></div>
+<div class="stat-card"><div class="stat-value green">${reviews.length}</div><div class="stat-label">Отзывов</div></div>
+`;
+
+// Обновляем бейдж на вкладке
+document.getElementById('requestsBadge').textContent = pendingRequests;
+document.getElementById('requestsBadge').style.display = pendingRequests > 0 ? 'inline' : 'none';
+}
+
+// ===== ЗАЯВКИ НА ОПЛАТУ =====
+function renderRequests() {
+const requests = getPaymentRequests();
+const container = document.getElementById('requestsList');
+
+if (requests.length === 0) {
+container.innerHTML = '<div class="empty"><div class="empty-icon">📩</div><p>Заявок на оплату пока нет</p></div>';
+return;
+}
+
+// Сортируем: сначала новые (pending), потом обработанные
+const sorted = [...requests].sort((a, b) => {
+if (a.status === 'pending' && b.status !== 'pending') return -1;
+if (a.status !== 'pending' && b.status === 'pending') return 1;
+return new Date(b.date) - new Date(a.date);
+});
+
+container.innerHTML = sorted.map((req, idx) => {
+const timeAgo = getTimeAgo(req.date);
+const isPending = req.status === 'pending';
+const isApproved = req.status === 'approved';
+
+let statusHtml = '';
+let actionsHtml = '';
+
+if (isPending) {
+statusHtml = '<span style="color: var(--warning); font-size: 0.8rem;">⏳ Ожидает проверки</span>';
+actionsHtml = `
+<button class="btn btn-success btn-sm" onclick="approveRequest('${req.id}')">✅ Подтвердить и выдать код</button>
+<button class="btn btn-danger btn-sm" onclick="rejectRequest('${req.id}')">❌ Отклонить</button>
+`;
+} else if (isApproved) {
+statusHtml = `<span style="color: var(--success); font-size: 0.8rem;">✅ Одобрено — код: <strong>${req.code}</strong></span>`;
+actionsHtml = `<button class="btn btn-ghost btn-sm" onclick="deleteRequest('${req.id}')">🗑️ Удалить</button>`;
+} else {
+statusHtml = '<span style="color: var(--danger); font-size: 0.8rem;">❌ Отклонено</span>';
+actionsHtml = `<button class="btn btn-ghost btn-sm" onclick="deleteRequest('${req.id}')">🗑️ Удалить</button>`;
+}
+
+return `
+<div class="request-card ${isPending ? 'urgent' : ''}">
+<div class="request-header">
+<div class="request-user">
+<div class="request-avatar">${req.userName ? req.userName.charAt(0).toUpperCase() : '?'}</div>
+<div>
+<div class="request-name">${req.userName || 'Неизвестный'}</div>
+<div class="request-email">${req.userEmail}</div>
+</div>
+</div>
+<div class="request-time">${timeAgo}</div>
+</div>
+${statusHtml}
+<div class="request-actions" style="margin-top: 12px;">${actionsHtml}</div>
+</div>
+`;
+}).join('');
+}
+
+function approveRequest(id) {
+const requests = getPaymentRequests();
+const req = requests.find(r => r.id === id);
+if (!req) return;
+
+const code = generateCode();
+req.status = 'approved';
+req.code = code;
+req.approvedAt = new Date().toISOString();
+savePaymentRequests(requests);
+
+// Также добавляем код в список валидных кодов (для активации на сайте)
+const validCodes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+validCodes.push(code);
+localStorage.setItem('pbValidCodes', JSON.stringify(validCodes));
+
+renderRequests();
+renderStats();
+
+alert('✅ Код активации сгенерирован:\n\n' + code + '\n\nКод добавлен в список валидных. Клиент сможет активировать его на сайте.');
+}
+
+function rejectRequest(id) {
+if (!confirm('Отклонить эту заявку?')) return;
+const requests = getPaymentRequests();
+const req = requests.find(r => r.id === id);
+if (req) {
+req.status = 'rejected';
+savePaymentRequests(requests);
+renderRequests();
+renderStats();
+}
+}
+
+function deleteRequest(id) {
+if (!confirm('Удалить эту заявку?')) return;
+let requests = getPaymentRequests();
+requests = requests.filter(r => r.id !== id);
+savePaymentRequests(requests);
+renderRequests();
+renderStats();
+}
+
+// ===== ПОЛЬЗОВАТЕЛИ =====
+function renderUsers() {
+const users = getUsers();
+const container = document.getElementById('usersList');
+
+if (users.length === 0) {
+container.innerHTML = '<div class="empty"><div class="empty-icon">👥</div><p>Пользователей пока нет</p></div>';
+return;
+}
+
+container.innerHTML = users.map(user => {
+const data = getUserData(user.email);
+const isPro = data.isPro;
+const processed = data.totalProcessed || 0;
+const regDate = user.registeredAt ? new Date(user.registeredAt).toLocaleDateString('ru-RU') : '—';
+const provider = user.provider === 'email' ? '📧 Email' : user.provider === 'google' ? '🔵 Google' : user.provider === 'vk' ? '🔷 ВК' : user.provider === 'yandex' ? '🔴 Яндекс' : '📧 Email';
+
+return `
+<div class="user-row">
+<div class="user-avatar">${user.name ? user.name.charAt(0).toUpperCase() : '?'}</div>
+<div class="user-info">
+<div class="user-name">${user.name || 'Без имени'} ${isPro ? '<span class="user-badge-pro">PRO</span>' : '<span class="user-badge-free">FREE</span>'}</div>
+<div class="user-email">${user.email} • ${provider}</div>
+<div class="user-meta">
+<span>📅 ${regDate}</span>
+<span>📸 Обработано: ${processed}</span>
+</div>
+</div>
+<button class="btn btn-danger btn-sm" onclick="deleteUser('${user.email}')">🗑️</button>
+</div>
+`;
+}).join('');
+}
+
+function deleteUser(email) {
+if (!confirm('Удалить пользователя ' + email + '?\n\nВсе данные пользователя будут удалены.')) return;
+
+// Удаляем из списка пользователей
+let users = getUsers();
+users = users.filter(u => u.email !== email);
+saveUsers(users);
+
+// Удаляем данные пользователя
+localStorage.removeItem('pbData_' + email);
+
+// Удаляем отзывы этого пользователя
+let reviews = getReviews();
+reviews = reviews.filter(r => r.authorEmail !== email);
+saveReviews(reviews);
+
+renderUsers();
+renderStats();
+renderReviews();
+}
+
+// ===== ОТЗЫВЫ =====
+function renderReviews() {
+const reviews = getReviews();
+const container = document.getElementById('reviewsList');
+
+if (reviews.length === 0) {
+container.innerHTML = '<div class="empty"><div class="empty-icon">⭐</div><p>Отзывов пока нет</p></div>';
+return;
+}
+
+// Сортируем: сначала новые, потом популярные
+const sorted = [...reviews].sort((a, b) => {
+if (a.status === 'popular' && b.status !== 'popular') return -1;
+if (a.status !== 'popular' && b.status === 'popular') return 1;
+return new Date(b.date) - new Date(a.date);
+});
+
+container.innerHTML = sorted.map(review => {
+const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+const date = new Date(review.date).toLocaleDateString('ru-RU');
+const status = review.status || 'new';
+
+let statusTag = '';
+if (status === 'new') statusTag = '<span class="status-tag new">НОВЫЙ</span>';
+else if (status === 'popular') statusTag = '<span class="status-tag popular">⭐ ПОПУЛЯРНЫЙ</span>';
+else if (status === 'hidden') statusTag = '<span class="status-tag hidden">СКРЫТ</span>';
+
+return `
+<div class="review-card" style="${status === 'hidden' ? 'opacity: 0.5;' : ''}">
+<div class="review-header">
+<div class="review-author">
+<div class="review-avatar">${review.name ? review.name.charAt(0).toUpperCase() : '?'}</div>
+<div>
+<div style="font-weight: 600;">${review.name || 'Аноним'} <span style="color: var(--text-muted); font-size: 0.8rem;">${review.authorEmail || ''}</span></div>
+<div class="review-stars">${stars}</div>
+</div>
+</div>
+${statusTag}
+</div>
+<div class="review-text">${review.text}</div>
+<div class="review-meta">
+<div class="review-date">📅 ${date} ${review.position ? '• ' + review.position : ''}</div>
+<div class="review-actions">
+${status !== 'popular' ? `<button class="btn btn-warning btn-sm" onclick="setReviewStatus('${review.id}', 'popular')">⭐ Популярный</button>` : ''}
+${status !== 'new' && status !== 'hidden' ? `<button class="btn btn-info btn-sm" onclick="setReviewStatus('${review.id}', 'new')">🆕 Новый</button>` : ''}
+${status !== 'hidden' ? `<button class="btn btn-ghost btn-sm" onclick="setReviewStatus('${review.id}', 'hidden')">🙈 Скрыть</button>` : `<button class="btn btn-info btn-sm" onclick="setReviewStatus('${review.id}', 'new')">👁️ Показать</button>`}
+<button class="btn btn-danger btn-sm" onclick="deleteReview('${review.id}')">🗑️ Удалить</button>
+</div>
+</div>
+</div>
+`;
+}).join('');
+}
+
+function setReviewStatus(id, status) {
+const reviews = getReviews();
+const review = reviews.find(r => r.id === id);
+if (review) {
+review.status = status;
+saveReviews(reviews);
+renderReviews();
+}
+}
+
+function deleteReview(id) {
+if (!confirm('Удалить этот отзыв?')) return;
+let reviews = getReviews();
+reviews = reviews.filter(r => r.id !== id);
+saveReviews(reviews);
+renderReviews();
+renderStats();
+}
+
+// ===== УТИЛИТЫ =====
+function getTimeAgo(dateStr) {
+const now = new Date();
+const date = new Date(dateStr);
+const diff = Math.floor((now - date) / 1000);
+
+if (diff < 60) return 'Только что';
+if (diff < 3600) return Math.floor(diff / 60) + ' мин. назад';
+if (diff < 86400) return Math.floor(diff / 3600) + ' ч. назад';
+if (diff < 604800) return Math.floor(diff / 86400) + ' дн. назад';
+return date.toLocaleDateString('ru-RU');
+}
+
+// Обновление каждые 30 секунд
+setInterval(() => {
+if (localStorage.getItem('pbAdminAuth') === 'true') {
+renderStats();
+renderRequests();
+}
+}, 30000);
+</script>
+</body>
+</html>
+
+
+              <script>
+                              // ===== ОПЛАТА =====
+function openPayment() {
+if (!state.user) { alert('Зарегистрируйтесь, чтобы купить PRO'); openModal('registerModal'); return; }
+const paid = state.data.paidClicked;
+document.getElementById('paidBtn').style.display = paid ? 'none' : 'block';
+document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
+openModal('paymentModal');
+}
+
+function markPaid() {
+state.data.paidClicked = true;
+saveUserData();
+document.getElementById('paidBtn').style.display = 'none';
+document.getElementById('paymentContacts').style.display = 'block';
+
+// Создаём заявку на оплату для админки
+createPaymentRequest();
+}
+
+function createPaymentRequest() {
+const requests = JSON.parse(localStorage.getItem('pbPaymentRequests') || '[]');
+const request = {
+id: 'req_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+userEmail: state.user.email,
+userName: state.user.name,
+date: new Date().toISOString(),
+status: 'pending',
+code: null
+};
+requests.push(request);
+localStorage.setItem('pbPaymentRequests', JSON.stringify(requests));
+}
+
+
+              </script>
+                        </body>
+                        </html>
+                    
