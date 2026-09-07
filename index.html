@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PhotoBoost PRO — Оптимизатор фото для Wildberries, Ozon и Avito</title>
 
-<!-- SEO и Мета-теги для соцсетей (ОБНОВЛЕНО) -->
+<!-- SEO и Мета-теги для соцсетей (ОБНОВЛЕНО С ПРИНУДИТЕЛЬНЫМ ОБНОВЛЕНИЕМ КЭША ?v=3) -->
 <meta name="description" content="Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito за секунды. Бесплатно 2 обработки. PRO — безлимитная загрузка, ZIP-архив и все настройки.">
 <link rel="canonical" href="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/">
 <meta name="robots" content="index, follow">
@@ -15,16 +15,17 @@
 <meta property="og:title" content="PhotoBoost PRO — Оптимизатор фото для маркетплейсов">
 <meta property="og:description" content="Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito за секунды. Бесплатно 2 обработки. PRO — безлимитная загрузка, ZIP-архив и все настройки.">
 <meta property="og:url" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/">
-<meta property="og:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
+<meta property="og:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PhotoBoost PRO Preview">
 <meta property="og:site_name" content="PhotoBoost">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PhotoBoost PRO — Оптимизатор фото для маркетплейсов">
 <meta name="twitter:description" content="Автоматическая оптимизация, обрезка и сжатие фото под требования Wildberries, Ozon и Avito за секунды. Бесплатно 2 обработки. PRO — безлимитная загрузка, ZIP-архив и все настройки.">
-<meta name="twitter:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png">
+<meta name="twitter:image" content="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/photoboost.png?v=3">
 
 <meta name="google-site-verification" content="">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -35,24 +36,23 @@
 html{scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-light);color:var(--text-dark);line-height:1.6;overflow-x:hidden}
 .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,10,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-.nav-container{max-width:1280px;margin:0 auto;padding:16px 30px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.nav-container{max-width:1280px;margin:0 auto;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{display:flex;align-items:center;gap:10px;font-size:1.4rem;font-weight:800;color:var(--text-light);text-decoration:none}
-/* ИЗМЕНЕНО: стиль для картинки-логотипа */
 .logo-icon{width:38px;height:38px;border-radius:10px;object-fit:cover;flex-shrink:0}
 .logo span{background:var(--gradient-main);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .nav-menu{display:flex;gap:30px;list-style:none}
 .nav-menu a{color:var(--text-muted);text-decoration:none;font-weight:500;font-size:0.95rem;cursor:pointer}
 .nav-menu a:hover{color:var(--text-light)}
-.nav-actions{display:flex;gap:10px;align-items:center}
+.nav-actions{display:flex;gap:10px;align-items:center;flex-shrink:0}
 .burger{display:none;background:none;border:none;color:var(--text-light);font-size:1.7rem;cursor:pointer;padding:4px 8px}
-.mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:rgba(10,10,26,0.98);z-index:999;padding:10px 20px 20px}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;background:rgba(10,10,26,0.98);z-index:999;padding:80px 20px 20px}
 .mobile-menu.open{display:block}
-.mobile-menu a{display:block;padding:14px 6px;color:var(--text-light);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border)}
-.btn{padding:11px 22px;border-radius:10px;font-weight:600;font-size:0.95rem;cursor:pointer;border:none;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
+.mobile-menu a{display:block;padding:16px 6px;color:var(--text-light);text-decoration:none;font-weight:600;border-bottom:1px solid var(--border);font-size:1.1rem}
+.btn{padding:10px 18px;border-radius:10px;font-weight:600;font-size:0.9rem;cursor:pointer;border:none;transition:all 0.3s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;white-space:nowrap}
 .btn-ghost{background:transparent;color:var(--text-light);border:1px solid var(--border)}
 .btn-primary{background:var(--gradient-purple);color:white}
 .btn-gold{background:var(--gradient-gold);color:var(--text-dark)}
-.btn-large{padding:16px 36px;font-size:1.05rem;border-radius:12px}
+.btn-large{padding:14px 28px;font-size:1rem;border-radius:12px}
 .btn-dark{background:var(--text-dark);color:white}
 .btn-secondary{background:#0077ff;color:white}
 .btn:disabled{opacity:0.5;cursor:not-allowed}
@@ -179,16 +179,64 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .receipt-box p{color:#92400e;font-weight:600;font-size:0.9rem}
 .sber-notice{background:#eff6ff;border-left:4px solid #3b82f6;padding:12px 16px;border-radius:8px;margin-top:12px;font-size:0.85rem;color:#1e40af}
 .contact-buttons{display:grid;gap:10px;margin-bottom:16px}
+
+/* ===== АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ (ИСПРАВЛЕНО: кнопки больше не вылезают) ===== */
 @media (max-width:1024px){.hero h1{font-size:2.6rem}.section-title{font-size:2.2rem}.tool-wrapper{padding:30px}.hero-container{gap:30px}}
-@media (max-width:900px){.nav-menu{display:none}.burger{display:block}.nav-container{padding:14px 20px}.hero{padding:120px 20px 70px}.hero-container{grid-template-columns:1fr}.hero-visual{height:300px}.trust-logos{gap:30px}.trust-logo{font-size:1.3rem}.footer-container{grid-template-columns:1fr 1fr}.section{padding:70px 20px}}
-@media (max-width:640px){.hero h1{font-size:2rem}.hero-subtitle{font-size:1.05rem}.hero-cta .btn{width:100%}.hero-stats{gap:20px}.section{padding:60px 16px}.section-title{font-size:1.7rem}.section-header{margin-bottom:40px}.tool-wrapper{padding:20px 14px;border-radius:18px}.upload-zone{padding:40px 16px;min-height:160px}.settings-panel{padding:18px 14px}.settings-grid{grid-template-columns:1fr 1fr;gap:12px}.action-bar{flex-direction:column;align-items:stretch;text-align:center}.result-item{grid-template-columns:80px 1fr;gap:12px}.result-item .btn{grid-column:1/-1;width:100%}.result-preview{width:80px;height:80px}.pricing-grid{grid-template-columns:1fr}.pricing-card.featured{transform:none}.pricing-card{padding:30px 22px}.modal-body{padding:16px 18px 24px}.modal-header{padding:24px 18px 0}.footer-container{grid-template-columns:1fr;gap:24px}.footer-bottom{flex-direction:column;align-items:flex-start}.cta-content h2{font-size:1.9rem}.logo{font-size:1.2rem}}
-@media (max-width:400px){.settings-grid{grid-template-columns:1fr}.hero h1{font-size:1.75rem}.hero-stats{flex-direction:column;gap:14px}}
+@media (max-width:900px){
+  .nav-menu{display:none}
+  .burger{display:block}
+  .nav-container{padding:14px 16px}
+  .hero{padding:120px 20px 70px}
+  .hero-container{grid-template-columns:1fr}
+  .hero-visual{height:300px}
+  .trust-logos{gap:30px}
+  .trust-logo{font-size:1.3rem}
+  .footer-container{grid-template-columns:1fr 1fr}
+  .section{padding:70px 20px}
+  .nav-actions{gap:8px}
+}
+@media (max-width:640px){
+  .hero h1{font-size:1.8rem}
+  .hero-subtitle{font-size:1rem}
+  .hero-cta{flex-direction:column;width:100%}
+  .hero-cta .btn{width:100%}
+  .hero-stats{gap:20px}
+  .section{padding:60px 16px}
+  .section-title{font-size:1.5rem}
+  .section-header{margin-bottom:40px}
+  .tool-wrapper{padding:20px 14px;border-radius:18px}
+  .upload-zone{padding:40px 16px;min-height:160px}
+  .settings-panel{padding:18px 14px}
+  .settings-grid{grid-template-columns:1fr;gap:12px}
+  .action-bar{flex-direction:column;align-items:stretch;text-align:center}
+  .result-item{grid-template-columns:80px 1fr;gap:12px}
+  .result-item .btn{grid-column:1/-1;width:100%}
+  .result-preview{width:80px;height:80px}
+  .pricing-grid{grid-template-columns:1fr}
+  .pricing-card.featured{transform:none}
+  .pricing-card{padding:24px 18px}
+  .modal-body{padding:16px 18px 24px}
+  .modal-header{padding:24px 18px 0}
+  .footer-container{grid-template-columns:1fr;gap:24px}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+  .cta-content h2{font-size:1.7rem}
+  .logo{font-size:1.1rem}
+  .logo-icon{width:32px;height:32px}
+  .nav-actions .btn{padding:8px 12px;font-size:0.8rem;white-space:nowrap}
+  .mobile-menu a{font-size:1rem;padding:14px 6px}
+  .btn-large{padding:12px 24px;font-size:0.95rem}
+}
+@media (max-width:400px){
+  .settings-grid{grid-template-columns:1fr}
+  .hero h1{font-size:1.6rem}
+  .hero-stats{flex-direction:column;gap:14px}
+  .nav-actions .btn{padding:6px 10px;font-size:0.75rem}
+}
 </style>
 </head>
 <body>
 <nav class="nav">
 <div class="nav-container">
-<!-- ИЗМЕНЕНО: Логотип-картинка в шапке -->
 <a href="./" class="logo"><img src="logo.png" class="logo-icon" alt="PhotoBoost"><div>Photo<span>Boost</span></div></a>
 <ul class="nav-menu">
 <li><a onclick="scrollToSection('features')">Возможности</a></li>
@@ -327,7 +375,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div></section>
 <footer class="footer"><div class="footer-container">
 <div>
-<!-- ИЗМЕНЕНО: Логотип-картинка в футере -->
 <a href="./" class="logo"><img src="logo.png" class="logo-icon" alt="PhotoBoost"><div>Photo<span>Boost</span></div></a>
 <p style="margin-top:16px;font-size:0.9rem;">Премиум-инструмент для оптимизации фото маркетплейсов.</p>
 </div>
@@ -337,7 +384,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 <div class="footer-bottom"><div>© 2024 PhotoBoost</div><div>Сделано с ❤️</div></div></footer>
 
-<!-- ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ -->
 <div class="modal-overlay" id="privacyModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('privacyModal')">✕</button>
@@ -356,7 +402,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- УСЛОВИЯ ИСПОЛЬЗОВАНИЯ -->
 <div class="modal-overlay" id="termsModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('termsModal')">✕</button>
@@ -373,7 +418,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- ВХОД -->
 <div class="modal-overlay" id="loginModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
@@ -389,7 +433,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- РЕГИСТРАЦИЯ -->
 <div class="modal-overlay" id="registerModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
@@ -406,7 +449,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- СБРОС -->
 <div class="modal-overlay" id="resetModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
@@ -418,7 +460,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 </div>
 
-<!-- ОПЛАТА -->
 <div class="modal-overlay" id="paymentModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('paymentModal')">✕</button>
@@ -520,12 +561,10 @@ if (codeObj.status === 'used') {
 alert('❌ Этот код уже был использован. Если вы получили его в подарок — обратитесь в поддержку.');
 return;
 }
-// Помечаем код как использованный
 codeObj.status = 'used';
 codeObj.usedBy = state.user ? state.user.email : 'anonymous';
 codeObj.usedAt = new Date().toISOString();
 localStorage.setItem('pbValidCodes', JSON.stringify(codes));
-// Активируем PRO
 state.data.usedCodes.push(code);
 state.data.isPro = true;
 const exp = new Date();
