@@ -3,324 +3,232 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — PhotoBoost</title>
+<title>Админ-панель — PhotoBoost</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-  background: #0f172a; 
-  color: #f8fafc; 
-  padding: 40px 20px;
-  min-height: 100vh;
+:root { 
+  --bg-dark: #0a0a1a; --bg-card: #12122a; --primary: #7c3aed; --gold: #fbbf24; 
+  --success: #10b981; --danger: #ef4444; --text-light: #f8fafc; --text-muted: #94a3b8; --border: rgba(255,255,255,0.1);
 }
-.container { max-width: 900px; margin: 0 auto; }
-h1 { font-size: 2rem; margin-bottom: 30px; color: #fbbf24; }
-.card { 
-  background: #1e293b; 
-  border-radius: 16px; 
-  padding: 30px; 
-  margin-bottom: 30px;
-  border: 1px solid #334155;
-}
-.card h2 { font-size: 1.3rem; margin-bottom: 20px; color: #fbbf24; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #94a3b8; }
-.form-group input, .form-group select { 
-  width: 100%; 
-  padding: 12px 16px; 
-  border: 2px solid #334155; 
-  border-radius: 10px; 
-  font-size: 1rem; 
-  background: #0f172a; 
-  color: #f8fafc;
-  font-family: inherit;
-}
-.form-group input:focus, .form-group select:focus { 
-  outline: none; 
-  border-color: #fbbf24; 
-}
-.btn { 
-  padding: 12px 24px; 
-  border-radius: 10px; 
-  font-weight: 600; 
-  font-size: 0.95rem; 
-  cursor: pointer; 
-  border: none; 
-  transition: all 0.3s; 
-  font-family: inherit;
-}
-.btn-primary { background: #fbbf24; color: #0f172a; }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4); }
-.btn-danger { background: #ef4444; color: white; }
-.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); }
-.btn-secondary { background: #475569; color: white; }
-.btn-secondary:hover { background: #64748b; }
-.btn-small { padding: 8px 16px; font-size: 0.85rem; }
-.codes-list { margin-top: 20px; }
-.code-item { 
-  background: #0f172a; 
-  border: 2px solid #10b981; 
-  border-radius: 10px; 
-  padding: 16px; 
-  margin-bottom: 12px; 
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center;
-  font-family: 'Courier New', monospace;
-  font-weight: 700;
-  color: #fbbf24;
-}
-.code-item.used { 
-  border-color: #64748b; 
-  opacity: 0.5; 
-}
-.code-item.used .code-value { color: #64748b; }
-.stats { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-  gap: 16px; 
-  margin-bottom: 20px; 
-}
-.stat-card { 
-  background: #0f172a; 
-  padding: 20px; 
-  border-radius: 12px; 
-  text-align: center;
-  border: 1px solid #334155;
-}
-.stat-value { font-size: 2rem; font-weight: 800; color: #fbbf24; margin-bottom: 4px; }
-.stat-label { font-size: 0.85rem; color: #94a3b8; }
-.warning { 
-  background: rgba(239, 68, 68, 0.1); 
-  border: 1px solid rgba(239, 68, 68, 0.3); 
-  color: #fca5a5; 
-  padding: 12px 16px; 
-  border-radius: 10px; 
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-}
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--bg-dark); color: var(--text-light); line-height: 1.6; padding: 20px; }
+.container { max-width: 1200px; margin: 0 auto; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+header h1 { font-size: 1.8rem; color: var(--gold); }
+.logout-btn { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+/* Вкладки */
+.dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
+.dash-tab { padding: 12px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-muted); font-family: inherit; margin-bottom: -2px; }
+.dash-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.dash-tab-content { display: none; }
+.dash-tab-content.active { display: block; }
+
+.card { background: var(--bg-card); border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 1px solid var(--border); }
+.card h3 { margin-bottom: 20px; font-size: 1.2rem; }
+
+/* Таблица пользователей */
+.table-wrapper { overflow-x: auto; }
+.users-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.users-table th, .users-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+.users-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
+.users-table td { font-size: 0.95rem; }
+
+/* Бейджи статусов */
+.badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; display: inline-block; }
+.badge-pro { background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid rgba(251, 191, 36, 0.3); }
+.badge-free { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.3); }
+
+/* Период подписки */
+.period-text { font-size: 0.9rem; color: var(--text-light); }
+.period-text.free { color: var(--text-muted); font-style: italic; }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 </style>
 </head>
 <body>
 <div class="container">
-<h1>🔧 Admin Panel — PhotoBoost</h1>
+  <header>
+    <h1>🔧 Админ-панель PhotoBoost</h1>
+    <button class="logout-btn" onclick="handleLogout()">Выйти</button>
+  </header>
 
-<div class="card">
-<h2> Статистика</h2>
-<div class="stats">
-<div class="stat-card">
-<div class="stat-value" id="totalCodes">0</div>
-<div class="stat-label">Всего кодов</div>
-</div>
-<div class="stat-card">
-<div class="stat-value" id="activeCodes">0</div>
-<div class="stat-label">Активных</div>
-</div>
-<div class="stat-card">
-<div class="stat-value" id="usedCodes">0</div>
-<div class="stat-label">Использовано</div>
-</div>
-</div>
-</div>
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="switchTab('users', this)">👥 Пользователи</button>
+    <button class="dash-tab" onclick="switchTab('codes', this)">🔑 Коды активации</button>
+  </div>
 
-<div class="card">
-<h2> Сгенерировать коды</h2>
-<div class="form-group">
-<label>Количество кодов</label>
-<input type="number" id="codeCount" value="10" min="1" max="100">
-</div>
-<button class="btn btn-primary" onclick="generateCodes()">Сгенерировать</button>
-</div>
+  <!-- ВКЛАДКА ПОЛЬЗОВАТЕЛИ -->
+  <div class="dash-tab-content active" id="tab-users">
+    <div class="card">
+      <h3>Список всех пользователей</h3>
+      <div class="table-wrapper">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Имя</th>
+              <th>Email</th>
+              <th>Статус</th>
+              <th>Период подписки</th>
+              <th>Дата регистрации</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersTableBody">
+            <!-- Заполняется через JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-<div class="card">
-<h2>📋 Активные коды</h2>
-<div class="warning">⚠️ Эти коды могут использовать клиенты для активации PRO</div>
-<div id="activeCodesList" class="codes-list"></div>
-<button class="btn btn-danger btn-small" onclick="clearGeneratedCodes()" style="margin-top: 16px;">🗑️ Очистить все сгенерированные коды</button>
-</div>
-
-<div class="card">
-<h2>👥 Пользователи</h2>
-<div id="usersList" class="codes-list"></div>
-</div>
-
-<div class="card">
-<h2>⚠️ Опасная зона</h2>
-<div class="warning">⚠️ Эти действия нельзя отменить!</div>
-<button class="btn btn-danger" onclick="clearAllUsers()">🗑️ Удалить всех пользователей</button>
-<button class="btn btn-danger" onclick="clearAllData()" style="margin-left: 10px;"> Полная очистка данных</button>
-</div>
+  <!-- ВКЛАДКА КОДЫ -->
+  <div class="dash-tab-content" id="tab-codes">
+    <div class="card">
+      <h3>Управление кодами активации</h3>
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="newCodeInput" placeholder="WB-XXXX-XXXX" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-dark); color: white;">
+        <button class="logout-btn" style="background: var(--primary);" onclick="addManualCode()">Добавить код</button>
+        <button class="logout-btn" style="background: var(--success);" onclick="generateRandomCode()">Сгенерировать</button>
+      </div>
+      <div id="codesList"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-// ===== ЗАГРУЗКА ДАННЫХ =====
-function loadCodes() {
-return JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+// ===== ПРОВЕРКА ВХОДА =====
+if (!localStorage.getItem('isAdmin')) {
+  // Простая проверка для демо. В реальности можно сделать вход по паролю
+  const pass = prompt('Введите пароль администратора:');
+  if (pass === 'admin123') { // ИЗМЕНИ ПАРОЛЬ ЗДЕСЬ
+    localStorage.setItem('isAdmin', 'true');
+  } else {
+    alert('Неверный пароль');
+    window.location.href = '../'; // Возврат на главную
+  }
 }
 
-function saveCodes(codes) {
-localStorage.setItem('pbValidCodes', JSON.stringify(codes));
+function handleLogout() {
+  localStorage.removeItem('isAdmin');
+  window.location.href = '../';
 }
 
-function loadUsers() {
-return JSON.parse(localStorage.getItem('pbUsers') || '[]');
+// ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+function switchTab(tabName, btn) {
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tabName).classList.add('active');
+  
+  if (tabName === 'users') renderUsers();
+  if (tabName === 'codes') renderCodes();
 }
 
-// ===== ГЕНЕРАЦИЯ КОДОВ =====
-function generateCodes() {
-const count = parseInt(document.getElementById('codeCount').value);
-if (!count || count < 1 || count > 100) {
-alert('Введите число от 1 до 100');
-return;
-}
-
-const codes = loadCodes();
-let generated = 0;
-
-for (let i = 0; i < count; i++) {
-const code = 'WB-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + 
-Math.random().toString(36).substring(2, 6).toUpperCase();
-codes.push({ code: code, used: false, generated: new Date().toISOString() });
-generated++;
-}
-
-saveCodes(codes);
-alert('✅ Сгенерировано ' + generated + ' кодов!');
-renderCodes();
-updateStats();
-}
-
-// ===== ОТОБРАЖЕНИЕ КОДОВ =====
-function renderCodes() {
-const codes = loadCodes();
-const activeList = document.getElementById('activeCodesList');
-
-if (codes.length === 0) {
-activeList.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 40px;">Нет сгенерированных кодов</p>';
-return;
-}
-
-activeList.innerHTML = codes.map(item => {
-const codeStr = typeof item === 'string' ? item : item.code;
-const isUsed = typeof item === 'object' && item.used;
-return `
-<div class="code-item ${isUsed ? 'used' : ''}">
-<span class="code-value">${codeStr}${isUsed ? ' ✓' : ''}</span>
-<button class="btn btn-secondary btn-small" onclick="copyCode('${codeStr}')">Копировать</button>
-</div>
-`;
-}).join('');
-}
-
-// ===== КОПИРОВАНИЕ КОДА =====
-function copyCode(code) {
-navigator.clipboard.writeText(code).then(() => {
-alert('Код скопирован: ' + code);
-}).catch(() => {
-// Fallback для старых браузеров
-const textarea = document.createElement('textarea');
-textarea.value = code;
-document.body.appendChild(textarea);
-textarea.select();
-document.execCommand('copy');
-document.body.removeChild(textarea);
-alert('Код скопирован: ' + code);
-});
-}
-
-// ===== ОЧИСТКА СГЕНЕРИРОВАННЫХ КОДОВ =====
-function clearGeneratedCodes() {
-if (!confirm('⚠️ Очистить ВСЕ сгенерированные коды?\n\nЭто удалит все коды, которые вы создавали через админку.\nИспользованные коды перестанут работать.\n\nПродолжить?')) {
-return;
-}
-
-saveCodes([]);
-renderCodes();
-updateStats();
-alert('✅ Все сгенерированные коды очищены');
-}
-
-// ===== ОЧИСТКА ПОЛЬЗОВАТЕЛЕЙ =====
-function clearAllUsers() {
-if (!confirm('⚠️ Удалить ВСЕХ пользователей?\n\nЭто удалит все аккаунты, историю, настройки.\nДействие нельзя отменить!\n\nПродолжить?')) {
-return;
-}
-
-localStorage.removeItem('pbUsers');
-// Очищаем данные пользователей, но НЕ коды
-const keys = Object.keys(localStorage);
-keys.forEach(key => {
-if (key.startsWith('pbData_')) {
-localStorage.removeItem(key);
-}
-});
-
-renderUsers();
-updateStats();
-alert('✅ Все пользователи удалены');
-}
-
-// ===== ПОЛНАЯ ОЧИСТКА =====
-function clearAllData() {
-if (!confirm('💥 ПОЛНАЯ ОЧИСТКА ДАННЫХ?\n\nЭто удалит:\n• Всех пользователей\n• Все коды\n• Всю историю\n\nПродолжить?')) {
-return;
-}
-
-localStorage.removeItem('pbUsers');
-localStorage.removeItem('pbValidCodes');
-localStorage.removeItem('pbUserReviews');
-
-const keys = Object.keys(localStorage);
-keys.forEach(key => {
-if (key.startsWith('pbData_') || key.startsWith('pbUser') || key.startsWith('pbValid')) {
-localStorage.removeItem(key);
-}
-});
-
-renderCodes();
-renderUsers();
-updateStats();
-alert('✅ Все данные очищены');
-}
-
-// ===== ОТОБРАЖЕНИЕ ПОЛЬЗОВАТЕЛЕЙ =====
+// ===== РЕНДЕР ПОЛЬЗОВАТЕЛЕЙ (С ДАТАМИ И СТАТУСОМ) =====
 function renderUsers() {
-const users = loadUsers();
-const usersList = document.getElementById('usersList');
+  const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+  const tbody = document.getElementById('adminUsersTableBody');
+  
+  if (users.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Пользователей пока нет</td></tr>';
+    return;
+  }
 
-if (users.length === 0) {
-usersList.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 40px;">Нет зарегистрированных пользователей</p>';
-return;
+  tbody.innerHTML = users.map(user => {
+    // Получаем данные конкретного пользователя
+    const data = JSON.parse(localStorage.getItem('pbData_' + user.email) || '{}');
+    const isPro = data.isPro;
+    const regDate = new Date(user.registeredAt).toLocaleDateString('ru-RU');
+    
+    let periodHtml = '<span class="period-text free">Нет активной подписки</span>';
+    
+    if (isPro && data.proExpiry) {
+      // Вычисляем дату начала (минус 1 месяц от даты окончания)
+      const endDate = new Date(data.proExpiry);
+      const startDate = new Date(endDate);
+      startDate.setMonth(startDate.getMonth() - 1);
+      
+      const startStr = startDate.toLocaleDateString('ru-RU');
+      const endStr = endDate.toLocaleDateString('ru-RU');
+      
+      periodHtml = `<span class="period-text">с <strong>${startStr}</strong> по <strong>${endStr}</strong></span>`;
+    }
+
+    const statusBadge = isPro 
+      ? '<span class="badge badge-pro">PRO</span>' 
+      : '<span class="badge badge-free">Free</span>';
+
+    return `
+      <tr>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${statusBadge}</td>
+        <td>${periodHtml}</td>
+        <td>${regDate}</td>
+      </tr>
+    `;
+  }).join('');
 }
 
-usersList.innerHTML = users.map(u => {
-const registered = new Date(u.registeredAt).toLocaleDateString('ru-RU');
-return `
-<div class="code-item">
-<div style="flex: 1;">
-<div style="font-weight: 700; color: #fbbf24;">${u.name}</div>
-<div style="font-size: 0.85rem; color: #94a3b8;">${u.email}</div>
-<div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Зарегистрирован: ${registered}</div>
-</div>
-</div>
-`;
-}).join('');
+// ===== УПРАВЛЕНИЕ КОДАМИ =====
+function renderCodes() {
+  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+  const list = document.getElementById('codesList');
+  
+  if (codes.length === 0) {
+    list.innerHTML = '<p class="empty-state">Нет активных кодов</p>';
+    return;
+  }
+
+  list.innerHTML = codes.map((code, index) => `
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-dark); border-radius: 8px; margin-bottom: 8px;">
+      <code style="font-family: monospace; font-size: 1.1rem; color: var(--gold); font-weight: 700;">${code}</code>
+      <button class="logout-btn" style="background: var(--danger); padding: 6px 12px; font-size: 0.8rem;" onclick="deleteCode(${index})">Удалить</button>
+    </div>
+  `).join('');
 }
 
-// ===== СТАТИСТИКА =====
-function updateStats() {
-const codes = loadCodes();
-const users = loadUsers();
-
-document.getElementById('totalCodes').textContent = codes.length;
-document.getElementById('activeCodes').textContent = codes.filter(c => typeof c === 'object' ? !c.used : true).length;
-document.getElementById('usedCodes').textContent = codes.filter(c => typeof c === 'object' && c.used).length;
+function generateRandomCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'WB-';
+  for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+  code += '-';
+  for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+  
+  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+  codes.push(code);
+  localStorage.setItem('pbValidCodes', JSON.stringify(codes));
+  renderCodes();
+  alert('Код добавлен: ' + code);
 }
 
-// ===== ЗАПУСК =====
-renderCodes();
+function addManualCode() {
+  const input = document.getElementById('newCodeInput');
+  const code = input.value.trim().toUpperCase();
+  if (!code || !code.startsWith('WB-')) {
+    alert('Неверный формат. Должен начинаться с WB-');
+    return;
+  }
+  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+  if (codes.includes(code)) {
+    alert('Такой код уже существует');
+    return;
+  }
+  codes.push(code);
+  localStorage.setItem('pbValidCodes', JSON.stringify(codes));
+  input.value = '';
+  renderCodes();
+}
+
+function deleteCode(index) {
+  if (!confirm('Удалить этот код?')) return;
+  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
+  codes.splice(index, 1);
+  localStorage.setItem('pbValidCodes', JSON.stringify(codes));
+  renderCodes();
+}
+
+// Инициализация при загрузке
 renderUsers();
-updateStats();
 </script>
 </body>
 </html>
