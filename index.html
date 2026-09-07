@@ -182,7 +182,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .sber-notice{background:#eff6ff;border-left:4px solid #3b82f6;padding:12px 16px;border-radius:8px;margin-top:12px;font-size:0.85rem;color:#1e40af}
 .contact-buttons{display:grid;gap:10px;margin-bottom:16px}
 
-/* ===== АДАПТАЦИЯ ПОД ТЕЛЕФОНЫ ===== */
 @media (max-width:1024px){.hero h1{font-size:2.6rem}.section-title{font-size:2.2rem}.tool-wrapper{padding:30px}.hero-container{gap:30px}}
 @media (max-width:900px){
   .nav-menu{display:none}
@@ -197,7 +196,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   .section{padding:70px 20px}
   .nav-actions{gap:8px}
 }
-/* НА ТЕЛЕФОНАХ: кнопки входа уходят из шапки в бургер-меню */
 @media (max-width:768px){
   .nav-actions{display:none}
   .mobile-auth{display:flex}
@@ -535,14 +533,14 @@ const nu={name,email,password,registeredAt:new Date().toISOString()};
 users.push(nu);localStorage.setItem('pbUsers',JSON.stringify(users));localStorage.setItem('pbUser',JSON.stringify(nu));
 state.user=nu;
 state.data={history:[],freeUsage:2,totalProcessed:0,totalSaved:0,isPro:false,proExpiry:null,paidClicked:false,usedCodes:[]};
-saveUserData();closeModal('registerModal');updateNav();updateUI();
+saveUserData();closeModal('registerModal');updateNav();updateUI();renderSelectedZone();
 alert('✅ Аккаунт создан! Добро пожаловать, '+name+'!');
 }
 function handleLogin(e){
 e.preventDefault();
 const email=document.getElementById('loginEmail').value,password=document.getElementById('loginPassword').value;
 const user=(JSON.parse(localStorage.getItem('pbUsers')||'[]')).find(u=>u.email===email&&u.password===password);
-if(user){state.user=user;localStorage.setItem('pbUser',JSON.stringify(user));loadUserData();closeModal('loginModal');updateNav();updateUI()}
+if(user){state.user=user;localStorage.setItem('pbUser',JSON.stringify(user));loadUserData();closeModal('loginModal');updateNav();updateUI();renderSelectedZone()}
 else alert('Неверный email или пароль');
 }
 function handleResetStep1(e){e.preventDefault();if((JSON.parse(localStorage.getItem('pbUsers')||'[]')).find(u=>u.email===document.getElementById('resetEmail').value)){document.getElementById('resetStep1').style.display='none';document.getElementById('resetStep2').style.display='block'}else alert('Пользователь не найден')}
@@ -586,28 +584,105 @@ state.data.proExpiry = exp.toISOString();
 saveUserData();
 input.value = '';
 updateUI();
+renderSelectedZone();
 alert('🎉 PRO активирована до ' + formatDate(state.data.proExpiry) + '!');
 }
 
 function updateUI(){
 const isPro=state.data.isPro;
 document.getElementById('statusDot').classList.toggle('active',isPro);
-document.getElementById('statusText').innerHTML=isPro?'<strong style="color:#10b981;">⭐ PRO</strong> — безлимит':'Бесплатно: <strong>'+state.data.freeUsage+'</strong> фото';
+document.getElementById('statusText').innerHTML=isPro?'<strong style="color:#10b981;">⭐ PRO</strong> — безлимит (до 100 фото)':'Бесплатно: <strong>'+state.data.freeUsage+'</strong> фото';
 document.getElementById('zipLock').style.display=isPro?'none':'inline';
 ['formatSetting','watermarkSetting','dpiSetting'].forEach(id=>{const el=document.getElementById(id);const inp=el.querySelector('select,input');if(isPro){el.classList.remove('disabled');inp.disabled=false}else{el.classList.add('disabled');inp.disabled=true}});
 document.getElementById('processBtn').disabled=state.selectedFiles.length===0||(!isPro&&state.data.freeUsage<=0);
 }
-const zone=document.getElementById('uploadZone');const fileInput=document.getElementById('fileInput');
-zone.addEventListener('click',()=>fileInput.click());
+
+const zone=document.getElementById('uploadZone');
+const fileInput=document.getElementById('fileInput');
+
+zone.addEventListener('click',(e)=>{
+  if(e.target.tagName==='BUTTON' || e.target.closest('button')) return;
+  fileInput.click();
+});
+
 fileInput.addEventListener('change',e=>handleFiles(e.target.files));
+
+// ===== НОВАЯ ЛОГИКА ЗАГРУЗКИ С НАКОПЛЕНИЕМ (PRO: 2–100 фото) =====
 function handleFiles(files){
-const max=getFeatures().maxBatchSize;
-const all=Array.from(files).filter(f=>f.type.startsWith('image/'));
-if(!all.length)return;
-if(all.length>max){alert('Максимум '+max+' фото');state.selectedFiles=all.slice(0,max)}else state.selectedFiles=all;
-zone.innerHTML='<div class="upload-icon-big">✓</div><h3>Выбрано: '+state.selectedFiles.length+'</h3>';
-updateUI();
+  const max=getFeatures().maxBatchSize;
+  const all=Array.from(files).filter(f=>f.type.startsWith('image/'));
+  if(!all.length){fileInput.value='';return;}
+
+  // Бесплатный тариф: только 1 фото, добавление запрещено
+  if(!state.data.isPro){
+    if(state.selectedFiles.length>=max){
+      alert('❌ На бесплатном тарифе — только 1 фото.\nАктивируйте PRO, чтобы загружать от 2 до 100 фото!');
+      fileInput.value='';
+      return;
+    }
+    state.selectedFiles=all.slice(0,max);
+  }else{
+    // PRO: накапливаем выбор, но не больше 100 суммарно
+    const free=max-state.selectedFiles.length;
+    if(all.length>free){
+      alert('⚠️ Лимит PRO — '+max+' фото за раз.\nБудет добавлено первых: '+free);
+      state.selectedFiles=state.selectedFiles.concat(all.slice(0,free));
+    }else{
+      state.selectedFiles=state.selectedFiles.concat(all);
+    }
+  }
+  fileInput.value='';
+  renderSelectedZone();
+  updateUI();
 }
+
+function renderSelectedZone(){
+  const n=state.selectedFiles.length;
+  const max=getFeatures().maxBatchSize;
+  const isPro=state.data.isPro;
+
+  if(n===0){
+    zone.innerHTML='<div class="upload-icon-big">📸</div><p style="font-weight:600;font-size:1.1rem;">Нажмите или перетащите фото</p>'+
+      '<p style="color:#64748b;font-size:0.9rem;margin-top:8px;">'+(isPro?'PRO: загрузите от 2 до 100 фото':'JPG, PNG, WebP — бесплатно 2 обработки')+'</p>';
+    return;
+  }
+
+  zone.innerHTML=
+    '<div class="upload-icon-big">✓</div>'+
+    '<h3 style="font-size:1.4rem;margin-bottom:6px;">Выбрано: '+n+' из '+max+'</h3>'+
+    '<p style="color:#64748b;font-size:0.9rem;margin-top:4px;">'+
+      (isPro?'Можно добавить ещё фото (до 100 суммарно)':'Бесплатный тариф: 1 фото')+
+    '</p>'+
+    '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center;">'+
+      '<button class="btn btn-primary" id="addMoreBtn">➕ Добавить ещё</button>'+
+      '<button class="btn" id="clearBtn" style="background:#e2e8f0;color:#0f0f1e;">✖ Сбросить</button>'+
+    '</div>';
+
+  // Вешаем обработчики (чтобы клики не всплывали до zone)
+  document.getElementById('addMoreBtn').addEventListener('click',(e)=>{
+    e.stopPropagation();
+    if(!isPro){
+      alert('❌ Добавление нескольких фото доступно только в PRO.\nАктивируйте PRO, чтобы загружать до 100 фото.');
+      return;
+    }
+    fileInput.click();
+  });
+  document.getElementById('clearBtn').addEventListener('click',(e)=>{
+    e.stopPropagation();
+    clearSelected();
+  });
+}
+
+function clearSelected(){
+  state.selectedFiles=[];
+  fileInput.value='';
+  document.getElementById('resultsArea').innerHTML='';
+  document.getElementById('downloadAllBtn').style.display='none';
+  state.processedFiles=[];
+  renderSelectedZone();
+  updateUI();
+}
+
 document.getElementById('processBtn').addEventListener('click',async()=>{
 if(!state.selectedFiles.length)return;
 if(!state.data.isPro&&state.data.freeUsage<=0){openPayment();return}
@@ -657,7 +732,7 @@ c.innerHTML=rv.map(r=>'<div class="testimonial-card"><div class="stars">'+'★'.
 }
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('active');document.body.style.overflow=''}}));
 loadUserData();
-updateNav();updateUI();renderUserReviews();
+updateNav();updateUI();renderSelectedZone();renderUserReviews();
 </script>
 </body>
 </html>
