@@ -6,212 +6,127 @@
 <title>Админ-панель — PhotoBoost</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f1f5f9; color: #0f0f1e; }
-.header { background: #0a0a1a; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
-.header h1 { font-size: 1.5rem; }
-.container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-.tabs { display: flex; gap: 10px; margin-bottom: 30px; }
-.tab { padding: 12px 24px; background: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; }
-.tab.active { background: #7c3aed; color: white; }
-.tab:hover:not(.active) { background: #e2e8f0; }
-.section { display: none; }
-.section.active { display: block; }
-.card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-.user-row { display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid #e2e8f0; }
-.user-row:last-child { border-bottom: none; }
-.user-info h4 { font-size: 1rem; margin-bottom: 4px; }
-.user-info p { font-size: 0.85rem; color: #64748b; }
-.user-meta { font-size: 0.8rem; color: #94a3b8; }
-.btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+body { font-family: -apple-system, sans-serif; background: #0a0a1a; color: #f8fafc; padding: 40px 20px; }
+.container { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 2rem; margin-bottom: 30px; }
+h2 { font-size: 1.3rem; margin: 30px 0 16px; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.generate-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.generate-row input { width: 100px; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; background: rgba(255,255,255,0.05); color: white; font-size: 1rem; }
+.btn { padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; font-family: inherit; }
 .btn-primary { background: #7c3aed; color: white; }
-.btn-primary:hover { background: #5b21b6; }
-.btn-success { background: #10b981; color: white; }
-.btn-success:hover { background: #059669; }
-.btn-secondary { background: #e2e8f0; color: #0f0f1e; }
-.btn-secondary:hover { background: #cbd5e1; }
-.code-box { background: #faf9ff; border: 2px dashed #7c3aed; padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 0.9rem; color: #7c3aed; font-weight: 700; text-align: center; margin-top: 8px; }
-.empty { text-align: center; padding: 60px 20px; color: #94a3b8; }
-.empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
-.stat-card { background: white; border-radius: 12px; padding: 20px; text-align: center; }
-.stat-value { font-size: 2rem; font-weight: 800; color: #7c3aed; }
-.stat-label { font-size: 0.85rem; color: #64748b; margin-top: 4px; }
-.toast { position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 16px 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: none; animation: slideIn 0.3s; }
-@keyframes slideIn { from { transform: translateX(400px); } to { transform: translateX(0); } }
-.toast.show { display: block; }
-.copy-hint { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; text-align: center; }
+.btn-primary:hover { background: #6d28d9; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+.code-list { margin-top: 20px; }
+.code-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 8px; }
+.code-item.used { opacity: 0.5; }
+.code-item code { font-family: monospace; font-size: 1.1rem; color: #10b981; }
+.code-item.used code { color: #64748b; text-decoration: line-through; }
+.status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+.status-active { background: rgba(16,185,129,0.2); color: #10b981; }
+.status-used { background: rgba(100,116,139,0.2); color: #64748b; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; text-align: center; }
+.stat-value { font-size: 2rem; font-weight: 800; color: #fbbf24; }
+.stat-label { font-size: 0.85rem; color: #94a3b8; margin-top: 4px; }
+@media (max-width: 640px) { .stats { grid-template-columns: 1fr; } .generate-row { flex-direction: column; } .generate-row input { width: 100%; } }
 </style>
 </head>
 <body>
-<div class="header">
-<h1>🔧 Админ-панель PhotoBoost</h1>
-<a href="dashboard/" class="btn btn-secondary" style="text-decoration:none; color:white;">← На сайт</a>
-</div>
 <div class="container">
+<h1>🔐 Админ-панель PhotoBoost</h1>
+
 <div class="stats">
-<div class="stat-card">
-<div class="stat-value" id="totalUsers">0</div>
-<div class="stat-label">Всего пользователей</div>
+<div class="stat"><div class="stat-value" id="totalCodes">0</div><div class="stat-label">Всего кодов</div></div>
+<div class="stat"><div class="stat-value" id="activeCodes">0</div><div class="stat-label">Активных</div></div>
+<div class="stat"><div class="stat-value" id="usedCodes">0</div><div class="stat-label">Использовано</div></div>
 </div>
-<div class="stat-card">
-<div class="stat-value" id="newUsers">0</div>
-<div class="stat-label">Новые (не оплатили)</div>
-</div>
-<div class="stat-card">
-<div class="stat-value" id="paidUsers">0</div>
-<div class="stat-label">Оплатили</div>
-</div>
-<div class="stat-card">
-<div class="stat-value" id="activeCodes">0</div>
-<div class="stat-label">Сгенерировано кодов</div>
+
+<div class="card">
+<h2>➕ Генерация кодов</h2>
+<div class="generate-row">
+<input type="number" id="codeCount" value="10" min="1" max="100" placeholder="Количество">
+<button class="btn btn-primary" onclick="generateCodes()">Сгенерировать</button>
+<button class="btn btn-danger" onclick="clearAllCodes()">Очистить все коды</button>
 </div>
 </div>
-<div class="tabs">
-<button class="tab active" onclick="switchTab('new')">Новые пользователи</button>
-<button class="tab" onclick="switchTab('paid')">Оплатили</button>
-<button class="tab" onclick="switchTab('all')">Все пользователи</button>
-</div>
-<div id="newSection" class="section active">
-<h2 style="margin-bottom:20px;">📋 Новые пользователи (не нажали "Я оплатил")</h2>
-<div id="newUsersList"></div>
-</div>
-<div id="paidSection" class="section">
-<h2 style="margin-bottom:20px;">✅ Оплатили (ждут код)</h2>
-<div id="paidUsersList"></div>
-</div>
-<div id="allSection" class="section">
-<h2 style="margin-bottom:20px;">👥 Все пользователи</h2>
-<div id="allUsersList"></div>
+
+<div class="card">
+<h2> Список кодов</h2>
+<div class="code-list" id="codeList"></div>
 </div>
 </div>
-<div class="toast" id="toast"></div>
+
 <script>
-// ===== ЗАГРУЗКА ДАННЫХ =====
-function loadUsers() {
-const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
-const userData = JSON.parse(localStorage.getItem('pbUserData') || '{}');
-const generatedCodes = JSON.parse(localStorage.getItem('pbGeneratedCodes') || '{}');
-return { users, userData, generatedCodes };
+function getCodes() { return JSON.parse(localStorage.getItem('pbValidCodes') || '[]'); }
+function saveCodes(codes) { localStorage.setItem('pbValidCodes', JSON.stringify(codes)); }
+
+function generateCode() {
+const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+let code = 'WB-';
+for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+code += '-';
+for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+return code;
 }
-// ===== ОТОБРАЖЕНИЕ =====
-function renderUsers(filter = 'new') {
-const { users, userData, generatedCodes } = loadUsers();
-let filtered = [];
-users.forEach(user => {
-const data = userData[user.email] || {};
-const paid = data.paidClicked || false;
-const hasCode = generatedCodes[user.email] ? true : false;
-if (filter === 'new' && !paid) filtered.push({ user, data, hasCode });
-else if (filter === 'paid' && paid) filtered.push({ user, data, hasCode });
-else if (filter === 'all') filtered.push({ user, data, hasCode });
-});
-// Сортировка: новые сверху
-filtered.sort((a, b) => new Date(b.user.registeredAt || 0) - new Date(a.user.registeredAt || 0));
-updateStats(users, userData);
-const container = document.getElementById(filter === 'new' ? 'newUsersList' : filter === 'paid' ? 'paidUsersList' : 'allUsersList');
-if (filtered.length === 0) {
-container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>Нет пользователей</p></div>';
+
+function generateCodes() {
+const count = parseInt(document.getElementById('codeCount').value) || 10;
+const codes = getCodes();
+for (let i = 0; i < count; i++) {
+codes.push({ code: generateCode(), status: 'active', usedBy: null, usedAt: null, createdAt: new Date().toISOString() });
+}
+saveCodes(codes);
+renderCodes();
+updateStats();
+alert('✅ Сгенерировано ' + count + ' кодов');
+}
+
+function clearAllCodes() {
+if (!confirm('Удалить ВСЕ коды? Это действие нельзя отменить.')) return;
+localStorage.removeItem('pbValidCodes');
+renderCodes();
+updateStats();
+}
+
+function renderCodes() {
+const codes = getCodes();
+const list = document.getElementById('codeList');
+if (codes.length === 0) {
+list.innerHTML = '<p style="color: #64748b;">Нет сгенерированных кодов</p>';
 return;
 }
-container.innerHTML = filtered.map(({ user, data, hasCode }) => {
-const email = user.email;
-const name = user.name;
-const registered = new Date(user.registeredAt).toLocaleDateString('ru-RU');
-const paid = data.paidClicked ? '✅' : '';
-const code = generatedCodes[email] || '';
-const proStatus = data.isPro ? '🟢 PRO' : '⚪ Free';
-return `
-<div class="card">
-<div class="user-row">
-<div class="user-info">
-<h4>${name} ${proStatus}</h4>
-<p>${email}</p>
-<div class="user-meta">Зарегистрирован: ${registered} • Статус оплаты: ${paid}</div>
+list.innerHTML = codes.map((c, i) => `
+<div class="code-item ${c.status === 'used' ? 'used' : ''}">
+<code>${c.code}</code>
+<span class="status-badge ${c.status === 'active' ? 'status-active' : 'status-used'}">
+${c.status === 'active' ? 'Активен' : 'Использован' + (c.usedBy ? ' (' + c.usedBy + ')' : '')}
+</span>
+<button class="btn btn-danger" onclick="deleteCode(${i})">Удалить</button>
 </div>
-<div>
-${!code ? `
-<button class="btn ${data.paidClicked ? 'btn-success' : 'btn-secondary'}" onclick="generateCode('${email}')" ${!data.paidClicked ? 'disabled title="Пользователь ещё не нажал Я оплатил"' : ''}>
-${data.paidClicked ? ' Сгенерировать код' : '⏳ Ожидание оплаты'}
-</button>
-` : `
-<div class="code-box">${code}</div>
-<div class="copy-hint">Нажми чтобы скопировать</div>
-<button class="btn btn-secondary" onclick="copyCode('${code}')" style="margin-top:8px;"> Копировать</button>
-<button class="btn btn-primary" onclick="regenerateCode('${email}')" style="margin-top:8px; margin-left:8px;">🔄 Новый код</button>
-`}
-</div>
-<div>
-<button class="btn btn-secondary" onclick="viewDetails('${email}')"> Подробнее</button>
-</div>
-</div>
-</div>
-`;
-}).join('');
+`).join('');
 }
-// ===== ГЕНЕРАЦИЯ КОДА =====
-function generateCode(email) {
-const code = 'WB-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-const generatedCodes = JSON.parse(localStorage.getItem('pbGeneratedCodes') || '{}');
-generatedCodes[email] = code;
-localStorage.setItem('pbGeneratedCodes', JSON.stringify(generatedCodes));
-showToast(`Код для ${email}: ${code}`);
-renderUsers(currentTab);
+
+function deleteCode(index) {
+if (!confirm('Удалить этот код?')) return;
+const codes = getCodes();
+codes.splice(index, 1);
+saveCodes(codes);
+renderCodes();
+updateStats();
 }
-function regenerateCode(email) {
-if (!confirm('Сгенерировать новый код? Старый станет недействительным.')) return;
-generateCode(email);
+
+function updateStats() {
+const codes = getCodes();
+document.getElementById('totalCodes').textContent = codes.length;
+document.getElementById('activeCodes').textContent = codes.filter(c => c.status === 'active').length;
+document.getElementById('usedCodes').textContent = codes.filter(c => c.status === 'used').length;
 }
-function copyCode(code) {
-navigator.clipboard.writeText(code).then(() => {
-showToast('Код скопирован: ' + code);
-});
-}
-// ===== СТАТИСТИКА =====
-function updateStats(users, userData) {
-const total = users.length;
-const paid = users.filter(u => (userData[u.email] || {}).paidClicked).length;
-const newU = total - paid;
-const codes = Object.keys(JSON.parse(localStorage.getItem('pbGeneratedCodes') || '{}')).length;
-document.getElementById('totalUsers').textContent = total;
-document.getElementById('newUsers').textContent = newU;
-document.getElementById('paidUsers').textContent = paid;
-document.getElementById('activeCodes').textContent = codes;
-}
-// ===== НАВИГАЦИЯ =====
-let currentTab = 'new';
-function switchTab(tab) {
-currentTab = tab;
-document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-event.target.classList.add('active');
-document.getElementById(tab + 'Section').classList.add('active');
-renderUsers(tab);
-}
-function viewDetails(email) {
-const { userData } = loadUsers();
-const data = userData[email] || {};
-const details = `
-Email: ${email}
-Имя: ${data.name || '—'}
-Зарегистрирован: ${data.registeredAt ? new Date(data.registeredAt).toLocaleString('ru-RU') : '—'}
-Нажал "Я оплатил": ${data.paidClicked ? '✅ Да' : '❌ Нет'}
-PRO активна: ${data.isPro ? '✅ Да (до ' + (data.proExpiry ? new Date(data.proExpiry).toLocaleDateString('ru-RU') : '—') + ')' : '❌ Нет'}
-Обработано фото: ${data.totalProcessed || 0}
-Сэкономлено: ${(data.totalSaved || 0).toFixed(2)} МБ
-Осталось бесплатных: ${data.freeUsage || 2}
-`.trim();
-alert(details);
-}
-function showToast(message) {
-const toast = document.getElementById('toast');
-toast.textContent = message;
-toast.classList.add('show');
-setTimeout(() => toast.classList.remove('show'), 3000);
-}
-// ===== ЗАПУСК =====
-renderUsers('new');
-// Автообновление каждые 5 секунд
-setInterval(() => renderUsers(currentTab), 5000);
+
+renderCodes();
+updateStats();
 </script>
 </body>
 </html>
