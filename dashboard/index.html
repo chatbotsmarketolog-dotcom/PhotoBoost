@@ -180,7 +180,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="setting-item"><label>Маркетплейс</label><select id="marketplace"><option value="wb">Wildberries (900×1200)</option><option value="ozon">Ozon (900×1200)</option><option value="avito">Avito (1200×900)</option><option value="ym">Я.Маркет (900×1200)</option></select></div>
 <div class="setting-item"><label>Качество</label><select id="quality"><option value="high">Высокое</option><option value="medium" selected>Среднее</option><option value="low">Низкое</option></select></div>
 <div class="setting-item"><label>Макс. размер</label><select id="maxSize"><option value="100" selected>100 КБ</option><option value="200">200 КБ</option><option value="500">500 КБ</option><option value="1000">1 МБ</option></select></div>
-<div class="setting-item" id="formatSetting"><label>Формат <span class="pro-lock">🔒 PRO</span></label><select id="outputFormat" disabled><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div>
+<div class="setting-item" id="formatSetting">
+  <label>Формат <span class="pro-lock">🔒 PRO</span></label>
+  <select id="outputFormat" disabled><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select>
+  <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; line-height: 1.3;">
+    ℹ️ <em>WebP fallback — если браузер не поддерживает, автоматически переключается на JPEG</em>
+  </p>
+</div>
 <div class="setting-item" id="watermarkSetting"><label>Водяной знак <span class="pro-lock">🔒 PRO</span></label><input type="text" id="watermarkText" placeholder="Текст" disabled></div>
 <div class="setting-item" id="dpiSetting"><label>DPI <span class="pro-lock">🔒 PRO</span></label><select id="dpiValue" disabled><option value="72">72</option><option value="150">150</option><option value="300" selected>300</option></select></div>
 </div>
@@ -463,7 +469,6 @@ function downloadSelectedZip() {
     let name = item.name || ('photo_' + (i+1) + '.jpg');
 
     // КРИТИЧЕСКАЯ ЗАЩИТА: если имя уже существует, добавляем суффикс _2, _3 и т.д.
-    // Без этого JSZip перезаписывает файлы с одинаковыми именами — в архиве остаётся только 1 файл
     if (usedNames[name]) {
       usedNames[name]++;
       const dot = name.lastIndexOf('.');
@@ -593,20 +598,16 @@ function activateByCode() {
   const code = input.value.trim().toUpperCase();
   if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { alert('❌ Формат: WB-A1B2-C3D4'); return; }
 
-  // ИСПРАВЛЕНО: читаем массив объектов {code, status, usedBy} из pbValidCodes
   const codesArr = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
   let codeObj = null;
 
-  // Поддержка двух форматов: массив строк (legacy) и массив объектов
   if (codesArr.length > 0 && typeof codesArr[0] === 'object' && codesArr[0].code !== undefined) {
     codeObj = codesArr.find(c => c.code === code);
   } else if (codesArr.length > 0) {
     if (codesArr.includes(code)) {
-      // legacy: код валиден, если он в списке
       codeObj = { code: code, status: 'active' };
     }
   } else {
-    // Если список кодов пуст — разрешаем любой код валидного формата (для теста)
     codeObj = { code: code, status: 'active' };
   }
 
@@ -614,7 +615,6 @@ function activateByCode() {
   if (codeObj.status === 'used') { alert('❌ Код уже использован'); return; }
   if (state.data.usedCodes.includes(code)) { alert('❌ Вы уже активировали этот код'); return; }
 
-  // Отмечаем код как использованный (только для объектного формата)
   if (typeof codesArr[0] === 'object' && codesArr[0].code !== undefined) {
     codeObj.status = 'used';
     codeObj.usedBy = state.user.email;
@@ -684,7 +684,6 @@ function handleFiles(files) {
   const all = Array.from(files).filter(f => f.type.startsWith('image/'));
   if (!all.length) { fileInput.value = ''; return; }
 
-  // Бесплатный тариф: только 1 фото, добавление запрещено
   if (!state.data.isPro) {
     if (state.selectedFiles.length >= max) {
       alert('❌ На бесплатном тарифе — только 1 фото.\nАктивируйте PRO, чтобы загружать от 2 до 100 фото!');
@@ -693,7 +692,6 @@ function handleFiles(files) {
     }
     state.selectedFiles = all.slice(0, max);
   } else {
-    // PRO: накапливаем выбор, но не больше 100 суммарно
     const free = max - state.selectedFiles.length;
     if (free <= 0) {
       alert('⚠️ Достигнут лимит PRO — 100 фото. Сбросьте выбор, чтобы загрузить новые.');
@@ -799,6 +797,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   updateUI();
 });
 
+// ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ОБРАБОТКИ С ПРОВЕРКОЙ ФОРМАТА =====
 function processImage(file, s) {
   return new Promise(res => {
     const rd = new FileReader();
@@ -820,18 +819,42 @@ function processImage(file, s) {
           ctx.textBaseline = 'bottom';
           ctx.fillText(s.watermark, W-20, H-20);
         }
-        let q = s.quality === 'high' ? 0.9 : s.quality === 'low' ? 0.5 : 0.7;
-        let mime = 'image/jpeg', ext = 'jpg';
-        if (s.outputFormat === 'png') { mime = 'image/png'; ext = 'png'; }
-        else if (s.outputFormat === 'webp') { mime = 'image/webp'; ext = 'webp'; }
+
+        // ===== КОРРЕКТНАЯ ОБРАБОТКА ФОРМАТОВ =====
+        let mime, ext, q;
+        if (s.outputFormat === 'png') {
+          mime = 'image/png';
+          ext = 'png';
+          q = 1.0; // PNG всегда lossless
+        } else if (s.outputFormat === 'webp') {
+          mime = 'image/webp';
+          ext = 'webp';
+          q = s.quality === 'high' ? 0.9 : s.quality === 'low' ? 0.5 : 0.7;
+        } else {
+          mime = 'image/jpeg';
+          ext = 'jpg';
+          q = s.quality === 'high' ? 0.9 : s.quality === 'low' ? 0.5 : 0.7;
+        }
+
         let url = c.toDataURL(mime, q);
+
+        // КРИТИЧЕСКАЯ ПРОВЕРКА: реально ли браузер создал WebP?
+        if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
+          console.warn('⚠️ WebP не поддерживается браузером, fallback на JPEG');
+          mime = 'image/jpeg';
+          ext = 'jpg';
+          url = c.toDataURL(mime, q);
+        }
+
         let size = url.length * 0.75;
+        // Сжатие только для lossy форматов (JPEG/WebP), PNG не сжимаем
         while (size > s.maxSize * 1024 && q > 0.1 && ext !== 'png') {
           q -= 0.05;
           url = c.toDataURL(mime, q);
           size = url.length * 0.75;
         }
-        res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext });
+
+        res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext: ext });
       };
       img.src = ev.target.result;
     };
