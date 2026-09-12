@@ -613,13 +613,12 @@ zone.addEventListener('click',(e)=>{
 
 fileInput.addEventListener('change',e=>handleFiles(e.target.files));
 
-// ===== НОВАЯ ЛОГИКА ЗАГРУЗКИ С НАКОПЛЕНИЕМ (PRO: 2–100 фото) =====
+// ===== ЛОГИКА ЗАГРУЗКИ С НАКОПЛЕНИЕМ (PRO: 2–100 фото) =====
 function handleFiles(files){
   const max=getFeatures().maxBatchSize;
   const all=Array.from(files).filter(f=>f.type.startsWith('image/'));
   if(!all.length){fileInput.value='';return;}
 
-  // Бесплатный тариф: только 1 фото, добавление запрещено
   if(!state.data.isPro){
     if(state.selectedFiles.length>=max){
       alert('❌ На бесплатном тарифе — только 1 фото.\nАктивируйте PRO, чтобы загружать от 2 до 100 фото!');
@@ -628,10 +627,14 @@ function handleFiles(files){
     }
     state.selectedFiles=all.slice(0,max);
   }else{
-    // PRO: накапливаем выбор, но не больше 100 суммарно
     const free=max-state.selectedFiles.length;
+    if(free<=0){
+      alert('⚠️ Достигнут лимит PRO — 100 фото. Сбросьте выбор, чтобы загрузить новые.');
+      fileInput.value='';
+      return;
+    }
     if(all.length>free){
-      alert('⚠️ Лимит PRO — '+max+' фото за раз.\nБудет добавлено первых: '+free);
+      alert('⚠️ Лимит PRO — 100 фото за раз.\nБудет добавлено первых: '+free);
       state.selectedFiles=state.selectedFiles.concat(all.slice(0,free));
     }else{
       state.selectedFiles=state.selectedFiles.concat(all);
@@ -648,32 +651,35 @@ function renderSelectedZone(){
   const isPro=state.data.isPro;
 
   if(n===0){
-    zone.innerHTML='<div class="upload-icon-big">📸</div><p style="font-weight:600;font-size:1.1rem;">Нажмите или перетащите фото</p>'+
-      '<p style="color:#64748b;font-size:0.9rem;margin-top:8px;">'+(isPro?'PRO: загрузите от 2 до 100 фото':'JPG, PNG, WebP — бесплатно 2 обработки')+'</p>';
+    zone.innerHTML=
+      '<div class="upload-icon-big">📸</div>' +
+      '<p style="font-weight:600;font-size:1.1rem;">Нажмите или перетащите фото</p>' +
+      '<p style="color:#64748b;font-size:0.9rem;margin-top:8px;">' +
+        (isPro ? 'PRO: загрузите от 2 до 100 фото' : 'JPG, PNG, WebP — бесплатно 2 обработки') +
+      '</p>';
     return;
   }
 
   zone.innerHTML=
-    '<div class="upload-icon-big">✓</div>'+
-    '<h3 style="font-size:1.4rem;margin-bottom:6px;">Выбрано: '+n+' из '+max+'</h3>'+
-    '<p style="color:#64748b;font-size:0.9rem;margin-top:4px;">'+
-      (isPro?'Можно добавить ещё фото (до 100 суммарно)':'Бесплатный тариф: 1 фото')+
-    '</p>'+
-    '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center;">'+
-      '<button class="btn btn-primary" id="addMoreBtn">➕ Добавить ещё</button>'+
-      '<button class="btn" id="clearBtn" style="background:#e2e8f0;color:#0f0f1e;">✖ Сбросить</button>'+
+    '<div class="upload-icon-big">✓</div>' +
+    '<h3 style="font-size:1.4rem;margin-bottom:6px;">Выбрано: ' + n + ' из ' + max + '</h3>' +
+    '<p style="color:#64748b;font-size:0.9rem;margin-top:4px;">' +
+      (isPro ? 'Можно добавить ещё фото (до 100 суммарно)' : 'Бесплатный тариф: 1 фото') +
+    '</p>' +
+    '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center;">' +
+      '<button class="btn btn-primary" id="addMoreBtn">➕ Добавить ещё</button>' +
+      '<button class="btn" id="clearBtn" style="background:#e2e8f0;color:#0f0f1e;">✖ Сбросить</button>' +
     '</div>';
 
-  // Вешаем обработчики (чтобы клики не всплывали до zone)
-  document.getElementById('addMoreBtn').addEventListener('click',(e)=>{
+  document.getElementById('addMoreBtn').addEventListener('click', (e) => {
     e.stopPropagation();
-    if(!isPro){
+    if (!isPro) {
       alert('❌ Добавление нескольких фото доступно только в PRO.\nАктивируйте PRO, чтобы загружать до 100 фото.');
       return;
     }
     fileInput.click();
   });
-  document.getElementById('clearBtn').addEventListener('click',(e)=>{
+  document.getElementById('clearBtn').addEventListener('click', (e) => {
     e.stopPropagation();
     clearSelected();
   });
@@ -690,20 +696,34 @@ function clearSelected(){
 }
 
 document.getElementById('processBtn').addEventListener('click',async()=>{
-if(!state.selectedFiles.length)return;
-if(!state.data.isPro&&state.data.freeUsage<=0){openPayment();return}
-const btn=document.getElementById('processBtn');btn.disabled=true;btn.textContent='Обработка...';
-document.getElementById('resultsArea').innerHTML='';state.processedFiles=[];
-const s={marketplace:document.getElementById('marketplace').value,quality:document.getElementById('quality').value,maxSize:parseInt(document.getElementById('maxSize').value),outputFormat:state.data.isPro?document.getElementById('outputFormat').value:'jpg',watermark:state.data.isPro?document.getElementById('watermarkText').value:''};
-for(const f of state.selectedFiles){const r=await processImage(f,s);state.processedFiles.push(r);displayResult(r,state.processedFiles.length-1);state.data.history.unshift({name:f.name,date:new Date().toISOString(),optimizedSize:r.optimizedSize,thumbnail:r.optimizedData,data:r.optimizedData})}
-if(!state.data.isPro)state.data.freeUsage=Math.max(0,state.data.freeUsage-state.selectedFiles.length);
-state.data.totalProcessed+=state.selectedFiles.length;
-saveUserData();btn.disabled=false;btn.textContent='Обработать фото';
-if(state.processedFiles.length>1)document.getElementById('downloadAllBtn').style.display='block';
-updateUI();
+  if(!state.selectedFiles.length)return;
+  if(!state.data.isPro&&state.data.freeUsage<=0){openPayment();return}
+  const btn=document.getElementById('processBtn');btn.disabled=true;btn.textContent='Обработка...';
+  document.getElementById('resultsArea').innerHTML='';state.processedFiles=[];
+  const s={marketplace:document.getElementById('marketplace').value,quality:document.getElementById('quality').value,maxSize:parseInt(document.getElementById('maxSize').value),outputFormat:state.data.isPro?document.getElementById('outputFormat').value:'jpg',watermark:state.data.isPro?document.getElementById('watermarkText').value:''};
+  for(const f of state.selectedFiles){
+    const r=await processImage(f,s);
+    state.processedFiles.push(r);
+    displayResult(r,state.processedFiles.length-1);
+    
+    // ИСПРАВЛЕНИЕ: добавляем поле ext, чтобы знать реальный формат сохраненного файла
+    state.data.history.unshift({
+      name: f.name,
+      ext: r.ext, // <--- ДОБАВЛЕНО: реальное расширение (jpg, png или webp)
+      date: new Date().toISOString(),
+      optimizedSize: r.optimizedSize,
+      thumbnail: r.optimizedData,
+      data: r.optimizedData
+    });
+  }
+  if(!state.data.isPro)state.data.freeUsage=Math.max(0,state.data.freeUsage-state.selectedFiles.length);
+  state.data.totalProcessed+=state.selectedFiles.length;
+  saveUserData();btn.disabled=false;btn.textContent='Обработать фото';
+  if(state.processedFiles.length>1)document.getElementById('downloadAllBtn').style.display='block';
+  updateUI();
 });
 
-// ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ОБРАБОТКИ С ПРОВЕРКОЙ ФОРМАТА =====
+// ===== ФУНКЦИЯ ОБРАБОТКИ С ПРОВЕРКОЙ ФОРМАТА =====
 function processImage(file,s){
   return new Promise(res=>{
     const rd=new FileReader();
@@ -726,12 +746,11 @@ function processImage(file,s){
           ctx.fillText(s.watermark,W-20,H-20);
         }
 
-        // ===== КОРРЕКТНАЯ ОБРАБОТКА ФОРМАТОВ =====
         let mime, ext, q;
         if (s.outputFormat === 'png') {
           mime = 'image/png';
           ext = 'png';
-          q = 1.0; // PNG всегда lossless
+          q = 1.0;
         } else if (s.outputFormat === 'webp') {
           mime = 'image/webp';
           ext = 'webp';
@@ -744,7 +763,6 @@ function processImage(file,s){
 
         let url = c.toDataURL(mime, q);
 
-        // КРИТИЧЕСКАЯ ПРОВЕРКА: реально ли браузер создал WebP?
         if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
           console.warn('⚠️ WebP не поддерживается браузером, fallback на JPEG');
           mime = 'image/jpeg';
@@ -753,7 +771,6 @@ function processImage(file,s){
         }
 
         let size = url.length * 0.75;
-        // Сжатие только для lossy форматов (JPEG/WebP), PNG не сжимаем
         while (size > s.maxSize * 1024 && q > 0.1 && ext !== 'png') {
           q -= 0.05;
           url = c.toDataURL(mime, q);
@@ -769,23 +786,50 @@ function processImage(file,s){
 }
 
 function displayResult(r,i){
-const sv=((1-r.optimizedSize/r.originalSize)*100).toFixed(1);
-const d=document.createElement('div');d.className='result-item';
-d.innerHTML='<img src="'+r.optimizedData+'" class="result-preview"><div class="result-info"><h4>'+r.originalName+'</h4><div class="result-metrics"><div><div class="metric-label">Размер</div><div class="metric-value">'+(r.originalSize/1024).toFixed(1)+' → '+(r.optimizedSize/1024).toFixed(1)+' КБ</div></div><div><div class="metric-label">Сжатие</div><div class="metric-value">-'+sv+'%</div></div></div></div><button class="btn btn-primary" onclick="downloadFile('+i+')">Скачать</button>';
-document.getElementById('resultsArea').appendChild(d);
+  const sv=((1-r.optimizedSize/r.originalSize)*100).toFixed(1);
+  const d=document.createElement('div');d.className='result-item';
+  d.innerHTML='<img src="'+r.optimizedData+'" class="result-preview"><div class="result-info"><h4>'+r.originalName+'</h4><div class="result-metrics"><div><div class="metric-label">Размер</div><div class="metric-value">'+(r.originalSize/1024).toFixed(1)+' → '+(r.optimizedSize/1024).toFixed(1)+' КБ</div></div><div><div class="metric-label">Сжатие</div><div class="metric-value">-'+sv+'%</div></div></div></div><button class="btn btn-primary" onclick="downloadFile('+i+')">Скачать</button>';
+  document.getElementById('resultsArea').appendChild(d);
 }
-function downloadFile(i){const r=state.processedFiles[i];const a=document.createElement('a');a.download='optimized_'+r.originalName.replace(/\.[^/.]+$/,'')+'.'+r.ext;a.href=r.optimizedData;a.click()}
+
+function downloadFile(i){
+  const r=state.processedFiles[i];
+  const a=document.createElement('a');
+  a.download='optimized_'+r.originalName.replace(/\.[^/.]+$/,'')+'.'+r.ext;
+  a.href=r.optimizedData;
+  a.click();
+}
+
+// ZIP для текущей сессии (с защитой от дубликатов и правильными расширениями)
 document.getElementById('downloadAllBtn').addEventListener('click',async()=>{
-if(!state.data.isPro){openPayment();return}
-const zip=new JSZip();
-state.processedFiles.forEach((r,i)=>zip.file('optimized_'+r.originalName.replace(/\.[^/.]+$/,'')+'_'+(i+1)+'.'+r.ext,r.optimizedData.split(',')[1],{base64:true}));
-const blob=await zip.generateAsync({type:'blob'});
-const a=document.createElement('a');a.download='photoboost.zip';a.href=URL.createObjectURL(blob);a.click();
+  if(!state.data.isPro){openPayment();return}
+  const zip=new JSZip();
+  const usedNames={};
+  state.processedFiles.forEach((r,i)=>{
+    const baseName=r.originalName.replace(/\.[^/.]+$/,'');
+    let name='optimized_'+baseName+'.'+r.ext;
+    
+    if(usedNames[name]){
+      usedNames[name]++;
+      const dot=name.lastIndexOf('.');
+      name=dot>0?name.slice(0,dot)+'_'+usedNames[name]+name.slice(dot):name+'_'+usedNames[name];
+    }else{
+      usedNames[name]=1;
+    }
+    zip.file(name,r.optimizedData.split(',')[1],{base64:true});
+  });
+  const blob=await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a');
+  a.download='photoboost_session_'+state.processedFiles.length+'.zip';
+  a.href=URL.createObjectURL(blob);
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
 });
+
 function renderUserReviews(){
-const c=document.getElementById('userReviewsContainer');const rv=JSON.parse(localStorage.getItem('pbUserReviews')||'[]');
-if(!rv.length){c.innerHTML='';return}
-c.innerHTML=rv.map(r=>'<div class="testimonial-card"><div class="stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</div><p class="testimonial-text">'+r.text+'</p><div class="testimonial-author"><div class="testimonial-author-photo" style="background:var(--gradient-purple);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">'+r.name.charAt(0).toUpperCase()+'</div><div class="testimonial-author-info"><h4>'+r.name+'</h4><p>'+(r.position||'Пользователь')+'</p></div></div></div>').join('');
+  const c=document.getElementById('userReviewsContainer');const rv=JSON.parse(localStorage.getItem('pbUserReviews')||'[]');
+  if(!rv.length){c.innerHTML='';return}
+  c.innerHTML=rv.map(r=>'<div class="testimonial-card"><div class="stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</div><p class="testimonial-text">'+r.text+'</p><div class="testimonial-author"><div class="testimonial-author-photo" style="background:var(--gradient-purple);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">'+r.name.charAt(0).toUpperCase()+'</div><div class="testimonial-author-info"><h4>'+r.name+'</h4><p>'+(r.position||'Пользователь')+'</p></div></div></div>').join('');
 }
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('active');document.body.style.overflow=''}}));
 loadUserData();
