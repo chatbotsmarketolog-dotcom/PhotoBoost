@@ -394,7 +394,7 @@ function renderSubscription() {
   }
 }
 
-// ===== ИСТОРИЯ (ИСПРАВЛЕНО: ZIP со всеми файлами) =====
+// ===== ИСТОРИЯ =====
 function renderHistory() {
   const list = document.getElementById('historyList');
   selectedHistory = new Set();
@@ -440,12 +440,15 @@ function downloadHistoryItem(i) {
   const item = state.data.history[i];
   if (!item || !item.data) return;
   const link = document.createElement('a');
-  link.download = item.name || ('photo_' + (i+1) + '.jpg');
+  // Используем правильное расширение при скачивании одного файла
+  const ext = item.ext || 'jpg';
+  const baseName = item.name ? item.name.replace(/\.[^/.]+$/, '') : ('photo_' + (i+1));
+  link.download = baseName + '.' + ext;
   link.href = item.data;
   link.click();
 }
 
-// ===== КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: ZIP скачивает ВСЕ отмеченные файлы с уникальными именами =====
+// ===== КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: ZIP скачивает ВСЕ отмеченные файлы с ПРАВИЛЬНЫМИ расширениями =====
 function downloadSelectedZip() {
   if (selectedHistory.size === 0) {
     alert('❌ Отметьте галочками хотя бы одно фото в истории');
@@ -466,9 +469,12 @@ function downloadSelectedZip() {
     const item = h[i];
     if (!item || !item.data) return;
 
-    let name = item.name || ('photo_' + (i+1) + '.jpg');
+    // ИСПРАВЛЕНИЕ: берем имя без старого расширения и добавляем ПРАВИЛЬНОЕ новое из item.ext
+    const baseName = item.name ? item.name.replace(/\.[^/.]+$/, '') : ('photo_' + (i+1));
+    const correctExt = item.ext || 'jpg'; // Если вдруг ext нет, fallback на jpg
+    let name = baseName + '.' + correctExt;
 
-    // КРИТИЧЕСКАЯ ЗАЩИТА: если имя уже существует, добавляем суффикс _2, _3 и т.д.
+    // Защита от дубликатов имен
     if (usedNames[name]) {
       usedNames[name]++;
       const dot = name.lastIndexOf('.');
@@ -495,7 +501,7 @@ function downloadSelectedZip() {
     link.href = URL.createObjectURL(content);
     link.click();
     setTimeout(() => URL.revokeObjectURL(link.href), 5000);
-    alert('✅ В архиве файлов: ' + addedCount);
+    alert('✅ В архиве файлов: ' + addedCount + ' (с сохранением правильных форматов)');
   }).catch(err => {
     console.error('ZIP error:', err);
     alert('❌ Ошибка при создании архива');
@@ -678,7 +684,7 @@ uploadZone.addEventListener('click', (e) => {
 
 fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
-// ===== НОВАЯ ЛОГИКА ЗАГРУЗКИ С НАКОПЛЕНИЕМ (PRO: 2–100 фото) =====
+// ===== ЛОГИКА ЗАГРУЗКИ С НАКОПЛЕНИЕМ (PRO: 2–100 фото) =====
 function handleFiles(files) {
   const max = getFeatures().maxBatchSize;
   const all = Array.from(files).filter(f => f.type.startsWith('image/'));
@@ -779,8 +785,11 @@ document.getElementById('processBtn').addEventListener('click', async () => {
     const r = await processImage(f, s);
     state.processedFiles.push(r);
     displayResult(r, state.processedFiles.length - 1);
+    
+    // ИСПРАВЛЕНИЕ: добавляем поле ext, чтобы знать реальный формат сохраненного файла
     state.data.history.unshift({
       name: f.name,
+      ext: r.ext, // <--- ДОБАВЛЕНО: реальное расширение (jpg, png или webp)
       date: new Date().toISOString(),
       originalSize: r.originalSize,
       optimizedSize: r.optimizedSize,
@@ -797,7 +806,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   updateUI();
 });
 
-// ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ ОБРАБОТКИ С ПРОВЕРКОЙ ФОРМАТА =====
+// ===== ФУНКЦИЯ ОБРАБОТКИ С ПРОВЕРКОЙ ФОРМАТА =====
 function processImage(file, s) {
   return new Promise(res => {
     const rd = new FileReader();
@@ -820,12 +829,11 @@ function processImage(file, s) {
           ctx.fillText(s.watermark, W-20, H-20);
         }
 
-        // ===== КОРРЕКТНАЯ ОБРАБОТКА ФОРМАТОВ =====
         let mime, ext, q;
         if (s.outputFormat === 'png') {
           mime = 'image/png';
           ext = 'png';
-          q = 1.0; // PNG всегда lossless
+          q = 1.0;
         } else if (s.outputFormat === 'webp') {
           mime = 'image/webp';
           ext = 'webp';
@@ -838,7 +846,6 @@ function processImage(file, s) {
 
         let url = c.toDataURL(mime, q);
 
-        // КРИТИЧЕСКАЯ ПРОВЕРКА: реально ли браузер создал WebP?
         if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
           console.warn('⚠️ WebP не поддерживается браузером, fallback на JPEG');
           mime = 'image/jpeg';
@@ -847,7 +854,6 @@ function processImage(file, s) {
         }
 
         let size = url.length * 0.75;
-        // Сжатие только для lossy форматов (JPEG/WebP), PNG не сжимаем
         while (size > s.maxSize * 1024 && q > 0.1 && ext !== 'png') {
           q -= 0.05;
           url = c.toDataURL(mime, q);
@@ -878,13 +884,15 @@ function downloadProcessed(i) {
   a.click();
 }
 
-// ZIP для текущей сессии (также с защитой от дубликатов)
+// ZIP для текущей сессии (с защитой от дубликатов и правильными расширениями)
 document.getElementById('downloadAllBtn').addEventListener('click', async () => {
   if (!state.data.isPro) { alert('🔒 ZIP доступен в PRO'); openPayment(); return; }
   const zip = new JSZip();
   const usedNames = {};
   state.processedFiles.forEach((r, i) => {
-    let name = 'optimized_' + r.originalName.replace(/\.[^/.]+$/, '') + '.' + r.ext;
+    const baseName = r.originalName.replace(/\.[^/.]+$/, '');
+    let name = 'optimized_' + baseName + '.' + r.ext;
+    
     if (usedNames[name]) {
       usedNames[name]++;
       const dot = name.lastIndexOf('.');
