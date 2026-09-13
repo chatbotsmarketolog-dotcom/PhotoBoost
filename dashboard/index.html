@@ -57,14 +57,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .results-area { margin-top: 24px; }
 .result-item { background: #faf9ff; padding: 20px; border-radius: 16px; margin-bottom: 16px; display: grid; grid-template-columns: 140px 1fr auto; gap: 20px; align-items: start; }
 
-/* ===== СЛАЙДЕР ДО/ПОСЛЕ ===== */
+/* ===== СЛАЙДЕР ДО/ПОСЛЕ (ИСПРАВЛЕНО: слева ДО, справа ПОСЛЕ) ===== */
 .comparison-slider{position:relative;width:140px;height:140px;border-radius:12px;overflow:hidden;cursor:col-resize;user-select:none;background:#e2e8f0;transition:transform 0.2s}
 .comparison-slider:hover{transform:scale(1.02)}
 .comparison-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
-.comparison-slider .img-after{clip-path:inset(0 50% 0 0)}
+.comparison-slider .img-after{clip-path:inset(0 0 0 50%)}
 .comparison-slider .slider-handle{position:absolute;top:0;bottom:0;left:50%;width:4px;background:white;cursor:col-resize;z-index:10;display:flex;align-items:center;justify-content:center;transform:translateX(-50%);box-shadow:0 0 4px rgba(0,0,0,0.3)}
 .comparison-slider .slider-handle::after{content:'↔';background:white;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
-.slider-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:white;padding:4px 8px;border-radius:6px;font-size:0.7rem;font-weight:600;z-index:5;pointer-events:none}
+.slider-zoom-hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.6);color:white;padding:4px 8px;border-radius:6px;font-size:0.7rem;font-weight:600;z-index:5;pointer-events:none;white-space:nowrap}
+.slider-label{position:absolute;top:8px;z-index:6;font-size:0.62rem;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:6px;pointer-events:none}
+.label-before{left:8px;background:rgba(0,0,0,0.55);color:#fff}
+.label-after{right:8px;background:rgba(124,58,237,0.85);color:#fff}
 
 .result-info h4 { margin-bottom: 10px; word-break: break-word; }
 .result-metrics { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem; }
@@ -128,12 +131,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 /* ===== МОДАЛКА ПРОСМОТРА (ИСПРАВЛЕНО) ===== */
 .view-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,26,0.97); backdrop-filter: blur(10px); z-index: 2500; justify-content: center; align-items: center; padding: 20px; }
 .view-modal-overlay.active { display: flex; }
-.view-modal { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.view-modal { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 95vw; }
 .view-modal .comparison-slider {
   width: min(85vw, 1000px);
   aspect-ratio: var(--slider-aspect, 3/4);
   height: auto;
-  max-height: 80vh;
+  max-height: 72vh;
   border-radius: 16px;
   background: #0a0a1a;
   overflow: hidden;
@@ -145,10 +148,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   object-fit: contain;
   background: #1a1a2e;
 }
+.view-modal .slider-label { font-size: 0.75rem; padding: 5px 12px; top: 12px; }
 .view-modal-close { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); cursor: pointer; font-size: 1.5rem; color: white; z-index: 2600; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
 .view-modal-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
 .view-modal-info { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 50px; color: white; font-weight: 600; font-size: 0.85rem; text-align: center; }
-.view-modal-meta { color: white; font-size: 0.9rem; text-align: center; opacity: 0.8; }
+.view-modal-meta { color: white; font-size: 0.9rem; text-align: center; opacity: 0.85; font-weight: 600; }
+.view-modal-stats { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.view-stat { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 50px; color: white; font-size: 0.85rem; font-weight: 600; }
+.view-stat.accent { background: rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
 
 /* ===== ПОДПИСКА ===== */
 .subscription-card { background: linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(245,158,11,0.05) 100%); border: 1px solid rgba(251,191,36,0.3); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
@@ -463,16 +470,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 </div>
 </div>
 
-<!-- МОДАЛКА ПРОСМОТРА ФОТО -->
+<!-- МОДАЛКА ПРОСМОТРА ФОТО (ИСПРАВЛЕНО) -->
 <div class="view-modal-overlay" id="viewModal">
 <button class="view-modal-close" onclick="closeViewModal()">✕</button>
 <div class="view-modal">
 <div class="view-modal-meta" id="viewModalMeta"></div>
 <div class="comparison-slider" id="viewSlider">
 <img src="" class="img-before" alt="До">
-<img src="" class="img-after" alt="После" style="clip-path: inset(0 50% 0 0);">
+<img src="" class="img-after" alt="После" style="clip-path: inset(0 0 0 50%);">
 <div class="slider-handle" style="left: 50%;"></div>
+<span class="slider-label label-before">ДО</span>
+<span class="slider-label label-after">ПОСЛЕ</span>
 </div>
+<div class="view-modal-stats" id="viewModalStats"></div>
 <div class="view-modal-info">Перетаскивайте ползунок для сравнения • ESC для закрытия</div>
 </div>
 </div>
@@ -491,6 +501,9 @@ let state = {
 
 let selectedHistory = new Set();
 let viewSliderActive = false;
+
+const MP_LABELS = { wb: 'Wildberries', ozon: 'Ozon', avito: 'Avito', ym: 'Я.Маркет' };
+const CAT_LABELS = { clothing: 'Одежда/Обувь', other: 'Другие товары' };
 
 const PRO_F = { maxBatchSize: 100 };
 const FREE_F = { maxBatchSize: 1 };
@@ -688,32 +701,20 @@ function clearHistory() {
 }
 
 // ===== РАЗДЕЛ ОТЧЁТОВ =====
-const MP_LABELS = {
-  wb: 'Wildberries',
-  ozon: 'Ozon',
-  avito: 'Avito',
-  ym: 'Я.Маркет'
-};
-const CAT_LABELS = {
-  clothing: 'Одежда/Обувь',
-  other: 'Другие товары'
-};
-
 function renderReports() {
   const list = document.getElementById('reportsList');
   const summary = document.getElementById('reportsSummary');
   const filter = document.getElementById('reportsFilter').value;
-  
+
   if (state.data.history.length === 0) {
     summary.innerHTML = '';
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><p>Отчёты появятся после первой обработки фото. Все проверки сохраняются автоматически.</p></div>';
     return;
   }
 
-  // Статистика
   let total = state.data.history.length;
   let dangerCount = 0, warningCount = 0, successCount = 0;
-  
+
   state.data.history.forEach(item => {
     const report = item.validationReport;
     if (!report) { successCount++; return; }
@@ -722,13 +723,12 @@ function renderReports() {
     else successCount++;
   });
 
-  summary.innerHTML = 
+  summary.innerHTML =
     '<div class="reports-stat"><div class="reports-stat-value total">' + total + '</div><div class="reports-stat-label">Всего отчётов</div></div>' +
     '<div class="reports-stat"><div class="reports-stat-value success">' + successCount + '</div><div class="reports-stat-label">Успешных</div></div>' +
     '<div class="reports-stat"><div class="reports-stat-value warning">' + warningCount + '</div><div class="reports-stat-label">С предупреждениями</div></div>' +
     '<div class="reports-stat"><div class="reports-stat-value danger">' + dangerCount + '</div><div class="reports-stat-label">С проблемами</div></div>';
 
-  // Фильтрация
   let filtered = state.data.history.filter(item => {
     const report = item.validationReport || { dangers: [], warnings: [], success: [] };
     if (filter === 'danger') return report.dangers.length > 0;
@@ -743,20 +743,19 @@ function renderReports() {
     return;
   }
 
-  // Рендер списка
   list.innerHTML = filtered.map((item, idx) => {
     const realIdx = state.data.history.indexOf(item);
     const report = item.validationReport || { dangers: [], warnings: [], success: [] };
-    const dangerCount = report.dangers.length;
-    const warningCount = report.warnings.length;
-    
+    const dCount = report.dangers.length;
+    const wCount = report.warnings.length;
+
     let statusClass, statusText;
-    if (dangerCount > 0) {
+    if (dCount > 0) {
       statusClass = 'status-danger';
-      statusText = '❌ ' + dangerCount + ' проблем';
-    } else if (warningCount > 0) {
+      statusText = '❌ ' + dCount + ' проблем';
+    } else if (wCount > 0) {
       statusClass = 'status-warning';
-      statusText = '⚠️ ' + warningCount + ' предупрежд.';
+      statusText = '⚠️ ' + wCount + ' предупрежд.';
     } else {
       statusClass = 'status-success';
       statusText = '✅ OK';
@@ -767,7 +766,6 @@ function renderReports() {
     const mpBadge = '<span class="badge badge-' + marketplace + '">' + (MP_LABELS[marketplace] || marketplace) + '</span>';
     const catBadge = '<span class="badge badge-cat">' + (CAT_LABELS[category] || category) + '</span>';
 
-    // Отчёт (свёрнутый по умолчанию)
     let reportHtml = '';
     if (report) {
       const allItems = [
@@ -779,7 +777,7 @@ function renderReports() {
         const icon = it.type === 'danger' ? '❌' : it.type === 'warning' ? '⚠️' : '✅';
         return '<div class="report-item"><div class="report-icon report-' + it.type + '">' + icon + '</div><div class="report-text"><strong>' + it.title + '</strong><p>' + it.desc + '</p></div></div>';
       }).join('');
-      
+
       reportHtml = '<div class="report-list-details"><div class="validation-report"><div class="report-header" onclick="toggleReportR(' + realIdx + ')"><span>📊 Подробности отчёта</span><div class="report-toggle" id="report-toggle-r-' + realIdx + '">▼</div></div><div class="report-body" id="report-body-r-' + realIdx + '"><div class="report-content">' + itemsHtml + '</div></div></div></div>';
     }
 
@@ -807,11 +805,51 @@ function toggleReportR(i) {
   }
 }
 
+// Открытие модалки из отчётов: только оптимизированное фото + статистика сжатия
 function openViewModalFromReport(i) {
   const item = state.data.history[i];
   if (!item || !item.data) return;
-  // В отчётах нет оригинального фото, показываем только оптимизированное
-  openViewModal(item.data, item.data, item.marketplace || 'wb', true);
+
+  const modal = document.getElementById('viewModal');
+  const slider = document.getElementById('viewSlider');
+  const imgBefore = slider.querySelector('.img-before');
+  const imgAfter = slider.querySelector('.img-after');
+  const handle = slider.querySelector('.slider-handle');
+  const labelBefore = slider.querySelector('.label-before');
+  const labelAfter = slider.querySelector('.label-after');
+  const meta = document.getElementById('viewModalMeta');
+  const stats = document.getElementById('viewModalStats');
+
+  const mp = item.marketplace || 'wb';
+  let aspectRatio = '3/4';
+  let mpLabel = '900×1200 (Wildberries)';
+  if (mp === 'avito') { aspectRatio = '4/3'; mpLabel = '1200×900 (Avito) — умная компоновка'; }
+  else if (mp === 'ozon') mpLabel = '900×1200 (Ozon)';
+  else if (mp === 'ym') mpLabel = '900×1200 (Я.Маркет)';
+
+  slider.style.setProperty('--slider-aspect', aspectRatio);
+
+  imgBefore.style.display = 'none';
+  handle.style.display = 'none';
+  labelBefore.style.display = 'none';
+  labelAfter.style.display = 'none';
+  imgAfter.style.clipPath = 'none';
+  imgAfter.src = item.data;
+
+  meta.textContent = 'Формат: ' + mpLabel + ' • ' + (item.name || 'фото');
+  if (item.originalSize && item.optimizedSize) {
+    const sv = ((1 - item.optimizedSize / item.originalSize) * 100).toFixed(1);
+    stats.innerHTML =
+      '<div class="view-stat">ДО: ' + (item.originalSize/1024).toFixed(0) + ' КБ</div>' +
+      '<div class="view-stat">ПОСЛЕ: ' + (item.optimizedSize/1024).toFixed(0) + ' КБ</div>' +
+      '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (item.ext || 'jpg').toUpperCase() + '</div>';
+  } else {
+    stats.innerHTML = '<div class="view-stat">ПОСЛЕ: ' + ((item.optimizedSize||0)/1024).toFixed(0) + ' КБ • ' + (item.ext || 'jpg').toUpperCase() + '</div>';
+  }
+
+  modal.classList.add('active');
+  viewSliderActive = true;
+  document.body.style.overflow = 'hidden';
 }
 
 function clearReports() {
@@ -1072,11 +1110,87 @@ function clearSelected() {
   document.getElementById('resultsArea').innerHTML = '';
   document.getElementById('downloadAllBtn').style.display = 'none';
   state.processedFiles = [];
+  fileCache.clear();
   renderSelectedZone();
   updateUI();
 }
 
-// === ФУНКЦИИ ВАЛИДАЦИИ И ОБРАБОТКИ ===
+// =====================================================
+// КЭШ ПРЕДВАРИТЕЛЬНОГО АНАЛИЗА ФАЙЛА (исправление бага 2)
+// Один файл -> один img, один SmartCrop-кроп на аспект,
+// детерминированные метрики. Все площадки получают
+// идентичные результаты проверок резкости/яркости.
+// =====================================================
+const fileCache = new Map();
+
+function fileKey(file){
+  return file.name + '|' + file.size + '|' + file.lastModified;
+}
+
+function loadImageFromFile(file){
+  return new Promise((res,rej)=>{
+    const rd=new FileReader();
+    rd.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>res(img);
+      img.onerror=()=>rej(new Error('Image load failed'));
+      img.src=ev.target.result;
+    };
+    rd.onerror=()=>rej(new Error('File read failed'));
+    rd.readAsDataURL(file);
+  });
+}
+
+async function getPrecompute(file){
+  const key = fileKey(file);
+  if (fileCache.has(key)) return fileCache.get(key);
+  const img = await loadImageFromFile(file);
+  const pre = { img: img, crops: {} };
+  fileCache.set(key, pre);
+  if (fileCache.size > 20) {
+    const firstKey = fileCache.keys().next().value;
+    fileCache.delete(firstKey);
+  }
+  return pre;
+}
+
+function centerCrop(img, W, H){
+  const targetAspect = W / H;
+  let cw, ch;
+  if (img.width / img.height > targetAspect) {
+    ch = img.height;
+    cw = ch * targetAspect;
+  } else {
+    cw = img.width;
+    ch = cw / targetAspect;
+  }
+  return { x: (img.width - cw) / 2, y: (img.height - ch) / 2, width: cw, height: ch };
+}
+
+async function getCrop(pre, W, H){
+  const key = W + 'x' + H;
+  if (pre.crops[key]) return pre.crops[key];
+  let crop = null;
+  if (typeof SmartCrop !== 'undefined') {
+    try {
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('SmartCrop timeout')), 5000)
+      );
+      const cropPromise = SmartCrop.crop(pre.img, { width: W, height: H, minScale: 0.1 });
+      const result = await Promise.race([cropPromise, timeoutPromise]);
+      if (result && result.topCrop) crop = result.topCrop;
+    } catch (e) {
+      console.warn('SmartCrop failed or timed out, falling back to center', e);
+    }
+  }
+  if (!crop) crop = centerCrop(pre.img, W, H);
+  pre.crops[key] = crop;
+  return crop;
+}
+
+// =====================================================
+// ВАЛИДАЦИЯ (исправления багов 2 и 3)
+// =====================================================
 
 function analyzeImage(canvas, marketplace, category) {
   const ctx = canvas.getContext('2d');
@@ -1085,15 +1199,17 @@ function analyzeImage(canvas, marketplace, category) {
   const imgData = ctx.getImageData(0, 0, w, h).data;
   const report = { success: [], warnings: [], dangers: [] };
 
-  // 1. Яркость (пересветы)
-  let brightSum = 0;
-  const sampleCount = Math.min(1000, w * h);
-  for (let i = 0; i < sampleCount; i++) {
-    const idx = Math.floor(Math.random() * (w * h)) * 4;
-    const lum = 0.299 * imgData[idx] + 0.587 * imgData[idx+1] + 0.114 * imgData[idx+2];
-    brightSum += lum;
+  // 1. Яркость — ДЕТЕРМИНИРОВАННАЯ сетка (без Math.random)
+  let brightSum = 0, brightCount = 0;
+  const bStep = Math.max(2, Math.floor(Math.min(w, h) / 120));
+  for (let y = 0; y < h; y += bStep) {
+    for (let x = 0; x < w; x += bStep) {
+      const idx = (y * w + x) * 4;
+      brightSum += 0.299 * imgData[idx] + 0.587 * imgData[idx+1] + 0.114 * imgData[idx+2];
+      brightCount++;
+    }
   }
-  const avgBrightness = brightSum / sampleCount;
+  const avgBrightness = brightSum / brightCount;
   if (avgBrightness > 235) {
     report.dangers.push({ title: 'Пересветы', desc: 'Изображение слишком яркое. Маркетплейсы могут отклонить.' });
   } else if (avgBrightness > 200) {
@@ -1102,7 +1218,7 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Яркость в норме', desc: 'Освещение оптимальное.' });
   }
 
-  // 2. Размытие
+  // 2. Размытие — детерминированная сетка
   let gradientSum = 0, samples = 0;
   for (let y = 10; y < h - 10; y += 20) {
     for (let x = 10; x < w - 10; x += 20) {
@@ -1122,50 +1238,41 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Резкость в норме', desc: 'Детали хорошо видны.' });
   }
 
-  // 3. Прилипание к краю кадра
-  let edgeVariance = 0, edgeSamples = 0;
-  const checkEdge = (x, y) => {
-    const idx = (y * w + x) * 4;
-    const idxIn = ((Math.min(y + 15, h - 1)) * w + Math.min(x + 15, w - 1)) * 4;
-    const diff = Math.abs(imgData[idx] - imgData[idxIn]) + Math.abs(imgData[idx+1] - imgData[idxIn+1]) + Math.abs(imgData[idx+2] - imgData[idxIn+2]);
-    if (diff > 100) edgeVariance++;
-    edgeSamples++;
-  };
-  for (let x = 0; x < w; x += 20) { checkEdge(x, 0); checkEdge(x, h - 1); }
-  for (let y = 0; y < h; y += 20) { checkEdge(0, y); checkEdge(w - 1, y); }
+  // 3. Прилипание к краю (не для Авито — там компоновка с фоном)
+  if (marketplace !== 'avito') {
+    let edgeVariance = 0, edgeSamples = 0;
+    const checkEdge = (x, y) => {
+      const idx = (y * w + x) * 4;
+      const idxIn = ((Math.min(y + 15, h - 1)) * w + Math.min(x + 15, w - 1)) * 4;
+      const diff = Math.abs(imgData[idx] - imgData[idxIn]) + Math.abs(imgData[idx+1] - imgData[idxIn+1]) + Math.abs(imgData[idx+2] - imgData[idxIn+2]);
+      if (diff > 100) edgeVariance++;
+      edgeSamples++;
+    };
+    for (let x = 0; x < w; x += 20) { checkEdge(x, 0); checkEdge(x, h - 1); }
+    for (let y = 0; y < h; y += 20) { checkEdge(0, y); checkEdge(w - 1, y); }
 
-  if (edgeVariance > edgeSamples * 0.3) {
-    report.warnings.push({ title: 'Объект у края кадра', desc: 'Товар прилипает к границе. Рекомендуется больше отступов.' });
-  } else {
-    report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
-  }
-
-  // 4. Водяные знаки / текст в углах
-  const checkCorner = (startX, startY, cW, cH) => {
-    let variance = 0, count = 0;
-    for (let y = startY; y < startY + cH; y += 5) {
-      for (let x = startX; x < startX + cW; x += 5) {
-        const idx = (y * w + x) * 4;
-        const idxR = (y * w + (x + 1)) * 4;
-        variance += Math.abs(imgData[idx] - imgData[idxR]);
-        count++;
-      }
+    if (edgeVariance > edgeSamples * 0.3) {
+      report.warnings.push({ title: 'Объект у края кадра', desc: 'Товар прилипает к границе. Рекомендуется больше отступов.' });
+    } else {
+      report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
     }
-    return variance / count;
-  };
-  const cW = Math.floor(w * 0.15), cH = Math.floor(h * 0.15);
-  const v1 = checkCorner(0, 0, cW, cH);
-  const v2 = checkCorner(w - cW, 0, cW, cH);
-  const v3 = checkCorner(0, h - cH, cW, cH);
-  const v4 = checkCorner(w - cW, h - cH, cW, cH);
-  if (v1 > 25 || v2 > 25 || v3 > 25 || v4 > 25) {
-    report.dangers.push({ title: 'Запрещённые элементы', desc: 'Обнаружены водяные знаки, текст или рамки в углах. WB/Ozon штрафуют за это.' });
   } else {
-    report.success.push({ title: 'Углы чистые', desc: 'Водяных знаков и рамок не обнаружено.' });
+    report.success.push({ title: 'Отступы в норме', desc: 'Для Авито используется умная компоновка с размытым фоном.' });
   }
 
-  // 5. Однородность фона — ТОЛЬКО для категории clothing
-  if (category === 'clothing') {
+  // 4. ТЕКСТ / ЛОГОТИПЫ — блоковый детектор (исправление бага 3)
+  const textBlocks = detectTextBlocks(imgData, w, h);
+  if (textBlocks >= 3) {
+    report.warnings.push({
+      title: 'Обнаружен текст или логотип',
+      desc: 'Возможно, на фото есть текст или логотип (' + textBlocks + ' блок(ов) с надписями). Проверьте перед загрузкой, иначе модерация отклонит карточку.'
+    });
+  } else {
+    report.success.push({ title: 'Углы и полотно чистые', desc: 'Крупных текстовых блоков, водяных знаков и рамок не обнаружено.' });
+  }
+
+  // 5. Однородность фона — только для clothing и не для Авито
+  if (category === 'clothing' && marketplace !== 'avito') {
     const corners = [0, (w - 1) * 4, (w * (h - 1)) * 4, (w * h - 1) * 4];
     let sumR = 0, sumG = 0, sumB = 0;
     corners.forEach(idx => {
@@ -1190,6 +1297,11 @@ function analyzeImage(canvas, marketplace, category) {
         desc: 'Фон соответствует требованиям для одежды.'
       });
     }
+  } else if (marketplace === 'avito') {
+    report.success.push({
+      title: 'Компоновка для Авито',
+      desc: 'Товар вписан целиком, фон размыт и заполняет пространство.'
+    });
   } else {
     report.success.push({
       title: 'Фон не проверялся',
@@ -1198,6 +1310,68 @@ function analyzeImage(canvas, marketplace, category) {
   }
 
   return report;
+}
+
+// Блоковый детектор текста/логотипов без AI:
+// бимодальность гистограммы яркости (чернила/фон) + плотность краёв + дисперсия
+function detectTextBlocks(imgData, w, h) {
+  const cols = 10;
+  const rows = Math.max(8, Math.round(10 * h / w));
+  const bw = Math.floor(w / cols);
+  const bh = Math.floor(h / rows);
+  let textBlocks = 0;
+
+  for (let by = 0; by < rows; by++) {
+    for (let bx = 0; bx < cols; bx++) {
+      const x0 = bx * bw, y0 = by * bh;
+      const x1 = Math.min(x0 + bw, w - 2), y1 = Math.min(y0 + bh, h - 2);
+
+      let n = 0, sum = 0, sumSq = 0;
+      const hist = new Array(16).fill(0);
+      let edgeCount = 0, edgeSamples = 0;
+
+      for (let y = y0; y < y1; y += 3) {
+        for (let x = x0; x < x1; x += 3) {
+          const i = (y * w + x) * 4;
+          const lum = 0.299 * imgData[i] + 0.587 * imgData[i+1] + 0.114 * imgData[i+2];
+          sum += lum; sumSq += lum * lum; n++;
+          hist[Math.min(15, Math.floor(lum / 16))]++;
+
+          const ir = (y * w + x + 1) * 4;
+          const id = ((y + 1) * w + x) * 4;
+          const gx = Math.abs(imgData[i] - imgData[ir]) + Math.abs(imgData[i+1] - imgData[ir+1]) + Math.abs(imgData[i+2] - imgData[ir+2]);
+          const gy = Math.abs(imgData[i] - imgData[id]) + Math.abs(imgData[i+1] - imgData[id+1]) + Math.abs(imgData[i+2] - imgData[id+2]);
+          if (gx + gy > 90) edgeCount++;
+          edgeSamples++;
+        }
+      }
+      if (n < 40 || edgeSamples === 0) continue;
+
+      const mean = sum / n;
+      const variance = sumSq / n - mean * mean;
+      const edgeDensity = edgeCount / edgeSamples;
+
+      let max1 = -1, bi1 = -1, max2 = -1, bi2 = -1;
+      for (let b = 0; b < 16; b++) {
+        if (hist[b] > max1) { max1 = hist[b]; bi1 = b; }
+      }
+      for (let b = 0; b < 16; b++) {
+        if (b === bi1) continue;
+        if (hist[b] > max2) { max2 = hist[b]; bi2 = b; }
+      }
+      const bimodal = (bi1 >= 0 && bi2 >= 0) &&
+        Math.abs(bi1 - bi2) >= 3 &&
+        ((max1 + max2) / n) >= 0.6;
+
+      const textLike = bimodal &&
+        variance > 900 &&
+        edgeDensity >= 0.08 &&
+        edgeDensity <= 0.85;
+
+      if (textLike) textBlocks++;
+    }
+  }
+  return textBlocks;
 }
 
 function shouldReplaceBackground(ctx, width, height) {
@@ -1267,6 +1441,43 @@ function replaceBackground(ctx, width, height, tR, tG, tB, tolerance) {
   ctx.putImageData(imageData, 0, 0);
 }
 
+// === ПРОФЕССИОНАЛЬНАЯ КОМПОНОВКА ДЛЯ АВИТО (синхронизировано с лендингом) ===
+function applyAvitoLayout(ctx, img, W, H) {
+  ctx.save();
+  ctx.filter = 'blur(30px) brightness(0.85) saturate(1.1)';
+  const bgScale = Math.max(W / img.width, H / img.height) * 1.15;
+  const bgX = (W - img.width * bgScale) / 2;
+  const bgY = (H - img.height * bgScale) / 2;
+  ctx.drawImage(img, bgX, bgY, img.width * bgScale, img.height * bgScale);
+  ctx.restore();
+
+  const vignette = ctx.createRadialGradient(W/2, H/2, Math.min(W, H)/3, W/2, H/2, Math.max(W, H)/1.2);
+  vignette.addColorStop(0, 'rgba(0,0,0,0)');
+  vignette.addColorStop(1, 'rgba(0,0,0,0.35)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, W, H);
+
+  const padding = 0.88;
+  const mainScale = Math.min(W / img.width, H / img.height) * padding;
+  const mainW = img.width * mainScale;
+  const mainH = img.height * mainScale;
+  const mainX = (W - mainW) / 2;
+  const mainY = (H - mainH) / 2;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.4)';
+  ctx.shadowBlur = 25;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 15;
+  ctx.fillStyle = 'white';
+  const borderPad = 6;
+  ctx.fillRect(mainX - borderPad, mainY - borderPad, mainW + borderPad*2, mainH + borderPad*2);
+  ctx.restore();
+
+  ctx.drawImage(img, mainX, mainY, mainW, mainH);
+}
+
+// === СЛАЙДЕРЫ (исправление бага 1: слева ДО, справа ПОСЛЕ) ===
 function initSlider(container) {
   if (!container) return;
   const handle = container.querySelector('.slider-handle');
@@ -1282,7 +1493,7 @@ function initSlider(container) {
     let percent = (x / rect.width) * 100;
     percent = Math.max(0, Math.min(100, percent));
     handle.style.left = percent + '%';
-    imgAfter.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+    imgAfter.style.clipPath = 'inset(0 0 0 ' + percent + '%)';
   };
 
   handle.addEventListener('mousedown', (e) => { isDragging = true; e.preventDefault(); });
@@ -1293,55 +1504,52 @@ function initSlider(container) {
   window.addEventListener('touchend', () => isDragging = false);
 }
 
-// ===== МОДАЛКА ПРОСМОТРА (ИСПРАВЛЕНО ДЛЯ СОХРАНЕНИЯ ПРОПОРЦИЙ) =====
-function openViewModal(originalUrl, optimizedUrl, marketplace, singleImage) {
+// Модалка берёт данные из state.processedFiles по индексу —
+// никаких base64 в HTML-атрибутах, источники всегда корректны
+function openViewModal(i) {
+  const r = state.processedFiles[i];
+  if (!r) return;
+
   const modal = document.getElementById('viewModal');
   const slider = document.getElementById('viewSlider');
   const imgBefore = slider.querySelector('.img-before');
   const imgAfter = slider.querySelector('.img-after');
   const handle = slider.querySelector('.slider-handle');
+  const labelBefore = slider.querySelector('.label-before');
+  const labelAfter = slider.querySelector('.label-after');
   const meta = document.getElementById('viewModalMeta');
+  const stats = document.getElementById('viewModalStats');
 
-  // Определяем aspect-ratio в зависимости от маркетплейса
-  let aspectRatio = '3/4'; // По умолчанию для WB/Ozon/Я.Маркет
-  let mpLabel = '900×1200';
-  if (marketplace === 'avito') {
-    aspectRatio = '4/3';
-    mpLabel = '1200×900 (Avito)';
-  } else if (marketplace === 'ozon') {
-    mpLabel = '900×1200 (Ozon)';
-  } else if (marketplace === 'ym') {
-    mpLabel = '900×1200 (Я.Маркет)';
-  } else {
-    mpLabel = '900×1200 (Wildberries)';
-  }
+  const mp = r.marketplace || 'wb';
+  let aspectRatio = '3/4';
+  let mpLabel = '900×1200 (Wildberries)';
+  if (mp === 'avito') { aspectRatio = '4/3'; mpLabel = '1200×900 (Avito) — умная компоновка'; }
+  else if (mp === 'ozon') mpLabel = '900×1200 (Ozon)';
+  else if (mp === 'ym') mpLabel = '900×1200 (Я.Маркет)';
 
   slider.style.setProperty('--slider-aspect', aspectRatio);
-  
-  if (singleImage) {
-    // Для отчётов — показываем только оптимизированное фото
-    imgBefore.style.display = 'none';
-    imgAfter.style.clipPath = 'none';
-    handle.style.display = 'none';
-    meta.textContent = 'Формат: ' + mpLabel + ' • Оптимизированное фото';
-  } else {
-    imgBefore.style.display = 'block';
-    handle.style.display = 'flex';
-    imgAfter.style.clipPath = 'inset(0 50% 0 0)';
-    handle.style.left = '50%';
-    meta.textContent = 'Формат: ' + mpLabel + ' • Перетаскивайте ползунок';
-  }
 
-  imgBefore.src = originalUrl;
-  imgAfter.src = optimizedUrl;
+  imgBefore.style.display = 'block';
+  handle.style.display = 'flex';
+  labelBefore.style.display = 'block';
+  labelAfter.style.display = 'block';
+  imgBefore.src = r.originalUrl || r.optimizedData;
+  imgAfter.src = r.optimizedData;
+  handle.style.left = '50%';
+  imgAfter.style.clipPath = 'inset(0 0 0 50%)';
+
+  const sv = ((1 - r.optimizedSize / r.originalSize) * 100).toFixed(1);
+  meta.textContent = 'Формат: ' + mpLabel + ' • ' + (r.finalName || r.originalName);
+  stats.innerHTML =
+    '<div class="view-stat">ДО: ' + (r.originalSize/1024).toFixed(0) + ' КБ</div>' +
+    '<div class="view-stat">ПОСЛЕ: ' + (r.optimizedSize/1024).toFixed(0) + ' КБ</div>' +
+    '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (r.ext || 'jpg').toUpperCase() + '</div>';
 
   modal.classList.add('active');
   viewSliderActive = true;
   document.body.style.overflow = 'hidden';
 
-  if (!singleImage) {
-    setTimeout(() => initSlider(slider), 100);
-  }
+  setTimeout(() => initSlider(slider), 100);
 }
 
 function closeViewModal() {
@@ -1391,6 +1599,9 @@ document.getElementById('processBtn').addEventListener('click', async () => {
 
   try {
     for (const f of state.selectedFiles) {
+      // Один раз на файл: загрузка + общий кэш кропов
+      const pre = await getPrecompute(f);
+
       for (const mp of selectedMPs) {
         const s = {
           marketplace: mp,
@@ -1402,7 +1613,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
 
         let r;
         try {
-          r = await processImage(f, s);
+          r = await processImage(pre, f, s);
         } catch (err) {
           console.error('Error processing image:', err);
           r = {
@@ -1455,8 +1666,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
 
     if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
     state.data.totalProcessed += state.selectedFiles.length;
-    
-    // Обновляем totalSaved
+
     let saved = 0;
     state.data.history.forEach(item => {
       if (item.originalSize && item.optimizedSize) {
@@ -1464,7 +1674,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
       }
     });
     state.data.totalSaved = saved / (1024 * 1024);
-    
+
     saveUserData();
 
   } catch (err) {
@@ -1479,112 +1689,87 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 });
 
-async function processImage(file, s) {
+async function processImage(pre, file, s) {
   return new Promise((res, rej) => {
-    const rd = new FileReader();
-    rd.onload = async ev => {
-      const img = new Image();
-      img.onload = async () => {
-        try {
-          let W = 900, H = 1200;
-          if (s.marketplace === 'avito') { W = 1200; H = 900; }
-          const c = document.getElementById('canvas');
+    (async () => {
+      try {
+        let W, H;
+        if (s.marketplace === 'avito') { W = 1200; H = 900; }
+        else { W = 900; H = 1200; }
 
-          // Умная обрезка через SmartCrop с таймаутом
-          let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
-          if (typeof SmartCrop !== 'undefined') {
-            try {
-              const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('SmartCrop timeout')), 5000)
-              );
-              const cropPromise = SmartCrop.crop(img, { width: W, height: H, minScale: 0.1 });
-              
-              const result = await Promise.race([cropPromise, timeoutPromise]);
-              if (result && result.topCrop) {
-                cropX = result.topCrop.x;
-                cropY = result.topCrop.y;
-                cropW = result.topCrop.width;
-                cropH = result.topCrop.height;
-              }
-            } catch (e) {
-              console.warn("SmartCrop failed or timed out, falling back to center", e);
-            }
-          }
+        const c = document.getElementById('canvas');
+        c.width = W;
+        c.height = H;
+        const ctx = c.getContext('2d');
+        const img = pre.img;
 
-          c.width = W;
-          c.height = H;
-          const ctx = c.getContext('2d');
+        if (s.marketplace === 'avito') {
+          // Авито: умная компоновка целиком (синхронизировано с лендингом)
+          applyAvitoLayout(ctx, img, W, H);
+        } else {
+          // Кроп берётся из кэша: wb/ozon/ym получают ОДИНАКОВЫЙ кроп
+          const crop = await getCrop(pre, W, H);
+          ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, W, H);
 
-          ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, W, H);
-
-          // Автоматическая замена фона — ТОЛЬКО для категории clothing
           if (s.category === 'clothing' && shouldReplaceBackground(ctx, W, H)) {
             let tR = 255, tG = 255, tB = 255;
             if (s.marketplace === 'ozon') { tR = 245; tG = 245; tB = 247; }
             replaceBackground(ctx, W, H, tR, tG, tB, 35);
           }
-
-          // Водяной знак
-          if (s.watermark) {
-            ctx.font = 'bold 24px Arial';
-            ctx.fillStyle = 'rgba(255,255,255,0.7)';
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'bottom';
-            ctx.fillText(s.watermark, W - 20, H - 20);
-          }
-
-          // Валидация изображения с учётом категории
-          const validationReport = analyzeImage(c, s.marketplace, s.category);
-
-          let mime, ext, q;
-          const qualityVal = s.quality;
-          const maxSize = qualityVal === 'high' ? 1000 : qualityVal === 'low' ? 100 : 300;
-
-          if (s.outputFormat === 'png') {
-            mime = 'image/png'; ext = 'png'; q = 1.0;
-          } else if (s.outputFormat === 'webp') {
-            mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
-          } else {
-            mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
-          }
-
-          let url = c.toDataURL(mime, q);
-
-          if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
-            mime = 'image/jpeg'; ext = 'jpg'; url = c.toDataURL(mime, q);
-          }
-
-          let size = url.length * 0.75;
-          while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') {
-            q -= 0.05;
-            url = c.toDataURL(mime, q);
-            size = url.length * 0.75;
-          }
-
-          const aspectRatio = s.marketplace === 'avito' ? '4/3' : '3/4';
-
-          res({
-            originalName: file.name,
-            originalSize: file.size,
-            optimizedData: url,
-            optimizedSize: size,
-            ext: ext,
-            originalUrl: URL.createObjectURL(file),
-            validationReport: validationReport,
-            marketplace: s.marketplace,
-            category: s.category,
-            aspectRatio: aspectRatio
-          });
-        } catch (err) {
-          console.error('processImage inner error:', err);
-          rej(err);
         }
-      };
-      img.onerror = () => rej(new Error('Image load failed'));
-      img.src = ev.target.result;
-    };
-    rd.onerror = () => rej(new Error('File read failed'));
-    rd.readAsDataURL(file);
+
+        if (s.watermark) {
+          ctx.font = 'bold 24px Arial';
+          ctx.fillStyle = 'rgba(255,255,255,0.7)';
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText(s.watermark, W - 20, H - 20);
+        }
+
+        const validationReport = analyzeImage(c, s.marketplace, s.category);
+
+        let mime, ext, q;
+        const qualityVal = s.quality;
+        const maxSize = qualityVal === 'high' ? 1000 : qualityVal === 'low' ? 100 : 300;
+
+        if (s.outputFormat === 'png') {
+          mime = 'image/png'; ext = 'png'; q = 1.0;
+        } else if (s.outputFormat === 'webp') {
+          mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+        } else {
+          mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+        }
+
+        let url = c.toDataURL(mime, q);
+
+        if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
+          mime = 'image/jpeg'; ext = 'jpg'; url = c.toDataURL(mime, q);
+        }
+
+        let size = url.length * 0.75;
+        while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') {
+          q -= 0.05;
+          url = c.toDataURL(mime, q);
+          size = url.length * 0.75;
+        }
+
+        res({
+          originalName: file.name,
+          originalSize: file.size,
+          optimizedData: url,
+          optimizedSize: size,
+          ext: ext,
+          originalUrl: URL.createObjectURL(file),
+          validationReport: validationReport,
+          marketplace: s.marketplace,
+          category: s.category,
+          aspectRatio: s.marketplace === 'avito' ? '4/3' : '3/4'
+        });
+      } catch (err) {
+        console.error('processImage inner error:', err);
+        rej(err);
+      }
+    })();
   });
 }
 
@@ -1598,7 +1783,7 @@ function displayResult(r, i) {
     const report = r.validationReport;
     const dangerCount = report.dangers.length;
     const warningCount = report.warnings.length;
-    
+
     let statusText = '';
     if (dangerCount > 0) {
       statusText = '<span style="color:var(--danger);font-weight:700;">❌ ' + dangerCount + ' проблем' + (dangerCount === 1 ? 'а' : '') + '</span>';
@@ -1625,14 +1810,17 @@ function displayResult(r, i) {
 
   const mp = r.marketplace || 'wb';
   const cat = r.category || 'other';
-  const aspectRatio = r.aspectRatio || '3/4';
+
+  const layoutHint = mp === 'avito' ? '<div style="font-size:0.75rem;color:var(--primary);margin-bottom:6px;font-weight:600;">🎬 Умная компоновка: товар целиком + размытый фон</div>' : '';
 
   d.innerHTML =
-    '<div class="comparison-slider" id="slider-' + i + '" onclick="openViewModal(\'' + r.originalUrl + '\', \'' + r.optimizedData + '\', \'' + mp + '\')">' +
+    '<div class="comparison-slider" id="slider-' + i + '" onclick="openViewModal(' + i + ')">' +
       '<img src="' + r.originalUrl + '" class="img-before" alt="До">' +
-      '<img src="' + r.optimizedData + '" class="img-after" alt="После" style="clip-path: inset(0 50% 0 0);">' +
+      '<img src="' + r.optimizedData + '" class="img-after" alt="После" style="clip-path: inset(0 0 0 50%);">' +
       '<div class="slider-handle" style="left: 50%;"></div>' +
-      '<div class="slider-zoom-hint">🔍 Увеличить</div>' +
+      '<span class="slider-label label-before">ДО</span>' +
+      '<span class="slider-label label-after">ПОСЛЕ</span>' +
+      '<div class="slider-zoom-hint">🔍 Сравнить крупнее</div>' +
     '</div>' +
     '<div class="result-info">' +
       '<h4>' + (r.finalName || r.originalName) + '</h4>' +
@@ -1640,6 +1828,7 @@ function displayResult(r, i) {
         '<span class="badge badge-' + mp + '">' + (MP_LABELS[mp] || mp) + '</span>' +
         '<span class="badge badge-cat">' + (CAT_LABELS[cat] || cat) + '</span>' +
       '</div>' +
+      layoutHint +
       '<div class="result-metrics">' +
         '<div><div class="metric-label">Размер</div><div class="metric-value">' + (r.originalSize/1024).toFixed(1) + ' → ' + (r.optimizedSize/1024).toFixed(1) + ' КБ</div></div>' +
         '<div><div class="metric-label">Сжатие</div><div class="metric-value">-' + sv + '%</div></div>' +
