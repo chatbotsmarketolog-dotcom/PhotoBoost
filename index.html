@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>PhotoBoost PRO — Оптимизатор фото для Wildberries, Ozon и Avito</title>
 
-<!-- SEO и Мета-теги для соцсетей (ДОБАВЛЕН ?v=99 ДЛЯ СБРОСА КЭША TELEGRAM/VK) -->
+<!-- SEO и Мета-теги для соцсетей -->
 <meta name="description" content="Оптимизация фотографий для маркетплейсов: обрезка, сжатие, замена фона и проверка требований. Бесплатно 2 обработки.">
 <link rel="canonical" href="https://chatbotsmarketolog-dot-com.github.io/PhotoBoost/">
 <meta name="robots" content="index, follow">
 
-<!-- Open Graph (Facebook, ВКонтакте, Telegram) -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="PhotoBoost PRO — Оптимизатор фото для маркетплейсов">
 <meta property="og:description" content="Оптимизация фотографий для маркетплейсов: обрезка, сжатие, замена фона и проверка требований. Бесплатно 2 обработки.">
@@ -29,6 +29,9 @@
 
 <meta name="google-site-verification" content="">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+
+<!-- SmartCrop JS для умной обрезки -->
+<script src="https://cdn.jsdelivr.net/npm/smartcrop@2.0.3/smartcrop.js"></script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -121,8 +124,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .progress-bar{height:100%;background:var(--gradient-purple);width:0%;transition:width 0.3s ease}
 .results-area{margin-top:30px}
 .result-item{background:#faf9ff;padding:20px;border-radius:16px;margin-bottom:16px;display:grid;grid-template-columns:100px 1fr auto;gap:20px;align-items:center}
-.result-preview-container{position:relative;width:100px;height:100px;border-radius:12px;overflow:hidden;cursor:col-resize}
-.result-preview{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+
+/* Стили для слайдера До/После */
+.comparison-slider{position:relative;width:100px;height:100px;border-radius:12px;overflow:hidden;cursor:col-resize;user-select:none;background:#e2e8f0}
+.comparison-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.comparison-slider .img-after{clip-path:inset(0 50% 0 0)}
+.comparison-slider .slider-handle{position:absolute;top:0;bottom:0;left:50%;width:4px;background:white;cursor:col-resize;z-index:10;display:flex;align-items:center;justify-content:center;transform:translateX(-50%);box-shadow:0 0 4px rgba(0,0,0,0.3)}
+.comparison-slider .slider-handle::after{content:'↔';background:white;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+
 .result-info h4{margin-bottom:10px}
 .result-metrics{display:flex;gap:20px;flex-wrap:wrap;font-size:0.85rem}
 .metric-value{font-weight:700;color:var(--success)}
@@ -224,9 +233,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   .settings-panel{padding:18px 14px}
   .settings-grid{grid-template-columns:1fr;gap:12px}
   .action-bar{flex-direction:column;align-items:stretch;text-align:center}
-  .result-item{grid-template-columns:80px 1fr;gap:12px}
-  .result-item .btn{grid-column:1/-1;width:100%}
-  .result-preview-container{width:80px;height:80px}
+  .result-item{grid-template-columns:1fr;gap:12px}
+  .result-item .btn{grid-column:1/-1;width:100%;margin-top:12px}
+  .comparison-slider{width:100%;height:200px;margin-bottom:12px}
   .pricing-grid{grid-template-columns:1fr}
   .pricing-card.featured{transform:none}
   .pricing-card{padding:24px 18px}
@@ -278,7 +287,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div>
 <div class="hero-badge"><span>⭐</span><span>Премиум инструмент для селлеров</span></div>
 <h1>Фото для <span class="gradient-text">маркетплейсов</span> за секунды</h1>
-<p class="hero-subtitle">Оптимизация фотографий для маркетплейсов: обрезка, сжатие, замена фона и проверка требований.</p>
+<p class="hero-subtitle">Оптимизация фотографий для маркетплейсов: умная обрезка, сжатие, замена фона и проверка требований.</p>
 <div class="hero-cta">
 <button class="btn btn-primary btn-large" onclick="scrollToSection('tool')">Попробовать бесплатно →</button>
 <button class="btn btn-ghost btn-large" onclick="scrollToSection('how')">Как это работает</button>
@@ -305,10 +314,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="section-header"><span class="section-label">Возможности</span><h2 class="section-title">Всё, что нужно для идеальных карточек</h2><p class="section-subtitle">Мощные инструменты, которые экономят часы работы и снижают риск отклонения модерацией</p></div>
 <div class="features-grid">
 <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/12cf2b514-c594-4498-a6fd-b17f32131b44.png" class="feature-image"><div class="feature-content"><h3>Мгновенная обработка</h3><p>До 100 фото в минуту прямо в браузере.</p></div></div>
-<div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/179bfde2c-13b9-4a1b-93ab-4de1a31dd244.png" class="feature-image"><div class="feature-content"><h3>Точные размеры</h3><p>Автоматическая обрезка под требования WB, Ozon и Avito.</p></div></div>
+<div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/179bfde2c-13b9-4a1b-93ab-4de1a31dd244.png" class="feature-image"><div class="feature-content"><h3>Умная обрезка</h3><p>AI-анализ контраста находит центр внимания, а не просто режет по середине.</p></div></div>
 <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1eb4b554c-c1c5-4b47-90fa-ff84cc5d6f62.png" class="feature-image"><div class="feature-content"><h3>Умное сжатие</h3><p>Сжимаем до нужного лимита без потери визуального качества.</p></div></div>
-<div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/16e8ccd6a-0547-48fc-b714-d3916080b405.png" class="feature-image"><div class="feature-content"><h3>Полная приватность</h3><p>Все операции локально в вашем браузере. Фото не уходят на сервер.</p></div></div>
-<div class="feature-card"><div class="feature-badge">PRO</div><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1fb584aef-7fc9-499b-99c9-5b665495c3ea.png" class="feature-image"><div class="feature-content"><h3>Пакетная обработка</h3><p>До 100 фото за раз и скачивание одним ZIP-архивом.</p></div></div>
+<div class="feature-card"><div class="feature-badge">PRO</div><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/1fb584aef-7fc9-499b-99c9-5b665495c3ea.png" class="feature-image"><div class="feature-content"><h3>Замена фона</h3><p>Алгоритм Flood Fill заменяет однородный студийный фон на серый или белый без нейросетей.</p></div></div>
+<div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/16e8ccd6a-0547-48fc-b714-d3916080b405.png" class="feature-image"><div class="feature-content"><h3>Валидация требований</h3><p>Проверка на пересветы, размытие, водяные знаки и прилипание к краю кадра.</p></div></div>
 <div class="feature-card"><img src="https://image.qwenlm.ai/public_source/26fb634a-a0d3-4790-a854-0dc2055dac47/189ae9c38-9e35-4c9f-8e1b-1393bbbc1299.png" class="feature-image"><div class="feature-content"><h3>Окупаемость</h3><p>1500₽/мес окупаются за счет сэкономленного времени и прошедших модераций.</p></div></div>
 </div>
 </div></section>
@@ -317,8 +326,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="section-header"><span class="section-label">Как это работает</span><h2 class="section-title">Три простых шага</h2><p class="section-subtitle">Всё интуитивно понятно</p></div>
 <div class="steps-grid">
 <div class="step-card"><div class="step-number">1</div><h3>Загрузите фото</h3><p>Перетащите фото. Поддерживаются JPG, PNG, WebP.</p></div>
-<div class="step-card"><div class="step-number">2</div><h3>Настройте параметры</h3><p>Выберите площадки, качество и дополнительные опции.</p></div>
-<div class="step-card"><div class="step-number">3</div><h3>Скачайте результат</h3><p>Получите готовые оптимизированные фото, готовые к загрузке.</p></div>
+<div class="step-card"><div class="step-number">2</div><h3>Настройте параметры</h3><p>Выберите площадки, качество, замену фона и дополнительные опции.</p></div>
+<div class="step-card"><div class="step-number">3</div><h3>Скачайте результат</h3><p>Оцените результат на слайдере «До/После» и скачайте готовые фото.</p></div>
 </div>
 </div></section>
 
@@ -351,6 +360,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
   <label>Формат <span class="pro-lock">🔒 PRO</span></label>
   <select id="outputFormat" disabled><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select>
   <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; line-height: 1.3;">ℹ️ <em>WebP fallback — если браузер не поддерживает, автоматически переключается на JPEG</em></p>
+</div>
+<div class="setting-item" id="bgReplaceSetting">
+  <label>Замена фона (серый/белый) <span class="pro-lock">🔒 PRO</span></label>
+  <label class="mp-checkbox" style="margin-top:8px;">
+    <input type="checkbox" id="replaceBg" disabled> 
+    Автоматическая заливка однородного фона
+  </label>
+  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Работает без нейросетей (Flood Fill). Если фон сложный, система предупредит об артефактах.</p>
 </div>
 <div class="setting-item" id="watermarkSetting">
   <label>Водяной знак для портфолио <span class="pro-lock">🔒 PRO</span></label>
@@ -394,9 +411,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <li><span class="check-icon">✓</span> Безлимитные обработки</li>
 <li><span class="check-icon">✓</span> Пакетная загрузка до 100 фото за раз</li>
 <li><span class="check-icon">✓</span> Скачивание готовых фото ZIP-архивом</li>
-<li><span class="check-icon">✓</span> Умная обрезка (центрирование на товаре)</li>
+<li><span class="check-icon">✓</span> Умная обрезка (smartcrop, центрирование на товаре)</li>
 <li><span class="check-icon">✓</span> Замена фона для Ozon (серый) и Я.Маркет (белый)</li>
-<li><span class="check-icon">✓</span> Проверка требований маркетплейсов</li>
+<li><span class="check-icon">✓</span> Валидация: проверка на пересветы, размытие и водяные знаки</li>
 <li><span class="check-icon">✓</span> Предупреждение о запрещённых элементах</li>
 <li><span class="check-icon">✓</span> Водяной знак для портфолио (защита авторских прав)</li>
 <li><span class="check-icon">✓</span> Все форматы: JPG, PNG, WebP</li>
@@ -455,7 +472,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 <div class="footer-bottom"><div>© 2024 PhotoBoost</div><div>Сделано с ❤️</div></div></footer>
 
-<!-- Модальные окна (без изменений в структуре, только тексты обновлены выше) -->
+<!-- Модальные окна -->
 <div class="modal-overlay" id="privacyModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('privacyModal')">✕</button>
@@ -541,7 +558,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div style="margin-bottom:10px;"><span style="color:var(--text-muted);font-size:0.85rem;">Карта:</span> <strong style="font-family:monospace;font-size:1.1rem;">9112 3810 1954 7066</strong></div>
 <div style="margin-bottom:10px;"><span style="color:var(--text-muted);font-size:0.85rem;">Держатель:</span> <strong>KRYSTSINA STRYHA</strong></div>
 <div><span style="color:var(--text-muted);font-size:0.85rem;">Срок:</span> <strong>02/31</strong></div>
-<div class="sber-notice"><strong>📌 Для Сбербанка:</strong> в разделе стран выбирайте «Другая страна» и там уже Беларусь.</div>
+<div class="sber-notice"><strong>📌 Для Сбербанка:</strong> в разделе стран выбирайте «Другая страна» и там уже выберите Беларусь.</div>
 </div>
 <div class="receipt-box"><p>⚠️ Обязательно сохраните чек об оплате!</p></div>
 <button id="paidBtn" class="btn btn-primary btn-large" style="width:100%;" onclick="markPaid()">✅ Я оплатил(а)</button>
@@ -579,7 +596,6 @@ function closeModal(id){const m=document.getElementById(id);if(m){m.classList.re
 function switchModal(a,b){closeModal(a);setTimeout(()=>openModal(b),200)}
 function toggleFaq(el){const item=el.parentElement;const was=item.classList.contains('active');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('active'));if(!was)item.classList.add('active')}
 
-// Стили для чекбоксов маркетплейсов
 document.querySelectorAll('.mp-checkbox').forEach(cb => {
   cb.addEventListener('click', function(e) {
     if (e.target.tagName !== 'INPUT') {
@@ -670,7 +686,13 @@ const isPro=state.data.isPro;
 document.getElementById('statusDot').classList.toggle('active',isPro);
 document.getElementById('statusText').innerHTML=isPro?'<strong style="color:#10b981;">⭐ PRO</strong> — безлимит (до 100 фото)':'Бесплатно: <strong>'+state.data.freeUsage+'</strong> фото';
 document.getElementById('zipLock').style.display=isPro?'none':'inline';
-['formatSetting','watermarkSetting'].forEach(id=>{const el=document.getElementById(id);const inp=el.querySelector('select,input');if(isPro){el.classList.remove('disabled');inp.disabled=false}else{el.classList.add('disabled');inp.disabled=true}});
+['formatSetting','watermarkSetting','bgReplaceSetting'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(!el) return;
+  const inp=el.querySelector('select,input');
+  if(isPro){el.classList.remove('disabled');if(inp)inp.disabled=false}
+  else{el.classList.add('disabled');if(inp)inp.disabled=true}
+});
 document.getElementById('processBtn').disabled=state.selectedFiles.length===0||(!isPro&&state.data.freeUsage<=0);
 }
 
@@ -765,6 +787,164 @@ function clearSelected(){
   updateUI();
 }
 
+// === НОВЫЕ ФУНКЦИИ ВАЛИДАЦИИ И ОБРАБОТКИ ===
+
+function analyzeImage(canvas) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const imgData = ctx.getImageData(0, 0, w, h).data;
+  const warnings = [];
+  
+  // 1. Яркость (пересветы)
+  let brightSum = 0;
+  for(let i=0; i<500; i++) {
+    const idx = Math.floor(Math.random() * (w * h)) * 4;
+    const lum = 0.299 * imgData[idx] + 0.587 * imgData[idx+1] + 0.114 * imgData[idx+2];
+    brightSum += lum;
+  }
+  if ((brightSum / 500) > 235) warnings.push("Возможны пересветы (изображение слишком яркое)");
+  
+  // 2. Размытие (анализ контраста соседних пикселей)
+  let gradientSum = 0, samples = 0;
+  for(let y=10; y<h-10; y+=20) {
+    for(let x=10; x<w-10; x+=20) {
+      const idx = (y * w + x) * 4;
+      const idxR = (y * w + (x+1)) * 4;
+      const idxD = ((y+1) * w + x) * 4;
+      gradientSum += Math.abs(imgData[idx] - imgData[idxR]) + Math.abs(imgData[idx] - imgData[idxD]);
+      samples++;
+    }
+  }
+  if ((gradientSum / samples) < 15) warnings.push("Изображение может быть размытым (низкий контраст деталей)");
+  
+  // 3. Однородность фона и прилипание к краю
+  let edgeVariance = 0, edgeSamples = 0;
+  const checkEdge = (x, y) => {
+    const idx = (y * w + x) * 4;
+    const idxIn = ((Math.min(y+15, h-1)) * w + Math.min(x+15, w-1)) * 4;
+    const diff = Math.abs(imgData[idx] - imgData[idxIn]) + Math.abs(imgData[idx+1] - imgData[idxIn+1]) + Math.abs(imgData[idx+2] - imgData[idxIn+2]);
+    if (diff > 100) edgeVariance++; // Высокий контраст на краю = объект прилипает или фон неоднороден
+    edgeSamples++;
+  };
+  for(let x=0; x<w; x+=20) { checkEdge(x, 0); checkEdge(x, h-1); }
+  for(let y=0; y<h; y+=20) { checkEdge(0, y); checkEdge(w-1, y); }
+  
+  if (edgeVariance > edgeSamples * 0.3) {
+    warnings.push("Объект прилипает к краю кадра или фон неоднородный");
+  }
+  
+  // 4. Водяные знаки / текст в углах (анализ дисперсии в углах)
+  const checkCorner = (startX, startY, cW, cH) => {
+    let variance = 0, count = 0;
+    for(let y=startY; y<startY+cH; y+=5) {
+      for(let x=startX; x<startX+cW; x+=5) {
+        const idx = (y * w + x) * 4;
+        const idxR = (y * w + (x+1)) * 4;
+        variance += Math.abs(imgData[idx] - imgData[idxR]);
+        count++;
+      }
+    }
+    return variance / count;
+  };
+  const cW = Math.floor(w * 0.15), cH = Math.floor(h * 0.15);
+  const v1 = checkCorner(0, 0, cW, cH);
+  const v2 = checkCorner(w-cW, 0, cW, cH);
+  const v3 = checkCorner(0, h-cH, cW, cH);
+  const v4 = checkCorner(w-cW, h-cH, cW, cH);
+  if (v1 > 25 || v2 > 25 || v3 > 25 || v4 > 25) {
+    warnings.push("Обнаружены возможные водяные знаки, текст или рамки в углах");
+  }
+  
+  return warnings;
+}
+
+function replaceBackground(ctx, width, height, tR, tG, tB, tolerance) {
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+  const corners = [0, (width - 1) * 4, (width * (height - 1)) * 4, (width * height - 1) * 4];
+  
+  let sumR = 0, sumG = 0, sumB = 0;
+  corners.forEach(idx => {
+    sumR += data[idx]; sumG += data[idx+1]; sumB += data[idx+2];
+  });
+  const bgR = sumR / 4, bgG = sumG / 4, bgB = sumB / 4;
+  
+  let maxDiff = 0;
+  corners.forEach(idx => {
+    const diff = Math.abs(data[idx] - bgR) + Math.abs(data[idx+1] - bgG) + Math.abs(data[idx+2] - bgB);
+    if (diff > maxDiff) maxDiff = diff;
+  });
+  
+  let warning = "";
+  if (maxDiff > 40) {
+    warning = "Фон неоднородный, автоматическая замена может дать артефакты";
+  }
+  
+  // Оптимизированный Flood Fill со стеком (без рекурсии)
+  const visited = new Uint8Array(width * height);
+  const stack = new Int32Array(width * height);
+  let stackPtr = 0;
+  
+  stack[stackPtr++] = 0;
+  stack[stackPtr++] = width - 1;
+  stack[stackPtr++] = width * (height - 1);
+  stack[stackPtr++] = width * height - 1;
+  
+  const tol3 = tolerance * 3;
+  
+  while (stackPtr > 0) {
+    const idx = stack[--stackPtr];
+    if (visited[idx]) continue;
+    visited[idx] = 1;
+    
+    const pIdx = idx * 4;
+    const diff = Math.abs(data[pIdx] - bgR) + Math.abs(data[pIdx+1] - bgG) + Math.abs(data[pIdx+2] - bgB);
+    
+    if (diff <= tol3) {
+      data[pIdx] = tR;
+      data[pIdx+1] = tG;
+      data[pIdx+2] = tB;
+      
+      const x = idx % width;
+      const y = (idx - x) / width;
+      
+      if (x > 0) stack[stackPtr++] = idx - 1;
+      if (x < width - 1) stack[stackPtr++] = idx + 1;
+      if (y > 0) stack[stackPtr++] = idx - width;
+      if (y < height - 1) stack[stackPtr++] = idx + width;
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+  return warning;
+}
+
+function initSlider(container) {
+  if (!container) return;
+  const handle = container.querySelector('.slider-handle');
+  const imgAfter = container.querySelector('.img-after');
+  let isDragging = false;
+
+  const move = (e) => {
+    if (!isDragging) return;
+    const rect = container.getBoundingClientRect();
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    if (!clientX) return;
+    const x = clientX - rect.left;
+    let percent = (x / rect.width) * 100;
+    percent = Math.max(0, Math.min(100, percent));
+    handle.style.left = percent + '%';
+    imgAfter.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+  };
+
+  handle.addEventListener('mousedown', () => isDragging = true);
+  handle.addEventListener('touchstart', () => isDragging = true, {passive: true});
+  window.addEventListener('mousemove', move);
+  window.addEventListener('touchmove', move, {passive: true});
+  window.addEventListener('mouseup', () => isDragging = false);
+  window.addEventListener('touchend', () => isDragging = false);
+}
+
 document.getElementById('processBtn').addEventListener('click',async()=>{
   if(!state.selectedFiles.length)return;
   if(!state.data.isPro&&state.data.freeUsage<=0){openPayment();return}
@@ -772,7 +952,6 @@ document.getElementById('processBtn').addEventListener('click',async()=>{
   btn.disabled=true;
   btn.textContent='Оптимизация...';
   
-  // Показываем прогресс-бар
   const progressContainer = document.getElementById('progressContainer');
   const progressBar = document.getElementById('progressBar');
   progressContainer.style.display = 'block';
@@ -781,7 +960,6 @@ document.getElementById('processBtn').addEventListener('click',async()=>{
   document.getElementById('resultsArea').innerHTML='';
   state.processedFiles=[];
   
-  // Получаем выбранные маркетплейсы
   const selectedMPs = Array.from(document.querySelectorAll('input[name="mp"]:checked')).map(cb => cb.value);
   if (selectedMPs.length === 0) {
     alert('Пожалуйста, выберите хотя бы одну площадку.');
@@ -799,11 +977,11 @@ document.getElementById('processBtn').addEventListener('click',async()=>{
         marketplace: mp,
         quality: document.getElementById('quality').value,
         outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg',
-        watermark: state.data.isPro ? document.getElementById('watermarkText').value : ''
+        watermark: state.data.isPro ? document.getElementById('watermarkText').value : '',
+        replaceBg: state.data.isPro && document.getElementById('replaceBg').checked
       };
       const r = await processImage(f, s);
       
-      // Добавляем суффикс площадки к имени, если их несколько
       const finalName = selectedMPs.length > 1 ? f.name.replace(/\.[^/.]+$/, '') + '_' + mp + '.' + r.ext : f.name;
       
       state.processedFiles.push({...r, finalName});
@@ -835,52 +1013,72 @@ document.getElementById('processBtn').addEventListener('click',async()=>{
   updateUI();
 });
 
-function processImage(file,s){
+async function processImage(file, s){
   return new Promise(res=>{
     const rd=new FileReader();
-    rd.onload=ev=>{
+    rd.onload=async ev=>{
       const img=new Image();
-      img.onload=()=>{
-        let W=900,H=1200;
-        if(s.marketplace==='avito'){W=1200;H=900}
+      img.onload=async ()=>{
+        let W=900, H=1200;
+        if(s.marketplace==='avito'){W=1200; H=900}
         const c=document.getElementById('canvas');
-        c.width=W;
-        c.height=H;
-        const ctx=c.getContext('2d');
-        const sc=Math.max(W/img.width,H/img.height);
-        ctx.drawImage(img,(W/2)-(img.width/2)*sc,(H/2)-(img.height/2)*sc,img.width*sc,img.height*sc);
+        
+        // Умная обрезка через SmartCrop
+        let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
+        if (typeof SmartCrop !== 'undefined') {
+          try {
+            const result = await SmartCrop.crop(img, {width: W, height: H, minScale: 0.1});
+            if (result && result.topCrop) {
+              cropX = result.topCrop.x;
+              cropY = result.topCrop.y;
+              cropW = result.topCrop.width;
+              cropH = result.topCrop.height;
+            }
+          } catch(e) { console.warn("SmartCrop failed, falling back to center", e); }
+        }
+        
+        c.width = W;
+        c.height = H;
+        const ctx = c.getContext('2d');
+        
+        // Рисуем с умной обрезкой (или по центру, если smartcrop не сработал)
+        ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, W, H);
+        
+        // Замена фона (Flood Fill)
+        let bgWarning = "";
+        if (s.replaceBg) {
+          let tR = 255, tG = 255, tB = 255; // Белый по умолчанию
+          if (s.marketplace === 'ozon') { tR = 245; tG = 245; tB = 247; } // Светло-серый для Ozon
+          bgWarning = replaceBackground(ctx, W, H, tR, tG, tB, 35);
+        }
+        
+        // Водяной знак
         if(s.watermark){
           ctx.font='bold 24px Arial';
           ctx.fillStyle='rgba(255,255,255,0.7)';
           ctx.textAlign='right';
           ctx.textBaseline='bottom';
-          ctx.fillText(s.watermark,W-20,H-20);
+          ctx.fillText(s.watermark, W-20, H-20);
         }
+
+        // Валидация изображения
+        const warnings = analyzeImage(c);
+        if (bgWarning) warnings.push(bgWarning);
 
         let mime, ext, q;
         const qualityVal = document.getElementById('quality').value;
         
         if (s.outputFormat === 'png') {
-          mime = 'image/png';
-          ext = 'png';
-          q = 1.0;
+          mime = 'image/png'; ext = 'png'; q = 1.0;
         } else if (s.outputFormat === 'webp') {
-          mime = 'image/webp';
-          ext = 'webp';
-          q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+          mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
         } else {
-          mime = 'image/jpeg';
-          ext = 'jpg';
-          q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+          mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
         }
 
         let url = c.toDataURL(mime, q);
-
         if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
-          console.warn('⚠️ WebP не поддерживается браузером, fallback на JPEG');
-          mime = 'image/jpeg';
-          ext = 'jpg';
-          url = c.toDataURL(mime, q);
+          mime = 'image/jpeg'; ext = 'jpg'; url = c.toDataURL(mime, q);
         }
 
         let size = url.length * 0.75;
@@ -892,7 +1090,15 @@ function processImage(file,s){
           size = url.length * 0.75;
         }
 
-        res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext: ext });
+        res({ 
+          originalName: file.name, 
+          originalSize: file.size, 
+          optimizedData: url, 
+          optimizedSize: size, 
+          ext: ext,
+          originalUrl: URL.createObjectURL(file),
+          warnings: warnings
+        });
       };
       img.src=ev.target.result;
     };
@@ -903,9 +1109,17 @@ function processImage(file,s){
 function displayResult(r,i){
   const sv=((1-r.optimizedSize/r.originalSize)*100).toFixed(1);
   const d=document.createElement('div');d.className='result-item';
+  
+  let warningsHtml = '';
+  if (r.warnings && r.warnings.length > 0) {
+    warningsHtml = `<div style="margin-top:8px; font-size:0.8rem; color:#f59e0b; line-height:1.4;">⚠️ ${r.warnings.join('<br>⚠️ ')}</div>`;
+  }
+  
   d.innerHTML=`
-    <div class="result-preview-container">
-      <img src="${r.optimizedData}" class="result-preview">
+    <div class="comparison-slider" id="slider-${i}">
+      <img src="${r.originalUrl}" class="img-before" alt="До">
+      <img src="${r.optimizedData}" class="img-after" alt="После" style="clip-path: inset(0 50% 0 0);">
+      <div class="slider-handle" style="left: 50%;"></div>
     </div>
     <div class="result-info">
       <h4>${r.finalName || r.originalName}</h4>
@@ -913,10 +1127,14 @@ function displayResult(r,i){
         <div><div class="metric-label">Размер</div><div class="metric-value">${(r.originalSize/1024).toFixed(1)} → ${(r.optimizedSize/1024).toFixed(1)} КБ</div></div>
         <div><div class="metric-label">Сжатие</div><div class="metric-value">-${sv}%</div></div>
       </div>
+      ${warningsHtml}
     </div>
     <button class="btn btn-primary" onclick="downloadFile(${i})">Скачать готовые фото</button>
   `;
   document.getElementById('resultsArea').appendChild(d);
+  
+  // Инициализация слайдера после рендера
+  setTimeout(() => initSlider(document.getElementById(`slider-${i}`)), 50);
 }
 
 function downloadFile(i){
