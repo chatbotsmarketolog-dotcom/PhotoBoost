@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Мой кабинет — PhotoBoost</title>
+
+<!-- SmartCrop JS для умной обрезки -->
+<script src="https://cdn.jsdelivr.net/npm/smartcrop@2.0.3/smartcrop.js"></script>
+
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root { --bg-dark: #0a0a1a; --bg-light: #faf9ff; --primary: #7c3aed; --gold: #fbbf24; --success: #10b981; --danger: #ef4444; --text-dark: #0f0f1e; --text-light: #f8fafc; --text-muted: #64748b; --border: rgba(255,255,255,0.1); --gradient-main: linear-gradient(135deg,#7c3aed 0%,#ec4899 50%,#f59e0b 100%); --gradient-purple: linear-gradient(135deg,#7c3aed 0%,#ec4899 100%); --gradient-gold: linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%); }
@@ -51,13 +55,51 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .progress-container { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 12px; display: none; }
 .progress-bar { height: 100%; background: var(--gradient-purple); width: 0%; transition: width 0.3s ease; }
 .results-area { margin-top: 24px; }
-.result-item { background: #faf9ff; padding: 20px; border-radius: 16px; margin-bottom: 16px; display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; align-items: center; }
-.result-preview { width: 100px; height: 100px; border-radius: 12px; object-fit: cover; }
+.result-item { background: #faf9ff; padding: 20px; border-radius: 16px; margin-bottom: 16px; display: grid; grid-template-columns: 140px 1fr auto; gap: 20px; align-items: start; }
+
+/* ===== СЛАЙДЕР ДО/ПОСЛЕ ===== */
+.comparison-slider{position:relative;width:140px;height:140px;border-radius:12px;overflow:hidden;cursor:col-resize;user-select:none;background:#e2e8f0;transition:transform 0.2s}
+.comparison-slider:hover{transform:scale(1.02)}
+.comparison-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.comparison-slider .img-after{clip-path:inset(0 50% 0 0)}
+.comparison-slider .slider-handle{position:absolute;top:0;bottom:0;left:50%;width:4px;background:white;cursor:col-resize;z-index:10;display:flex;align-items:center;justify-content:center;transform:translateX(-50%);box-shadow:0 0 4px rgba(0,0,0,0.3)}
+.comparison-slider .slider-handle::after{content:'↔';background:white;color:#333;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
+.slider-zoom-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.6);color:white;padding:4px 8px;border-radius:6px;font-size:0.7rem;font-weight:600;z-index:5;pointer-events:none}
+
 .result-info h4 { margin-bottom: 10px; word-break: break-word; }
 .result-metrics { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem; }
 .metric-value { font-weight: 700; color: var(--success); }
 .metric-value.dim { color: var(--text-dark); }
 .metric-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
+
+/* ===== ОТЧЁТ ВАЛИДАЦИИ ===== */
+.validation-report { margin-top: 14px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+.report-header { padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+.report-header:hover { background: #f1f5f9; }
+.report-toggle { margin-left: auto; transition: transform 0.3s; }
+.report-toggle.open { transform: rotate(180deg); }
+.report-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.report-body.open { max-height: 500px; }
+.report-content { padding: 12px 14px; }
+.report-item { display: flex; align-items: start; gap: 8px; padding: 8px 0; font-size: 0.85rem; border-bottom: 1px solid #f1f5f9; }
+.report-item:last-child { border-bottom: none; }
+.report-icon { flex-shrink: 0; font-size: 1rem; line-height: 1.4; }
+.report-success { color: var(--success); }
+.report-warning { color: #d97706; }
+.report-danger { color: var(--danger); }
+.report-text { flex: 1; }
+.report-text strong { display: block; margin-bottom: 2px; }
+.report-text p { color: var(--text-muted); font-size: 0.8rem; margin: 0; }
+
+/* ===== МОДАЛКА ПРОСМОТРА ===== */
+.view-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,26,0.95); backdrop-filter: blur(10px); z-index: 2500; justify-content: center; align-items: center; padding: 20px; }
+.view-modal-overlay.active { display: flex; }
+.view-modal { max-width: 90vw; max-height: 90vh; position: relative; }
+.view-modal .comparison-slider { width: 80vw; height: 80vh; max-width: 1000px; max-height: 800px; border-radius: 16px; }
+.view-modal-close { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); cursor: pointer; font-size: 1.5rem; color: white; z-index: 2600; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+.view-modal-close:hover { background: rgba(255,255,255,0.2); transform: scale(1.1); }
+.view-modal-info { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 50px; color: white; font-weight: 600; font-size: 0.9rem; z-index: 2600; }
+
 /* ===== ПОДПИСКА ===== */
 .subscription-card { background: linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(245,158,11,0.05) 100%); border: 1px solid rgba(251,191,36,0.3); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
 .subscription-card.free { background: linear-gradient(135deg,#f1f5f9 0%,#e2e8f0 100%); border-color: #cbd5e1; }
@@ -134,9 +176,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dash-header h1 { font-size: 1.6rem; }
 .settings-grid { grid-template-columns: 1fr; gap: 12px; }
 .action-bar { flex-direction: column; align-items: stretch; text-align: center; }
-.result-item { grid-template-columns: 80px 1fr; gap: 12px; }
+.result-item { grid-template-columns: 1fr; gap: 12px; }
 .result-item .btn { grid-column: 1 / -1; width: 100%; }
-.result-preview { width: 80px; height: 80px; }
+.comparison-slider { width: 100%; height: 240px; margin-bottom: 12px; }
+.view-modal .comparison-slider { width: 95vw; height: 70vh; }
 .history-item { flex-wrap: wrap; }
 .history-item .btn { width: 100%; }
 .history-actions { flex-direction: column; }
@@ -327,7 +370,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="receipt-box"><p>⚠️ Обязательно сохраните чек об оплате!</p></div>
 <button id="paidBtn" class="btn btn-primary" style="width:100%;" onclick="markPaid()">✅ Я оплатил(а)</button>
 <div id="paymentContacts" style="display:none;">
-<div style="background:#eff6ff; padding:16px; border-radius:12px; margin-bottom:16px;"><p style="font-size:0.95rem; color:#1e40af; margin:0;">📲 Напишите нам, прикрепите чек — и получите код активации PRO.</p></div>
+<div style="background:#eff6ff; padding:16px; border-radius: 12px; margin-bottom:16px;"><p style="font-size:0.95rem; color:#1e40af; margin:0;">📲 Напишите нам, прикрепите чек — и получите код активации PRO.</p></div>
 <div class="contact-buttons">
 <a href="https://t.me/PhotoBoosts" target="_blank" class="btn btn-primary" style="text-decoration:none;">✈️ Написать в Telegram</a>
 <a href="https://vk.ru/art_akrilll" target="_blank" class="btn btn-secondary" style="text-decoration:none;">💬 Написать ВКонтакте</a>
@@ -335,6 +378,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 </div>
 </div>
 </div>
+</div>
+
+<!-- МОДАЛКА ПРОСМОТРА ФОТО -->
+<div class="view-modal-overlay" id="viewModal">
+<button class="view-modal-close" onclick="closeViewModal()">✕</button>
+<div class="view-modal">
+<div class="comparison-slider" id="viewSlider">
+<img src="" class="img-before" alt="До">
+<img src="" class="img-after" alt="После" style="clip-path: inset(0 50% 0 0);">
+<div class="slider-handle" style="left: 50%;"></div>
+</div>
+</div>
+<div class="view-modal-info">Перетаскивайте ползунок для сравнения • ESC для закрытия</div>
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
@@ -350,6 +406,7 @@ let state = {
 };
 
 let selectedHistory = new Set();
+let viewSliderActive = false;
 
 const PRO_F = { maxBatchSize: 100 };
 const FREE_F = { maxBatchSize: 1 };
@@ -626,6 +683,10 @@ function openPayment() {
   document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
   document.getElementById('paymentModal').classList.add('active');
 }
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('active');
+}
 function markPaid() { state.data.paidClicked = true; saveUserData(); document.getElementById('paidBtn').style.display = 'none'; document.getElementById('paymentContacts').style.display = 'block'; }
 
 function activateByCode() {
@@ -795,10 +856,290 @@ function clearSelected() {
   updateUI();
 }
 
+// === ФУНКЦИИ ВАЛИДАЦИИ И ОБРАБОТКИ ===
+
+function analyzeImage(canvas) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+  const imgData = ctx.getImageData(0, 0, w, h).data;
+  const report = {
+    success: [],
+    warnings: [],
+    dangers: []
+  };
+
+  // 1. Яркость (пересветы)
+  let brightSum = 0;
+  const sampleCount = Math.min(1000, w * h);
+  for (let i = 0; i < sampleCount; i++) {
+    const idx = Math.floor(Math.random() * (w * h)) * 4;
+    const lum = 0.299 * imgData[idx] + 0.587 * imgData[idx+1] + 0.114 * imgData[idx+2];
+    brightSum += lum;
+  }
+  const avgBrightness = brightSum / sampleCount;
+  if (avgBrightness > 235) {
+    report.dangers.push({
+      title: 'Пересветы',
+      desc: 'Изображение слишком яркое. Маркетплейсы могут отклонить.'
+    });
+  } else if (avgBrightness > 200) {
+    report.warnings.push({
+      title: 'Высокая яркость',
+      desc: 'Рекомендуется немного затемнить фото.'
+    });
+  } else {
+    report.success.push({
+      title: 'Яркость в норме',
+      desc: 'Освещение оптимальное.'
+    });
+  }
+
+  // 2. Размытие (анализ контраста соседних пикселей)
+  let gradientSum = 0, samples = 0;
+  for (let y = 10; y < h - 10; y += 20) {
+    for (let x = 10; x < w - 10; x += 20) {
+      const idx = (y * w + x) * 4;
+      const idxR = (y * w + (x + 1)) * 4;
+      const idxD = ((y + 1) * w + x) * 4;
+      gradientSum += Math.abs(imgData[idx] - imgData[idxR]) + Math.abs(imgData[idx] - imgData[idxD]);
+      samples++;
+    }
+  }
+  const avgGradient = gradientSum / samples;
+  if (avgGradient < 10) {
+    report.dangers.push({
+      title: 'Сильное размытие',
+      desc: 'Фото нечёткое. Модерация почти наверняка отклонит.'
+    });
+  } else if (avgGradient < 15) {
+    report.warnings.push({
+      title: 'Возможное размытие',
+      desc: 'Рекомендуется использовать более чёткое фото.'
+    });
+  } else {
+    report.success.push({
+      title: 'Резкость в норме',
+      desc: 'Детали хорошо видны.'
+    });
+  }
+
+  // 3. Прилипание к краю кадра
+  let edgeVariance = 0, edgeSamples = 0;
+  const checkEdge = (x, y) => {
+    const idx = (y * w + x) * 4;
+    const idxIn = ((Math.min(y + 15, h - 1)) * w + Math.min(x + 15, w - 1)) * 4;
+    const diff = Math.abs(imgData[idx] - imgData[idxIn]) + Math.abs(imgData[idx+1] - imgData[idxIn+1]) + Math.abs(imgData[idx+2] - imgData[idxIn+2]);
+    if (diff > 100) edgeVariance++;
+    edgeSamples++;
+  };
+  for (let x = 0; x < w; x += 20) { checkEdge(x, 0); checkEdge(x, h - 1); }
+  for (let y = 0; y < h; y += 20) { checkEdge(0, y); checkEdge(w - 1, y); }
+
+  if (edgeVariance > edgeSamples * 0.3) {
+    report.warnings.push({
+      title: 'Объект у края кадра',
+      desc: 'Товар прилипает к границе. Рекомендуется больше отступов.'
+    });
+  } else {
+    report.success.push({
+      title: 'Отступы в норме',
+      desc: 'Товар не касается границ кадра.'
+    });
+  }
+
+  // 4. Водяные знаки / текст в углах
+  const checkCorner = (startX, startY, cW, cH) => {
+    let variance = 0, count = 0;
+    for (let y = startY; y < startY + cH; y += 5) {
+      for (let x = startX; x < startX + cW; x += 5) {
+        const idx = (y * w + x) * 4;
+        const idxR = (y * w + (x + 1)) * 4;
+        variance += Math.abs(imgData[idx] - imgData[idxR]);
+        count++;
+      }
+    }
+    return variance / count;
+  };
+  const cW = Math.floor(w * 0.15), cH = Math.floor(h * 0.15);
+  const v1 = checkCorner(0, 0, cW, cH);
+  const v2 = checkCorner(w - cW, 0, cW, cH);
+  const v3 = checkCorner(0, h - cH, cW, cH);
+  const v4 = checkCorner(w - cW, h - cH, cW, cH);
+  if (v1 > 25 || v2 > 25 || v3 > 25 || v4 > 25) {
+    report.dangers.push({
+      title: 'Запрещённые элементы',
+      desc: 'Обнаружены водяные знаки, текст или рамки в углах. WB/Ozon штрафуют за это.'
+    });
+  } else {
+    report.success.push({
+      title: 'Углы чистые',
+      desc: 'Водяных знаков и рамок не обнаружено.'
+    });
+  }
+
+  // 5. Однородность фона
+  const corners = [0, (w - 1) * 4, (w * (h - 1)) * 4, (w * h - 1) * 4];
+  let sumR = 0, sumG = 0, sumB = 0;
+  corners.forEach(idx => {
+    sumR += imgData[idx]; sumG += imgData[idx+1]; sumB += imgData[idx+2];
+  });
+  const bgR = sumR / 4, bgG = sumG / 4, bgB = sumB / 4;
+
+  let maxDiff = 0;
+  corners.forEach(idx => {
+    const diff = Math.abs(imgData[idx] - bgR) + Math.abs(imgData[idx+1] - bgG) + Math.abs(imgData[idx+2] - bgB);
+    if (diff > maxDiff) maxDiff = diff;
+  });
+
+  if (maxDiff > 40) {
+    report.warnings.push({
+      title: 'Неоднородный фон',
+      desc: 'Фон сложный. Автоматическая замена не выполнена.'
+    });
+  } else {
+    report.success.push({
+      title: 'Фон однородный',
+      desc: 'Автоматическая замена выполнена успешно.'
+    });
+  }
+
+  return report;
+}
+
+function shouldReplaceBackground(ctx, width, height) {
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+  const corners = [0, (width - 1) * 4, (width * (height - 1)) * 4, (width * height - 1) * 4];
+
+  let sumR = 0, sumG = 0, sumB = 0;
+  corners.forEach(idx => {
+    sumR += data[idx]; sumG += data[idx+1]; sumB += data[idx+2];
+  });
+  const bgR = sumR / 4, bgG = sumG / 4, bgB = sumB / 4;
+
+  let maxDiff = 0;
+  corners.forEach(idx => {
+    const diff = Math.abs(data[idx] - bgR) + Math.abs(data[idx+1] - bgG) + Math.abs(data[idx+2] - bgB);
+    if (diff > maxDiff) maxDiff = diff;
+  });
+
+  return maxDiff <= 40;
+}
+
+function replaceBackground(ctx, width, height, tR, tG, tB, tolerance) {
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const data = imageData.data;
+  const corners = [0, (width - 1) * 4, (width * (height - 1)) * 4, (width * height - 1) * 4];
+
+  let sumR = 0, sumG = 0, sumB = 0;
+  corners.forEach(idx => {
+    sumR += data[idx]; sumG += data[idx+1]; sumB += data[idx+2];
+  });
+  const bgR = sumR / 4, bgG = sumG / 4, bgB = sumB / 4;
+
+  const visited = new Uint8Array(width * height);
+  const stack = new Int32Array(width * height * 2);
+  let stackPtr = 0;
+
+  stack[stackPtr++] = 0;
+  stack[stackPtr++] = width - 1;
+  stack[stackPtr++] = width * (height - 1);
+  stack[stackPtr++] = width * height - 1;
+
+  const tol3 = tolerance * 3;
+
+  while (stackPtr > 0) {
+    const idx = stack[--stackPtr];
+    if (visited[idx]) continue;
+    visited[idx] = 1;
+
+    const pIdx = idx * 4;
+    const diff = Math.abs(data[pIdx] - bgR) + Math.abs(data[pIdx+1] - bgG) + Math.abs(data[pIdx+2] - bgB);
+
+    if (diff <= tol3) {
+      data[pIdx] = tR;
+      data[pIdx+1] = tG;
+      data[pIdx+2] = tB;
+
+      const x = idx % width;
+      const y = (idx - x) / width;
+
+      if (x > 0) stack[stackPtr++] = idx - 1;
+      if (x < width - 1) stack[stackPtr++] = idx + 1;
+      if (y > 0) stack[stackPtr++] = idx - width;
+      if (y < height - 1) stack[stackPtr++] = idx + width;
+    }
+  }
+  ctx.putImageData(imageData, 0, 0);
+}
+
+function initSlider(container) {
+  if (!container) return;
+  const handle = container.querySelector('.slider-handle');
+  const imgAfter = container.querySelector('.img-after');
+  let isDragging = false;
+
+  const move = (e) => {
+    if (!isDragging) return;
+    const rect = container.getBoundingClientRect();
+    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+    if (!clientX) return;
+    const x = clientX - rect.left;
+    let percent = (x / rect.width) * 100;
+    percent = Math.max(0, Math.min(100, percent));
+    handle.style.left = percent + '%';
+    imgAfter.style.clipPath = `inset(0 ${100 - percent}% 0 0)`;
+  };
+
+  handle.addEventListener('mousedown', (e) => { isDragging = true; e.preventDefault(); });
+  handle.addEventListener('touchstart', () => isDragging = true, { passive: true });
+  window.addEventListener('mousemove', move);
+  window.addEventListener('touchmove', move, { passive: true });
+  window.addEventListener('mouseup', () => isDragging = false);
+  window.addEventListener('touchend', () => isDragging = false);
+}
+
+// ===== МОДАЛКА ПРОСМОТРА =====
+function openViewModal(originalUrl, optimizedUrl) {
+  const modal = document.getElementById('viewModal');
+  const slider = document.getElementById('viewSlider');
+  const imgBefore = slider.querySelector('.img-before');
+  const imgAfter = slider.querySelector('.img-after');
+  const handle = slider.querySelector('.slider-handle');
+
+  imgBefore.src = originalUrl;
+  imgAfter.src = optimizedUrl;
+  handle.style.left = '50%';
+  imgAfter.style.clipPath = 'inset(0 50% 0 0)';
+
+  modal.classList.add('active');
+  viewSliderActive = true;
+
+  setTimeout(() => initSlider(slider), 100);
+}
+
+function closeViewModal() {
+  document.getElementById('viewModal').classList.remove('active');
+  viewSliderActive = false;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && viewSliderActive) {
+    closeViewModal();
+  }
+});
+
+document.getElementById('viewModal').addEventListener('click', (e) => {
+  if (e.target.id === 'viewModal') {
+    closeViewModal();
+  }
+});
+
 document.getElementById('processBtn').addEventListener('click', async () => {
   if (!state.selectedFiles.length) return;
   if (!state.data.isPro && state.data.freeUsage <= 0) { openPayment(); return; }
-  
+
   const selectedMPs = Array.from(document.querySelectorAll('input[name="mp"]:checked')).map(cb => cb.value);
   if (selectedMPs.length === 0) {
     alert('Пожалуйста, выберите хотя бы одну площадку.');
@@ -806,124 +1147,194 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 
   const btn = document.getElementById('processBtn');
+  const originalBtnText = 'Оптимизировать';
   btn.disabled = true;
   btn.textContent = 'Оптимизация...';
-  
+
   const progressContainer = document.getElementById('progressContainer');
   const progressBar = document.getElementById('progressBar');
   progressContainer.style.display = 'block';
   progressBar.style.width = '0%';
-  
+
   document.getElementById('resultsArea').innerHTML = '';
   state.processedFiles = [];
-  
+
   const totalTasks = state.selectedFiles.length * selectedMPs.length;
   let completedTasks = 0;
 
-  for (const f of state.selectedFiles) {
-    for (const mp of selectedMPs) {
-      const s = {
-        marketplace: mp,
-        quality: document.getElementById('quality').value,
-        outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg',
-        watermark: state.data.isPro ? document.getElementById('watermarkText').value : ''
-      };
-      
-      const r = await processImage(f, s);
-      
-      // Если выбрано несколько площадок, добавляем суффикс к имени файла
-      const finalName = selectedMPs.length > 1 ? f.name.replace(/\.[^/.]+$/, '') + '_' + mp + '.' + r.ext : f.name;
-      
-      state.processedFiles.push({...r, finalName});
-      displayResult({...r, finalName}, state.processedFiles.length - 1);
-      
-      state.data.history.unshift({
-        name: finalName,
-        ext: r.ext,
-        date: new Date().toISOString(),
-        originalSize: r.originalSize,
-        optimizedSize: r.optimizedSize,
-        thumbnail: r.optimizedData,
-        data: r.optimizedData
-      });
-      
-      completedTasks++;
-      progressBar.style.width = ((completedTasks / totalTasks) * 100) + '%';
+  try {
+    for (const f of state.selectedFiles) {
+      for (const mp of selectedMPs) {
+        const s = {
+          marketplace: mp,
+          quality: document.getElementById('quality').value,
+          outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg',
+          watermark: state.data.isPro ? document.getElementById('watermarkText').value : ''
+        };
+
+        let r;
+        try {
+          r = await processImage(f, s);
+        } catch (err) {
+          console.error('Error processing image:', err);
+          r = {
+            originalName: f.name,
+            originalSize: f.size,
+            optimizedData: null,
+            optimizedSize: f.size,
+            ext: 'jpg',
+            originalUrl: null,
+            validationReport: {
+              success: [],
+              warnings: [],
+              dangers: [{ title: 'Ошибка обработки', desc: 'Не удалось обработать файл. Попробуйте другой формат.' }]
+            }
+          };
+        }
+
+        if (!r.optimizedData) {
+          completedTasks++;
+          progressBar.style.width = ((completedTasks / totalTasks) * 100) + '%';
+          continue;
+        }
+
+        const finalName = selectedMPs.length > 1 ? f.name.replace(/\.[^/.]+$/, '') + '_' + mp + '.' + r.ext : f.name;
+
+        state.processedFiles.push({...r, finalName});
+        displayResult({...r, finalName}, state.processedFiles.length - 1);
+
+        state.data.history.unshift({
+          name: finalName,
+          ext: r.ext,
+          date: new Date().toISOString(),
+          originalSize: r.originalSize,
+          optimizedSize: r.optimizedSize,
+          thumbnail: r.optimizedData,
+          data: r.optimizedData
+        });
+
+        completedTasks++;
+        progressBar.style.width = ((completedTasks / totalTasks) * 100) + '%';
+      }
     }
+
+    if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
+    state.data.totalProcessed += state.selectedFiles.length;
+    saveUserData();
+
+  } catch (err) {
+    console.error('Processing error:', err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalBtnText;
+    setTimeout(() => { progressContainer.style.display = 'none'; }, 1000);
+
+    if (state.processedFiles.length > 1) document.getElementById('downloadAllBtn').style.display = 'block';
+    updateUI();
   }
-  
-  if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
-  state.data.totalProcessed += state.selectedFiles.length;
-  saveUserData();
-  
-  btn.disabled = false;
-  btn.textContent = 'Оптимизировать';
-  setTimeout(() => { progressContainer.style.display = 'none'; }, 1000);
-  
-  if (state.processedFiles.length > 1) document.getElementById('downloadAllBtn').style.display = 'block';
-  updateUI();
 });
 
-function processImage(file, s) {
-  return new Promise(res => {
+async function processImage(file, s) {
+  return new Promise((res, rej) => {
     const rd = new FileReader();
-    rd.onload = ev => {
+    rd.onload = async ev => {
       const img = new Image();
-      img.onload = () => {
-        let W = 900, H = 1200;
-        if (s.marketplace === 'avito') { W = 1200; H = 900; }
-        const c = document.getElementById('canvas');
-        c.width = W;
-        c.height = H;
-        const ctx = c.getContext('2d');
-        const sc = Math.max(W / img.width, H / img.height);
-        ctx.drawImage(img, (W/2)-(img.width/2)*sc, (H/2)-(img.height/2)*sc, img.width*sc, img.height*sc);
-        if (s.watermark) {
-          ctx.font = 'bold 24px Arial';
-          ctx.fillStyle = 'rgba(255,255,255,0.7)';
-          ctx.textAlign = 'right';
-          ctx.textBaseline = 'bottom';
-          ctx.fillText(s.watermark, W-20, H-20);
+      img.onload = async () => {
+        try {
+          let W = 900, H = 1200;
+          if (s.marketplace === 'avito') { W = 1200; H = 900; }
+          const c = document.getElementById('canvas');
+
+          // Умная обрезка через SmartCrop с таймаутом
+          let cropX = 0, cropY = 0, cropW = img.width, cropH = img.height;
+          if (typeof SmartCrop !== 'undefined') {
+            try {
+              const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('SmartCrop timeout')), 5000)
+              );
+              const cropPromise = SmartCrop.crop(img, { width: W, height: H, minScale: 0.1 });
+              
+              const result = await Promise.race([cropPromise, timeoutPromise]);
+              if (result && result.topCrop) {
+                cropX = result.topCrop.x;
+                cropY = result.topCrop.y;
+                cropW = result.topCrop.width;
+                cropH = result.topCrop.height;
+              }
+            } catch (e) {
+              console.warn("SmartCrop failed or timed out, falling back to center", e);
+            }
+          }
+
+          c.width = W;
+          c.height = H;
+          const ctx = c.getContext('2d');
+
+          ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, W, H);
+
+          // Автоматическое определение необходимости замены фона
+          if (shouldReplaceBackground(ctx, W, H)) {
+            let tR = 255, tG = 255, tB = 255;
+            if (s.marketplace === 'ozon') { tR = 245; tG = 245; tB = 247; }
+            replaceBackground(ctx, W, H, tR, tG, tB, 35);
+          }
+
+          // Водяной знак
+          if (s.watermark) {
+            ctx.font = 'bold 24px Arial';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText(s.watermark, W - 20, H - 20);
+          }
+
+          // Валидация изображения
+          const validationReport = analyzeImage(c);
+
+          let mime, ext, q;
+          const qualityVal = s.quality;
+          const maxSize = qualityVal === 'high' ? 1000 : qualityVal === 'low' ? 100 : 300;
+
+          if (s.outputFormat === 'png') {
+            mime = 'image/png'; ext = 'png'; q = 1.0;
+          } else if (s.outputFormat === 'webp') {
+            mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+          } else {
+            mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+          }
+
+          let url = c.toDataURL(mime, q);
+
+          if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
+            console.warn('⚠️ WebP не поддерживается браузером, fallback на JPEG');
+            mime = 'image/jpeg'; ext = 'jpg'; url = c.toDataURL(mime, q);
+          }
+
+          let size = url.length * 0.75;
+          while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') {
+            q -= 0.05;
+            url = c.toDataURL(mime, q);
+            size = url.length * 0.75;
+          }
+
+          res({
+            originalName: file.name,
+            originalSize: file.size,
+            optimizedData: url,
+            optimizedSize: size,
+            ext: ext,
+            originalUrl: URL.createObjectURL(file),
+            validationReport: validationReport
+          });
+        } catch (err) {
+          console.error('processImage inner error:', err);
+          rej(err);
         }
-
-        let mime, ext, q;
-        const qualityVal = s.quality;
-        const maxSize = qualityVal === 'high' ? 1000 : qualityVal === 'low' ? 100 : 300;
-
-        if (s.outputFormat === 'png') {
-          mime = 'image/png';
-          ext = 'png';
-          q = 1.0;
-        } else if (s.outputFormat === 'webp') {
-          mime = 'image/webp';
-          ext = 'webp';
-          q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
-        } else {
-          mime = 'image/jpeg';
-          ext = 'jpg';
-          q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
-        }
-
-        let url = c.toDataURL(mime, q);
-
-        if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
-          console.warn('⚠️ WebP не поддерживается браузером, fallback на JPEG');
-          mime = 'image/jpeg';
-          ext = 'jpg';
-          url = c.toDataURL(mime, q);
-        }
-
-        let size = url.length * 0.75;
-        while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') {
-          q -= 0.05;
-          url = c.toDataURL(mime, q);
-          size = url.length * 0.75;
-        }
-
-        res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext: ext });
       };
+      img.onerror = () => rej(new Error('Image load failed'));
       img.src = ev.target.result;
     };
+    rd.onerror = () => rej(new Error('File read failed'));
     rd.readAsDataURL(file);
   });
 }
@@ -932,8 +1343,86 @@ function displayResult(r, i) {
   const sv = ((1 - r.optimizedSize / r.originalSize) * 100).toFixed(1);
   const d = document.createElement('div');
   d.className = 'result-item';
-  d.innerHTML = '<img src="' + r.optimizedData + '" class="result-preview"><div class="result-info"><h4>' + (r.finalName || r.originalName) + '</h4><div class="result-metrics"><div><div class="metric-label">Размер</div><div class="metric-value">' + (r.originalSize/1024).toFixed(1) + ' → ' + (r.optimizedSize/1024).toFixed(1) + ' КБ</div></div><div><div class="metric-label">Сжатие</div><div class="metric-value">-' + sv + '%</div></div></div></div><button class="btn btn-primary" onclick="downloadProcessed(' + i + ')">Скачать готовые фото</button>';
+
+  let reportHtml = '';
+  if (r.validationReport) {
+    const report = r.validationReport;
+    const totalItems = report.success.length + report.warnings.length + report.dangers.length;
+    const dangerCount = report.dangers.length;
+    const warningCount = report.warnings.length;
+    
+    let statusText = '';
+    if (dangerCount > 0) {
+      statusText = `<span style="color:var(--danger);font-weight:700;">❌ ${dangerCount} проблем${dangerCount === 1 ? 'а' : ''}</span>`;
+    } else if (warningCount > 0) {
+      statusText = `<span style="color:#d97706;font-weight:700;">⚠️ ${warningCount} предупреждени${warningCount === 1 ? 'е' : 'й'}</span>`;
+    } else {
+      statusText = `<span style="color:var(--success);font-weight:700;">✅ Все проверки пройдены</span>`;
+    }
+
+    const allItems = [
+      ...report.dangers.map(item => ({...item, type: 'danger'})),
+      ...report.warnings.map(item => ({...item, type: 'warning'})),
+      ...report.success.map(item => ({...item, type: 'success'}))
+    ];
+
+    const itemsHtml = allItems.map(item => {
+      const iconClass = `report-${item.type}`;
+      const icon = item.type === 'danger' ? '❌' : item.type === 'warning' ? '⚠️' : '✅';
+      return `
+        <div class="report-item">
+          <div class="report-icon ${iconClass}">${icon}</div>
+          <div class="report-text">
+            <strong>${item.title}</strong>
+            <p>${item.desc}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    reportHtml = `
+      <div class="validation-report">
+        <div class="report-header" onclick="toggleReport(${i})">
+          <span>📊 Отчёт валидации</span>
+          ${statusText}
+          <div class="report-toggle" id="report-toggle-${i}">▼</div>
+        </div>
+        <div class="report-body" id="report-body-${i}">
+          <div class="report-content">
+            ${itemsHtml}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  d.innerHTML =
+    '<div class="comparison-slider" id="slider-' + i + '" onclick="openViewModal(\'' + r.originalUrl + '\', \'' + r.optimizedData + '\')">' +
+      '<img src="' + r.originalUrl + '" class="img-before" alt="До">' +
+      '<img src="' + r.optimizedData + '" class="img-after" alt="После" style="clip-path: inset(0 50% 0 0);">' +
+      '<div class="slider-handle" style="left: 50%;"></div>' +
+      '<div class="slider-zoom-hint">🔍 Нажмите для увеличения</div>' +
+    '</div>' +
+    '<div class="result-info">' +
+      '<h4>' + (r.finalName || r.originalName) + '</h4>' +
+      '<div class="result-metrics">' +
+        '<div><div class="metric-label">Размер</div><div class="metric-value">' + (r.originalSize/1024).toFixed(1) + ' → ' + (r.optimizedSize/1024).toFixed(1) + ' КБ</div></div>' +
+        '<div><div class="metric-label">Сжатие</div><div class="metric-value">-' + sv + '%</div></div>' +
+      '</div>' +
+      reportHtml +
+    '</div>' +
+    '<button class="btn btn-primary" onclick="downloadProcessed(' + i + ')">Скачать готовые фото</button>';
+
   document.getElementById('resultsArea').appendChild(d);
+
+  setTimeout(() => initSlider(document.getElementById('slider-' + i)), 50);
+}
+
+function toggleReport(i) {
+  const body = document.getElementById('report-body-' + i);
+  const toggle = document.getElementById('report-toggle-' + i);
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
 }
 
 function downloadProcessed(i) {
@@ -951,7 +1440,7 @@ document.getElementById('downloadAllBtn').addEventListener('click', async () => 
   state.processedFiles.forEach((r, i) => {
     const baseName = (r.finalName || r.originalName).replace(/\.[^/.]+$/, '');
     let name = 'optimized_' + baseName + '.' + r.ext;
-    
+
     if (usedNames[name]) {
       usedNames[name]++;
       const dot = name.lastIndexOf('.');
