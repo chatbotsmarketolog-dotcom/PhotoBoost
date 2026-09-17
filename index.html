@@ -215,6 +215,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .testimonial-author-photo{width:50px;height:50px;border-radius:50%;object-fit:cover}
 .testimonial-author-info h4{font-size:1rem}
 .testimonial-author-info p{color:var(--text-muted);font-size:0.85rem}
+.testimonial-date{font-size:0.8rem;color:var(--text-muted);margin-top:4px}
 .faq-list{max-width:800px;margin:0 auto}
 .faq-item{background:white;margin-bottom:14px;border-radius:14px;overflow:hidden;border:1px solid #f1f5f9}
 .faq-question{padding:22px 28px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:20px}
@@ -255,6 +256,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .receipt-box p{color:#92400e;font-weight:600;font-size:0.9rem}
 .sber-notice{background:#eff6ff;border-left:4px solid #3b82f6;padding:12px 16px;border-radius:8px;margin-top:12px;font-size:0.85rem;color:#1e40af}
 .contact-buttons{display:grid;gap:10px;margin-bottom:16px}
+.photo-upload-label{display:block;cursor:pointer;padding:12px 16px;background:#f3f0ff;border:2px dashed var(--primary);border-radius:10px;text-align:center;color:var(--primary);font-weight:600;transition:all 0.3s;margin-top:8px}
+.photo-upload-label:hover{background:#e9e4ff}
+.photo-preview{margin-top:10px;text-align:center}
+.photo-preview img{max-width:120px;max-height:120px;border-radius:10px;border:2px solid #e2e8f0}
+.photo-preview .remove-photo{margin-top:8px;background:var(--danger);color:white;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:0.85rem}
 
 @media (max-width:1024px){.hero h1{font-size:2.6rem}.section-title{font-size:2.2rem}.tool-wrapper{padding:30px}.hero-container{gap:30px}}
 @media (max-width:900px){
@@ -537,11 +543,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="modal-body">
 <p>Сервис PhotoBoost уважает вашу приватность.</p>
 <h3>1. Какие данные мы обрабатываем</h3>
-<p>• Имя и email — при регистрации.<br>• Фотографии — обрабатываются <strong>локально в вашем браузере</strong>.<br>• Технические данные (localStorage) хранятся только в вашем браузере.</p>
+<p>• Имя и email — при регистрации.<br>• Фотографии — обрабатываются <strong>локально в вашем браузере</strong>.<br>• История обработок и отзывы хранятся в облаке Firebase для синхронизации.</p>
 <h3>2. Как мы используем данные</h3>
 <p>Только для работы Сервиса.</p>
 <h3>3. Хранение</h3>
-<p>Фото и история хранятся локально на вашем устройстве.</p>
+<p>Данные хранятся в Firebase Firestore с защитой правилами безопасности.</p>
 </div>
 </div>
 </div>
@@ -596,10 +602,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="modal-overlay" id="resetModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
-<div class="modal-header"><div class="modal-icon">🔑</div><h2 id="resetTitle">Сброс пароля</h2><p class="modal-subtitle" id="resetSubtitle">Введите email</p></div>
+<div class="modal-header"><div class="modal-icon">🔑</div><h2>Сброс пароля</h2><p class="modal-subtitle">Введите email, мы отправим ссылку для сброса</p></div>
 <div class="modal-body">
-<div id="resetStep1"><form onsubmit="handleResetStep1(event)"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required></div><button type="submit" class="btn btn-primary btn-large" style="width:100%;">Продолжить</button></form></div>
-<div id="resetStep2" style="display:none;"><form onsubmit="handleResetStep2(event)"><div class="form-group"><label class="form-label">Новый пароль</label><input type="password" class="form-input" id="newPassword" required minlength="6"></div><div class="form-group"><label class="form-label">Повторите</label><input type="password" class="form-input" id="confirmPassword" required minlength="6"></div><button type="submit" class="btn btn-primary btn-large" style="width:100%;">Сохранить</button></form></div>
+<form onsubmit="handleReset(event)">
+<div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required></div>
+<button type="submit" class="btn btn-primary btn-large" style="width:100%;">Отправить ссылку</button>
+</form>
 </div>
 </div>
 </div>
@@ -649,14 +657,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 
 <canvas id="canvas" style="display:none;"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script>
-let state={user:JSON.parse(localStorage.getItem('pbUser'))||null,data:null,selectedFiles:[],processedFiles:[]};
+<script type="module">
+import { Cloud } from './js/cloud.js';
+
+let state = { user: null, data: null, selectedFiles: [], processedFiles: [], reviewPhoto: null };
 let viewSliderActive = false;
 
 const MP_LABELS = { wb: 'Wildberries', ozon: 'Ozon', avito: 'Avito', ym: 'Я.Маркет' };
 const CAT_LABELS = { clothing: 'Одежда/Обувь', other: 'Другие товары' };
 
-// Тексты рекомендаций по площадкам (конкретика вместо запугивания)
 const TEXT_ADVICE = {
   wb: 'На главном фото WB не рекомендуется размещать маркетинговый текст (слоганы, «гарантия», «хит»). Инфографику лучше перенести на 2-е и последующие фото. Если это название бренда или характеристики (размер, цвет) — это допустимо.',
   ozon_clothing: 'На главном фото Ozon для этой категории не должно быть инфографики и маркетингового текста. Оставьте только товар на сером фоне.',
@@ -667,23 +676,24 @@ const TEXT_ADVICE = {
 const TEXT_CATEGORIES = 'Категории текста: ✅ разрешено — название бренда, размеры, характеристики; ⚠️ рискованно — слоганы и обещания; ❌ запрещено — цены, скидки, контакты. Сервис не читает надписи (без OCR), поэтому относит их к «рискованно» — проверьте содержимое вручную.';
 const MANUAL_BG_NOTE = 'Мы не можем автоматически заменить фон на этом фото, так как он сложный. Пожалуйста, замените его вручную или загрузите фото на однородном фоне.';
 
-const PRO_F={maxBatchSize:100};const FREE_F={maxBatchSize:1};
-function getFeatures(){return(state.data&&state.data.isPro)?PRO_F:FREE_F}
-function dataKey(){return 'pbData_'+(state.user?state.user.email:'guest')}
-function loadUserData(){
-const def={history:[],freeUsage:2,totalProcessed:0,totalSaved:0,isPro:false,proExpiry:null,paidClicked:false,usedCodes:[]};
-state.data=Object.assign(def,JSON.parse(localStorage.getItem(dataKey())||'null')||{});
-if(state.data.proExpiry&&new Date(state.data.proExpiry)<new Date()){state.data.isPro=false;saveUserData()}
+const PRO_F = { maxBatchSize: 100 };
+const FREE_F = { maxBatchSize: 1 };
+
+function getFeatures() { return (state.data && state.data.plan === 'pro') ? PRO_F : FREE_F; }
+
+function formatDate(d) {
+  if (!d) return '—';
+  const date = d.toDate ? d.toDate() : new Date(d);
+  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 }
-function saveUserData(){if(state.data)localStorage.setItem(dataKey(),JSON.stringify(state.data))}
-function formatDate(d){if(!d)return '—';return new Date(d).toLocaleDateString('ru-RU')}
-function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
-function closeMenu(){document.getElementById('mobileMenu').classList.remove('open')}
-function scrollToSection(id){const el=document.getElementById(id);if(el)window.scrollTo({top:el.getBoundingClientRect().top+window.pageYOffset-80,behavior:'smooth'})}
-function openModal(id){const m=document.getElementById(id);if(m){m.classList.add('active');document.body.style.overflow='hidden'}}
-function closeModal(id){const m=document.getElementById(id);if(m){m.classList.remove('active');document.body.style.overflow=''}}
-function switchModal(a,b){closeModal(a);setTimeout(()=>openModal(b),200)}
-function toggleFaq(el){const item=el.parentElement;const was=item.classList.contains('active');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('active'));if(!was)item.classList.add('active')}
+
+function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+function scrollToSection(id) { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 80, behavior: 'smooth' }); }
+function openModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; } }
+function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('active'); document.body.style.overflow = ''; } }
+function switchModal(a, b) { closeModal(a); setTimeout(() => openModal(b), 200); }
+function toggleFaq(el) { const item = el.parentElement; const was = item.classList.contains('active'); document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active')); if (!was) item.classList.add('active'); }
 
 document.querySelectorAll('.mp-checkbox').forEach(cb => {
   cb.addEventListener('click', function(e) {
@@ -695,144 +705,155 @@ document.querySelectorAll('.mp-checkbox').forEach(cb => {
   });
 });
 
-function updateNav(){
-const a=document.getElementById('navActions');
-const m=document.getElementById('mobileAuth');
-if(state.user){
-a.innerHTML='<div class="user-badge" onclick="location.href=\'dashboard/\'"><div class="user-avatar">'+state.user.name.charAt(0).toUpperCase()+'</div><div class="user-name">'+state.user.name.split(' ')[0]+'</div></div>';
-if(m)m.innerHTML='<button class="btn btn-primary" onclick="closeMenu();location.href=\'dashboard/\'">👤 Личный кабинет</button>';
-}else{
-a.innerHTML='<button class="btn btn-ghost" onclick="openModal(\'loginModal\')">Войти</button><button class="btn btn-primary" onclick="openModal(\'registerModal\')">Регистрация</button>';
-if(m)m.innerHTML='<button class="btn btn-ghost" onclick="closeMenu();openModal(\'loginModal\')">Войти</button><button class="btn btn-primary" onclick="closeMenu();openModal(\'registerModal\')">Регистрация</button>';
-}
-}
-function handleRegister(e){
-e.preventDefault();
-const name=document.getElementById('regName').value,email=document.getElementById('regEmail').value,password=document.getElementById('regPassword').value;
-const users=JSON.parse(localStorage.getItem('pbUsers')||'[]');
-if(users.find(u=>u.email===email)){alert('Пользователь уже существует');return}
-const nu={name,email,password,registeredAt:new Date().toISOString()};
-users.push(nu);localStorage.setItem('pbUsers',JSON.stringify(users));localStorage.setItem('pbUser',JSON.stringify(nu));
-state.user=nu;
-state.data={history:[],freeUsage:2,totalProcessed:0,totalSaved:0,isPro:false,proExpiry:null,paidClicked:false,usedCodes:[]};
-saveUserData();closeModal('registerModal');updateNav();updateUI();renderSelectedZone();
-alert('✅ Аккаунт создан! Добро пожаловать, '+name+'!');
-}
-function handleLogin(e){
-e.preventDefault();
-const email=document.getElementById('loginEmail').value,password=document.getElementById('loginPassword').value;
-const user=(JSON.parse(localStorage.getItem('pbUsers')||'[]')).find(u=>u.email===email&&u.password===password);
-if(user){state.user=user;localStorage.setItem('pbUser',JSON.stringify(user));loadUserData();closeModal('loginModal');updateNav();updateUI();renderSelectedZone()}
-else alert('Неверный email или пароль');
-}
-function handleResetStep1(e){e.preventDefault();if((JSON.parse(localStorage.getItem('pbUsers')||'[]')).find(u=>u.email===document.getElementById('resetEmail').value)){document.getElementById('resetStep1').style.display='none';document.getElementById('resetStep2').style.display='block'}else alert('Пользователь не найден')}
-function handleResetStep2(e){e.preventDefault();if(document.getElementById('newPassword').value!==document.getElementById('confirmPassword').value){alert('Пароли не совпадают');return}const users=JSON.parse(localStorage.getItem('pbUsers')||'[]');const u=users.find(x=>x.email===document.getElementById('resetEmail').value);if(u){u.password=document.getElementById('newPassword').value;localStorage.setItem('pbUsers',JSON.stringify(users))}alert('Пароль изменён!');closeModal('resetModal')}
-function openPayment(){
-if(!state.user){alert('Зарегистрируйтесь, чтобы купить PRO');openModal('registerModal');return}
-const paid=state.data.paidClicked;
-document.getElementById('paidBtn').style.display=paid?'none':'block';
-document.getElementById('paymentContacts').style.display=paid?'block':'none';
-openModal('paymentModal');
-}
-function markPaid(){state.data.paidClicked=true;saveUserData();document.getElementById('paidBtn').style.display='none';document.getElementById('paymentContacts').style.display='block'}
-
-function activateByCode() {
-const input = document.getElementById('activationCodeInput');
-if (!input) return;
-const code = input.value.trim().toUpperCase();
-if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
-alert('❌ Неверный формат. Пример: WB-A1B2-C3D4');
-return;
-}
-const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-const codeObj = codes.find(c => c.code === code);
-if (!codeObj) {
-alert('❌ Код не найден. Проверьте правильность ввода.');
-return;
-}
-if (codeObj.status === 'used') {
-alert('❌ Этот код уже был использован.');
-return;
-}
-codeObj.status = 'used';
-codeObj.usedBy = state.user ? state.user.email : 'anonymous';
-codeObj.usedAt = new Date().toISOString();
-localStorage.setItem('pbValidCodes', JSON.stringify(codes));
-state.data.usedCodes.push(code);
-state.data.isPro = true;
-const exp = new Date();
-exp.setMonth(exp.getMonth() + 1);
-state.data.proExpiry = exp.toISOString();
-saveUserData();
-input.value = '';
-updateUI();
-renderSelectedZone();
-alert('🎉 PRO активирована до ' + formatDate(state.data.proExpiry) + '!');
+function updateNav() {
+  const a = document.getElementById('navActions');
+  const m = document.getElementById('mobileAuth');
+  if (state.user) {
+    a.innerHTML = '<div class="user-badge" onclick="location.href=\'dashboard/\'"><div class="user-avatar">' + state.user.displayName.charAt(0).toUpperCase() + '</div><div class="user-name">' + state.user.displayName.split(' ')[0] + '</div></div>';
+    if (m) m.innerHTML = '<button class="btn btn-primary" onclick="closeMenu();location.href=\'dashboard/\'">👤 Личный кабинет</button><button class="btn btn-ghost" onclick="handleLogout()">Выйти</button>';
+  } else {
+    a.innerHTML = '<button class="btn btn-ghost" onclick="openModal(\'loginModal\')">Войти</button><button class="btn btn-primary" onclick="openModal(\'registerModal\')">Регистрация</button>';
+    if (m) m.innerHTML = '<button class="btn btn-ghost" onclick="closeMenu();openModal(\'loginModal\')">Войти</button><button class="btn btn-primary" onclick="closeMenu();openModal(\'registerModal\')">Регистрация</button>';
+  }
 }
 
-function updateUI(){
-const isPro=state.data.isPro;
-document.getElementById('statusDot').classList.toggle('active',isPro);
-document.getElementById('statusText').innerHTML=isPro?'<strong style="color:#10b981;">⭐ PRO</strong> — безлимит (до 100 фото)':'Бесплатно: <strong>'+state.data.freeUsage+'</strong> фото';
-document.getElementById('zipLock').style.display=isPro?'none':'inline';
-['formatSetting','watermarkSetting'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(!el) return;
-  const inp=el.querySelector('select,input');
-  if(isPro){el.classList.remove('disabled');if(inp)inp.disabled=false}
-  else{el.classList.add('disabled');if(inp)inp.disabled=true}
-});
-document.getElementById('processBtn').disabled=state.selectedFiles.length===0||(!isPro&&state.data.freeUsage<=0);
+async function handleRegister(e) {
+  e.preventDefault();
+  const name = document.getElementById('regName').value;
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPassword').value;
+  
+  try {
+    const user = await Cloud.register(name, email, password);
+    state.user = user;
+    state.data = await Cloud.loadProfile(user.uid);
+    closeModal('registerModal');
+    updateNav();
+    updateUI();
+    renderSelectedZone();
+    alert('✅ Аккаунт создан! Добро пожаловать, ' + name + '!');
+  } catch (err) {
+    alert('❌ Ошибка: ' + err.message);
+  }
 }
 
-const zone=document.getElementById('uploadZone');
-const fileInput=document.getElementById('fileInput');
+async function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  
+  try {
+    const user = await Cloud.login(email, password);
+    state.user = user;
+    state.data = await Cloud.loadProfile(user.uid);
+    closeModal('loginModal');
+    updateNav();
+    updateUI();
+    renderSelectedZone();
+  } catch (err) {
+    alert('❌ Неверный email или пароль');
+  }
+}
 
-zone.addEventListener('click',(e)=>{
-  if(e.target.tagName==='BUTTON' || e.target.closest('button')) return;
+async function handleReset(e) {
+  e.preventDefault();
+  const email = document.getElementById('resetEmail').value;
+  try {
+    await Cloud.sendPasswordReset(email);
+    alert('✅ Ссылка для сброса пароля отправлена на ' + email);
+    closeModal('resetModal');
+  } catch (err) {
+    alert('❌ Ошибка: ' + err.message);
+  }
+}
+
+async function handleLogout() {
+  await Cloud.logout();
+  state.user = null;
+  state.data = null;
+  updateNav();
+  updateUI();
+  renderSelectedZone();
+}
+
+function openPayment() {
+  if (!state.user) { alert('Зарегистрируйтесь, чтобы купить PRO'); openModal('registerModal'); return; }
+  const paid = state.data.paidClicked;
+  document.getElementById('paidBtn').style.display = paid ? 'none' : 'block';
+  document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
+  openModal('paymentModal');
+}
+
+function markPaid() {
+  state.data.paidClicked = true;
+  Cloud.updateProfile(state.user.uid, { paidClicked: true });
+  document.getElementById('paidBtn').style.display = 'none';
+  document.getElementById('paymentContacts').style.display = 'block';
+}
+
+function updateUI() {
+  const isPro = state.data && state.data.plan === 'pro';
+  document.getElementById('statusDot').classList.toggle('active', isPro);
+  document.getElementById('statusText').innerHTML = isPro ? '<strong style="color:#10b981;">⭐ PRO</strong> — безлимит (до 100 фото)' : 'Бесплатно: <strong>' + (state.data ? state.data.freeUsage : 0) + '</strong> фото';
+  document.getElementById('zipLock').style.display = isPro ? 'none' : 'inline';
+  ['formatSetting', 'watermarkSetting'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const inp = el.querySelector('select,input');
+    if (isPro) { el.classList.remove('disabled'); if (inp) inp.disabled = false; }
+    else { el.classList.add('disabled'); if (inp) inp.disabled = true; }
+  });
+  document.getElementById('processBtn').disabled = state.selectedFiles.length === 0 || (!isPro && state.data && state.data.freeUsage <= 0);
+}
+
+const zone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+
+zone.addEventListener('click', (e) => {
+  if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
   fileInput.click();
 });
 
-fileInput.addEventListener('change',e=>handleFiles(e.target.files));
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
-function handleFiles(files){
-  const max=getFeatures().maxBatchSize;
-  const all=Array.from(files).filter(f=>f.type.startsWith('image/'));
-  if(!all.length){fileInput.value='';return;}
+function handleFiles(files) {
+  const max = getFeatures().maxBatchSize;
+  const all = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (!all.length) { fileInput.value = ''; return; }
 
-  if(!state.data.isPro){
-    if(state.selectedFiles.length>=max){
+  if (!state.data || state.data.plan !== 'pro') {
+    if (state.selectedFiles.length >= max) {
       alert('❌ На бесплатном тарифе — только 1 фото.\nАктивируйте PRO, чтобы загружать от 2 до 100 фото!');
-      fileInput.value='';
+      fileInput.value = '';
       return;
     }
-    state.selectedFiles=all.slice(0,max);
-  }else{
-    const free=max-state.selectedFiles.length;
-    if(free<=0){
+    state.selectedFiles = all.slice(0, max);
+  } else {
+    const free = max - state.selectedFiles.length;
+    if (free <= 0) {
       alert('⚠️ Достигнут лимит PRO — 100 фото. Сбросьте выбор, чтобы загрузить новые.');
-      fileInput.value='';
+      fileInput.value = '';
       return;
     }
-    if(all.length>free){
-      alert('⚠️ Лимит PRO — 100 фото за раз.\nБудет добавлено первых: '+free);
-      state.selectedFiles=state.selectedFiles.concat(all.slice(0,free));
-    }else{
-      state.selectedFiles=state.selectedFiles.concat(all);
+    if (all.length > free) {
+      alert('⚠️ Лимит PRO — 100 фото за раз.\nБудет добавлено первых: ' + free);
+      state.selectedFiles = state.selectedFiles.concat(all.slice(0, free));
+    } else {
+      state.selectedFiles = state.selectedFiles.concat(all);
     }
   }
-  fileInput.value='';
+  fileInput.value = '';
   renderSelectedZone();
   updateUI();
 }
 
-function renderSelectedZone(){
-  const n=state.selectedFiles.length;
-  const max=getFeatures().maxBatchSize;
-  const isPro=state.data.isPro;
+function renderSelectedZone() {
+  const n = state.selectedFiles.length;
+  const max = getFeatures().maxBatchSize;
+  const isPro = state.data && state.data.plan === 'pro';
 
-  if(n===0){
-    zone.innerHTML=
+  if (n === 0) {
+    zone.innerHTML =
       '<div class="upload-icon-big">📸</div>' +
       '<p style="font-weight:600;font-size:1.1rem;">Нажмите или перетащите фото</p>' +
       '<p style="color:#64748b;font-size:0.9rem;margin-top:8px;">' +
@@ -841,7 +862,7 @@ function renderSelectedZone(){
     return;
   }
 
-  zone.innerHTML=
+  zone.innerHTML =
     '<div class="upload-icon-big">✓</div>' +
     '<h3 style="font-size:1.4rem;margin-bottom:6px;">Выбрано: ' + n + ' из ' + max + '</h3>' +
     '<p style="color:#64748b;font-size:0.9rem;margin-top:4px;">' +
@@ -866,41 +887,38 @@ function renderSelectedZone(){
   });
 }
 
-function clearSelected(){
-  state.selectedFiles=[];
-  fileInput.value='';
-  document.getElementById('resultsArea').innerHTML='';
-  document.getElementById('downloadAllBtn').style.display='none';
-  state.processedFiles=[];
+function clearSelected() {
+  state.selectedFiles = [];
+  fileInput.value = '';
+  document.getElementById('resultsArea').innerHTML = '';
+  document.getElementById('downloadAllBtn').style.display = 'none';
+  state.processedFiles = [];
   fileCache.clear();
   renderSelectedZone();
   updateUI();
 }
 
-// =====================================================
-// КЭШ ФАЙЛОВ: один файл загружается один раз
-// =====================================================
 const fileCache = new Map();
 
-function fileKey(file){
+function fileKey(file) {
   return file.name + '|' + file.size + '|' + file.lastModified;
 }
 
-function loadImageFromFile(file){
-  return new Promise((res,rej)=>{
-    const rd=new FileReader();
-    rd.onload=ev=>{
-      const img=new Image();
-      img.onload=()=>res(img);
-      img.onerror=()=>rej(new Error('Image load failed'));
-      img.src=ev.target.result;
+function loadImageFromFile(file) {
+  return new Promise((res, rej) => {
+    const rd = new FileReader();
+    rd.onload = ev => {
+      const img = new Image();
+      img.onload = () => res(img);
+      img.onerror = () => rej(new Error('Image load failed'));
+      img.src = ev.target.result;
     };
-    rd.onerror=()=>rej(new Error('File read failed'));
+    rd.onerror = () => rej(new Error('File read failed'));
     rd.readAsDataURL(file);
   });
 }
 
-async function getPrecompute(file){
+async function getPrecompute(file) {
   const key = fileKey(file);
   if (fileCache.has(key)) return fileCache.get(key);
   const img = await loadImageFromFile(file);
@@ -913,8 +931,7 @@ async function getPrecompute(file){
   return pre;
 }
 
-// Предсказуемая обрезка по центру (без «умных» вырезаний)
-function centerCrop(img, W, H){
+function centerCrop(img, W, H) {
   const targetAspect = W / H;
   let cw, ch;
   if (img.width / img.height > targetAspect) {
@@ -927,10 +944,6 @@ function centerCrop(img, W, H){
   return { x: (img.width - cw) / 2, y: (img.height - ch) / 2, width: cw, height: ch };
 }
 
-// =====================================================
-// БЕЗОПАСНОЕ УЛУЧШЕНИЕ: мягкий unsharp mask + контраст
-// Никаких вырезаний фона и изменений композиции
-// =====================================================
 function enhanceImage(ctx, w, h) {
   const srcCanvas = document.createElement('canvas');
   srcCanvas.width = w; srcCanvas.height = h;
@@ -947,7 +960,7 @@ function enhanceImage(ctx, w, h) {
   const blur = bctx.getImageData(0, 0, w, h).data;
   const out = ctx.createImageData(w, h);
   const o = out.data;
-  const k = 0.30; // сила резкости — мягкая, без артефактов
+  const k = 0.30;
 
   for (let i = 0; i < src.length; i += 4) {
     o[i]   = Math.max(0, Math.min(255, src[i]   + k * (src[i]   - blur[i])));
@@ -958,11 +971,7 @@ function enhanceImage(ctx, w, h) {
   ctx.putImageData(out, 0, 0);
 }
 
-// =====================================================
-// ВАЛИДАЦИЯ: конкретные рекомендации по площадкам
-// =====================================================
-
-function lumAt(d, i){ return 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]; }
+function lumAt(d, i) { return 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]; }
 
 function analyzeBackground(imgData, w, h) {
   const corners = [0, (w - 1) * 4, (w * (h - 1)) * 4, (w * h - 1) * 4];
@@ -993,7 +1002,7 @@ function analyzeBackground(imgData, w, h) {
   return { uniform: uniform, bgR: bgR, bgG: bgG, bgB: bgB, coverage: coverage };
 }
 
-function colorDist(r1,g1,b1,r2,g2,b2){ return Math.abs(r1-r2)+Math.abs(g1-g2)+Math.abs(b1-b2); }
+function colorDist(r1,g1,b1,r2,g2,b2) { return Math.abs(r1-r2)+Math.abs(g1-g2)+Math.abs(b1-b2); }
 
 function analyzeImage(canvas, marketplace, category) {
   const ctx = canvas.getContext('2d');
@@ -1002,10 +1011,8 @@ function analyzeImage(canvas, marketplace, category) {
   const imgData = ctx.getImageData(0, 0, w, h).data;
   const report = { success: [], warnings: [], dangers: [] };
 
-  // 0. Безопасный конвейер (единый для всех площадок, включая Avito)
   report.success.push({ title: 'Безопасная обработка', desc: 'Фото обрезано по центру до формата площадки (' + w + '×' + h + '), мягко улучшены резкость и контраст, сжато без потерь композиции. Фон и товар не изменялись.' });
 
-  // 1. Яркость — детерминированная сетка
   let brightSum = 0, brightCount = 0;
   const bStep = Math.max(2, Math.floor(Math.min(w, h) / 120));
   for (let y = 0; y < h; y += bStep) {
@@ -1023,7 +1030,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Яркость в норме', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — освещение оптимальное.' });
   }
 
-  // 2. Резкость — доля чётких границ (не зависит от тёмного фона)
   let edges = 0, samples = 0;
   for (let y = 0; y < h - 1; y += 4) {
     for (let x = 0; x < w - 1; x += 4) {
@@ -1045,7 +1051,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Резкость в норме', desc: 'Чётких границ ' + edgePct + '% кадра — детали хорошо различимы, фото не выглядит размытым.' });
   }
 
-  // 3. Прилипание к краю кадра
   let edgeVariance = 0, edgeSamples = 0;
   const checkEdge = (x, y) => {
     const idx = (y * w + x) * 4;
@@ -1063,7 +1068,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
   }
 
-  // 4. Текст / логотипы — конкретика по площадке + категории текста
   const textBlocks = detectTextBlocks(imgData, w, h);
   if (textBlocks >= 3) {
     let advice;
@@ -1080,7 +1084,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Текстовых блоков не обнаружено', desc: 'Крупных надписей, логотипов и водяных знаков на фото не найдено.' });
   }
 
-  // 5. Фон — требования конкретной площадки
   const bg = analyzeBackground(imgData, w, h);
 
   if (marketplace === 'ozon' && category === 'clothing') {
@@ -1116,7 +1119,6 @@ function analyzeImage(canvas, marketplace, category) {
   return report;
 }
 
-// Блоковый детектор текста/логотипов без AI
 function detectTextBlocks(imgData, w, h) {
   const cols = 10;
   const rows = Math.max(8, Math.round(10 * h / w));
@@ -1166,7 +1168,6 @@ function detectTextBlocks(imgData, w, h) {
   return textBlocks;
 }
 
-// === СЛАЙДЕРЫ ===
 function initSlider(container) {
   if (!container) return;
   const handle = container.querySelector('.slider-handle');
@@ -1259,7 +1260,8 @@ document.getElementById('viewModal').addEventListener('click', (e) => {
 
 document.getElementById('processBtn').addEventListener('click', async () => {
   if (!state.selectedFiles.length) return;
-  if (!state.data.isPro && state.data.freeUsage <= 0) { openPayment(); return; }
+  if (!state.user) { alert('Зарегистрируйтесь, чтобы обрабатывать фото'); openModal('registerModal'); return; }
+  if (!state.data || state.data.plan !== 'pro' && state.data.freeUsage <= 0) { openPayment(); return; }
 
   const selectedMPs = Array.from(document.querySelectorAll('input[name="mp"]:checked')).map(cb => cb.value);
   if (selectedMPs.length === 0) {
@@ -1293,8 +1295,8 @@ document.getElementById('processBtn').addEventListener('click', async () => {
           marketplace: mp,
           category: category,
           quality: document.getElementById('quality').value,
-          outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg',
-          watermark: state.data.isPro ? document.getElementById('watermarkText').value : ''
+          outputFormat: state.data.plan === 'pro' ? document.getElementById('outputFormat').value : 'jpg',
+          watermark: state.data.plan === 'pro' ? document.getElementById('watermarkText').value : ''
         };
 
         let r;
@@ -1331,7 +1333,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
         state.processedFiles.push({...r, finalName});
         displayResult({...r, finalName}, state.processedFiles.length - 1);
 
-        state.data.history.unshift({
+        await Cloud.pushHistory(state.user.uid, {
           name: finalName,
           ext: r.ext,
           date: new Date().toISOString(),
@@ -1350,9 +1352,12 @@ document.getElementById('processBtn').addEventListener('click', async () => {
       }
     }
 
-    if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
-    state.data.totalProcessed += state.selectedFiles.length;
-    saveUserData();
+    if (state.data.plan !== 'pro') {
+      state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
+      await Cloud.updateProfile(state.user.uid, { freeUsage: state.data.freeUsage });
+    }
+    state.data.totalProcessed = (state.data.totalProcessed || 0) + state.selectedFiles.length;
+    await Cloud.updateProfile(state.user.uid, { totalProcessed: state.data.totalProcessed });
 
   } catch (err) {
     console.error('Processing error:', err);
@@ -1366,12 +1371,6 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 });
 
-// =====================================================
-// ЕДИНЫЙ БЕЗОПАСНЫЙ КОНВЕЙЕР ДЛЯ ВСЕХ ПЛОЩАДОК
-// (включая Avito): обрезка по центру до формата ->
-// мягкое улучшение резкости/контраста -> сжатие.
-// Никакой замены фона, никакого размытого фона-подложки.
-// =====================================================
 async function processImage(pre, file, s) {
   return new Promise((res, rej) => {
     (async () => {
@@ -1386,7 +1385,6 @@ async function processImage(pre, file, s) {
         const ctx = c.getContext('2d');
         const img = pre.img;
 
-        // Обрезка по центру до формата площадки + лёгкое улучшение
         const crop = centerCrop(img, W, H);
         ctx.filter = 'contrast(1.05) saturate(1.06) brightness(1.02)';
         ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, W, H);
@@ -1533,7 +1531,7 @@ function downloadFile(i){
 }
 
 document.getElementById('downloadAllBtn').addEventListener('click',async()=>{
-  if(!state.data.isPro){openPayment();return}
+  if(!state.data || state.data.plan !== 'pro'){openPayment();return}
   const zip=new JSZip();
   const usedNames={};
   state.processedFiles.forEach((r,i)=>{
@@ -1557,18 +1555,60 @@ document.getElementById('downloadAllBtn').addEventListener('click',async()=>{
   setTimeout(()=>URL.revokeObjectURL(a.href),5000);
 });
 
-function renderUserReviews(){
-  const c=document.getElementById('userReviewsContainer');const rv=JSON.parse(localStorage.getItem('pbUserReviews')||'[]');
-  if(!rv.length){c.innerHTML='';return}
-  c.innerHTML=rv.map(r=>'<div class="testimonial-card"><div class="stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</div><p class="testimonial-text">'+r.text+'</p><div class="testimonial-author"><div class="testimonial-author-photo" style="background:var(--gradient-purple);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">'+r.name.charAt(0).toUpperCase()+'</div><div class="testimonial-author-info"><h4>'+r.name+'</h4><p>'+(r.position||'Пользователь')+'</p></div></div></div>').join('');
+async function renderUserReviews() {
+  const c = document.getElementById('userReviewsContainer');
+  const reviews = await Cloud.loadReviews(30);
+  
+  if (!reviews.length) {
+    c.innerHTML = '';
+    return;
+  }
+  
+  c.innerHTML = reviews.map(r => {
+    const photoHtml = r.photoUrl ? 
+      '<img src="' + r.photoUrl + '" class="testimonial-author-photo">' :
+      '<div class="testimonial-author-photo" style="background:var(--gradient-purple);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">' + r.name.charAt(0).toUpperCase() + '</div>';
+    
+    return '<div class="testimonial-card">' +
+      '<div class="stars">' + '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) + '</div>' +
+      '<p class="testimonial-text">' + r.text + '</p>' +
+      '<div class="testimonial-author">' +
+        photoHtml +
+        '<div class="testimonial-author-info">' +
+          '<h4>' + r.name + '</h4>' +
+          '<p>' + (r.position || 'Пользователь') + '</p>' +
+          '<div class="testimonial-date">' + formatDate(r.createdAt) + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
-document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o){o.classList.remove('active');document.body.style.overflow=''}}));
-loadUserData();
-updateNav();
-updateUI();
-renderSelectedZone();
-renderUserReviews();
+// Загрузка фото для отзыва
+document.addEventListener('DOMContentLoaded', () => {
+  const reviewForm = document.querySelector('#registerModal form');
+  if (reviewForm) {
+    // Добавляем обработчик для формы отзыва в кабинете (если она есть)
+  }
+});
+
+Cloud.onAuth(async (user) => {
+  if (user) {
+    state.user = user;
+    state.data = await Cloud.loadProfile(user.uid);
+  } else {
+    state.user = null;
+    state.data = null;
+  }
+  updateNav();
+  updateUI();
+  renderSelectedZone();
+  renderUserReviews();
+});
+
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => {
+  if (e.target === o) { o.classList.remove('active'); document.body.style.overflow = ''; }
+}));
 </script>
 </body>
 </html>
