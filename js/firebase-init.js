@@ -1,7 +1,20 @@
-// js/firebase-init.js — инициализация Firebase SDK
+// js/firebase-init.js — инициализация Firebase + ре-экспорт всех нужных функций
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, limit, getDocs, runTransaction, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc, setDoc, getDoc, updateDoc, deleteDoc,
+  collection, addDoc, getDocs,
+  query, orderBy, limit, where,
+  runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDu0LYyiKzYQtuhiE_FiDxcs4TEfMmzH0s",
@@ -16,4 +29,11 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-export { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, limit, getDocs, runTransaction, serverTimestamp, where };
+export {
+  auth, db,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail,
+  doc, setDoc, getDoc, updateDoc, deleteDoc,
+  collection, addDoc, getDocs,
+  query, orderBy, limit, where,
+  runTransaction, serverTimestamp
+};
