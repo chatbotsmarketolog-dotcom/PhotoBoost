@@ -1,18 +1,10 @@
-// js/firebase-init.js — инициализация Firebase + ре-экспорт всех нужных функций
+// js/firebase-init.js — инициализация Firebase и экспорт Firestore-функций
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import {
   getFirestore,
   doc, setDoc, getDoc, updateDoc, deleteDoc,
   collection, addDoc, getDocs,
-  query, orderBy, limit, where,
+  query, where, orderBy, limit,
   runTransaction, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
@@ -26,14 +18,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getFirestore(app);
 
 export {
-  auth, db,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail,
+  db,
   doc, setDoc, getDoc, updateDoc, deleteDoc,
   collection, addDoc, getDocs,
-  query, orderBy, limit, where,
+  query, where, orderBy, limit,
   runTransaction, serverTimestamp
 };
