@@ -14,11 +14,12 @@ body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: v
 .container { max-width: 1200px; margin: 0 auto; }
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
 header h1 { font-size: 1.8rem; color: var(--gold); }
-.logout-btn { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.logout-btn { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: opacity 0.3s; }
+.logout-btn:hover { opacity: 0.9; }
 
 /* Вкладки */
-.dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); }
-.dash-tab { padding: 12px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-muted); font-family: inherit; margin-bottom: -2px; }
+.dash-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid var(--border); overflow-x: auto; }
+.dash-tab { padding: 12px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-muted); font-family: inherit; margin-bottom: -2px; white-space: nowrap; }
 .dash-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
 .dash-tab-content { display: none; }
 .dash-tab-content.active { display: block; }
@@ -28,21 +29,39 @@ header h1 { font-size: 1.8rem; color: var(--gold); }
 
 /* Таблица пользователей */
 .table-wrapper { overflow-x: auto; }
-.users-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.users-table { width: 100%; border-collapse: collapse; min-width: 700px; }
 .users-table th, .users-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
 .users-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
 .users-table td { font-size: 0.95rem; }
+.users-table tr:hover { background: rgba(255,255,255,0.02); }
 
 /* Бейджи статусов */
 .badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; display: inline-block; }
 .badge-pro { background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid rgba(251, 191, 36, 0.3); }
 .badge-free { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.3); }
+.badge-used { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+.badge-active { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
 
 /* Период подписки */
 .period-text { font-size: 0.9rem; color: var(--text-light); }
 .period-text.free { color: var(--text-muted); font-style: italic; }
 
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+
+/* Коды */
+.code-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--bg-dark); border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
+.code-item:hover { border-color: var(--primary); }
+.code-value { font-family: monospace; font-size: 1.1rem; color: var(--gold); font-weight: 700; flex: 1; }
+.code-meta { font-size: 0.85rem; color: var(--text-muted); margin-left: 12px; }
+
+.input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.input-group input { flex: 1; min-width: 200px; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-dark); color: white; font-family: inherit; }
+.input-group input:focus { outline: none; border-color: var(--primary); }
+.input-group button { padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: opacity 0.3s; }
+.input-group button:hover { opacity: 0.9; }
+
+.loading { text-align: center; padding: 20px; color: var(--text-muted); }
+.error { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 12px; border-radius: 8px; margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -61,6 +80,7 @@ header h1 { font-size: 1.8rem; color: var(--gold); }
   <div class="dash-tab-content active" id="tab-users">
     <div class="card">
       <h3>Список всех пользователей</h3>
+      <div id="usersError"></div>
       <div class="table-wrapper">
         <table class="users-table">
           <thead>
@@ -69,11 +89,12 @@ header h1 { font-size: 1.8rem; color: var(--gold); }
               <th>Email</th>
               <th>Статус</th>
               <th>Период подписки</th>
+              <th>Обработано</th>
               <th>Дата регистрации</th>
             </tr>
           </thead>
           <tbody id="adminUsersTableBody">
-            <!-- Заполняется через JS -->
+            <tr><td colspan="6" class="loading">Загрузка...</td></tr>
           </tbody>
         </table>
       </div>
@@ -84,31 +105,37 @@ header h1 { font-size: 1.8rem; color: var(--gold); }
   <div class="dash-tab-content" id="tab-codes">
     <div class="card">
       <h3>Управление кодами активации</h3>
-      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <input type="text" id="newCodeInput" placeholder="WB-XXXX-XXXX" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-dark); color: white;">
+      <div class="input-group">
+        <input type="text" id="newCodeInput" placeholder="WB-XXXX-XXXX">
         <button class="logout-btn" style="background: var(--primary);" onclick="addManualCode()">Добавить код</button>
         <button class="logout-btn" style="background: var(--success);" onclick="generateRandomCode()">Сгенерировать</button>
       </div>
-      <div id="codesList"></div>
+      <div id="codesError"></div>
+      <div id="codesList">
+        <p class="loading">Загрузка...</p>
+      </div>
     </div>
   </div>
 </div>
 
-<script>
+<script type="module">
+import { db, getDocs, collection, doc, setDoc, deleteDoc, query, orderBy } from '../js/firebase-init.js';
+
 // ===== ПРОВЕРКА ВХОДА =====
-if (!localStorage.getItem('isAdmin')) {
-  // Простая проверка для демо. В реальности можно сделать вход по паролю
+const ADMIN_EMAIL = 'admin@photoboost.com'; // ИЗМЕНИ НА СВОЙ EMAIL АДМИНА
+
+if (!sessionStorage.getItem('isAdminAuthenticated')) {
   const pass = prompt('Введите пароль администратора:');
   if (pass === 'admin123') { // ИЗМЕНИ ПАРОЛЬ ЗДЕСЬ
-    localStorage.setItem('isAdmin', 'true');
+    sessionStorage.setItem('isAdminAuthenticated', 'true');
   } else {
     alert('Неверный пароль');
-    window.location.href = '../'; // Возврат на главную
+    window.location.href = '../';
   }
 }
 
 function handleLogout() {
-  localStorage.removeItem('isAdmin');
+  sessionStorage.removeItem('isAdminAuthenticated');
   window.location.href = '../';
 }
 
@@ -123,112 +150,215 @@ function switchTab(tabName, btn) {
   if (tabName === 'codes') renderCodes();
 }
 
-// ===== РЕНДЕР ПОЛЬЗОВАТЕЛЕЙ (С ДАТАМИ И СТАТУСОМ) =====
-function renderUsers() {
-  const users = JSON.parse(localStorage.getItem('pbUsers') || '[]');
+// ===== ФОРМАТИРОВАНИЕ ДАТЫ =====
+function formatDate(timestamp) {
+  if (!timestamp) return '—';
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function formatPeriod(proExpiry) {
+  if (!proExpiry) return '<span class="period-text free">Нет активной подписки</span>';
+  
+  const endDate = proExpiry.toDate ? proExpiry.toDate() : new Date(proExpiry);
+  const startDate = new Date(endDate);
+  startDate.setMonth(startDate.getMonth() - 1);
+  
+  const startStr = startDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
+  const endStr = endDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
+  
+  return `<span class="period-text">с <strong>${startStr}</strong> по <strong>${endStr}</strong></span>`;
+}
+
+// ===== РЕНДЕР ПОЛЬЗОВАТЕЛЕЙ =====
+async function renderUsers() {
   const tbody = document.getElementById('adminUsersTableBody');
+  const errorDiv = document.getElementById('usersError');
   
-  if (users.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Пользователей пока нет</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = users.map(user => {
-    // Получаем данные конкретного пользователя
-    const data = JSON.parse(localStorage.getItem('pbData_' + user.email) || '{}');
-    const isPro = data.isPro;
-    const regDate = new Date(user.registeredAt).toLocaleDateString('ru-RU');
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Загрузка...</td></tr>';
+  errorDiv.innerHTML = '';
+  
+  try {
+    const snapshot = await getDocs(collection(db, 'users'));
+    const users = [];
     
-    let periodHtml = '<span class="period-text free">Нет активной подписки</span>';
+    snapshot.forEach(doc => {
+      users.push({ id: doc.id, ...doc.data() });
+    });
     
-    if (isPro && data.proExpiry) {
-      // Вычисляем дату начала (минус 1 месяц от даты окончания)
-      const endDate = new Date(data.proExpiry);
-      const startDate = new Date(endDate);
-      startDate.setMonth(startDate.getMonth() - 1);
-      
-      const startStr = startDate.toLocaleDateString('ru-RU');
-      const endStr = endDate.toLocaleDateString('ru-RU');
-      
-      periodHtml = `<span class="period-text">с <strong>${startStr}</strong> по <strong>${endStr}</strong></span>`;
+    if (users.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Пользователей пока нет</td></tr>';
+      return;
     }
-
-    const statusBadge = isPro 
-      ? '<span class="badge badge-pro">PRO</span>' 
-      : '<span class="badge badge-free">Free</span>';
-
-    return `
-      <tr>
-        <td>${user.name}</td>
-        <td>${user.email}</td>
-        <td>${statusBadge}</td>
-        <td>${periodHtml}</td>
-        <td>${regDate}</td>
-      </tr>
-    `;
-  }).join('');
-}
-
-// ===== УПРАВЛЕНИЕ КОДАМИ =====
-function renderCodes() {
-  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-  const list = document.getElementById('codesList');
-  
-  if (codes.length === 0) {
-    list.innerHTML = '<p class="empty-state">Нет активных кодов</p>';
-    return;
+    
+    tbody.innerHTML = users.map(user => {
+      const isPro = user.plan === 'pro';
+      const statusBadge = isPro 
+        ? '<span class="badge badge-pro">PRO</span>' 
+        : '<span class="badge badge-free">Free</span>';
+      
+      const periodHtml = isPro && user.proExpiry 
+        ? formatPeriod(user.proExpiry)
+        : '<span class="period-text free">Нет активной подписки</span>';
+      
+      const totalProcessed = user.totalProcessed || 0;
+      
+      return `
+        <tr>
+          <td>${user.name || '—'}</td>
+          <td>${user.email || '—'}</td>
+          <td>${statusBadge}</td>
+          <td>${periodHtml}</td>
+          <td>${totalProcessed}</td>
+          <td>${formatDate(user.createdAt)}</td>
+        </tr>
+      `;
+    }).join('');
+    
+  } catch (err) {
+    console.error('Error loading users:', err);
+    errorDiv.innerHTML = '<div class="error">❌ Ошибка загрузки пользователей: ' + err.message + '</div>';
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Не удалось загрузить данные</td></tr>';
   }
-
-  list.innerHTML = codes.map((code, index) => `
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg-dark); border-radius: 8px; margin-bottom: 8px;">
-      <code style="font-family: monospace; font-size: 1.1rem; color: var(--gold); font-weight: 700;">${code}</code>
-      <button class="logout-btn" style="background: var(--danger); padding: 6px 12px; font-size: 0.8rem;" onclick="deleteCode(${index})">Удалить</button>
-    </div>
-  `).join('');
 }
 
-function generateRandomCode() {
+// ===== РЕНДЕР КОДОВ =====
+async function renderCodes() {
+  const list = document.getElementById('codesList');
+  const errorDiv = document.getElementById('codesError');
+  
+  list.innerHTML = '<p class="loading">Загрузка...</p>';
+  errorDiv.innerHTML = '';
+  
+  try {
+    const snapshot = await getDocs(collection(db, 'proCodes'));
+    const codes = [];
+    
+    snapshot.forEach(doc => {
+      codes.push({ id: doc.id, ...doc.data() });
+    });
+    
+    if (codes.length === 0) {
+      list.innerHTML = '<p class="empty-state">Нет кодов активации</p>';
+      return;
+    }
+    
+    // Сортируем: активные сверху, использованные снизу
+    codes.sort((a, b) => {
+      if (a.status === 'active' && b.status !== 'active') return -1;
+      if (a.status !== 'active' && b.status === 'active') return 1;
+      return 0;
+    });
+    
+    list.innerHTML = codes.map(code => {
+      const isActive = code.status === 'active';
+      const statusBadge = isActive 
+        ? '<span class="badge badge-active">Активен</span>'
+        : '<span class="badge badge-used">Использован</span>';
+      
+      const usedInfo = !isActive && code.usedBy 
+        ? `<div class="code-meta">Использован: ${code.usedBy} • ${formatDate(code.usedAt)}</div>`
+        : '';
+      
+      return `
+        <div class="code-item">
+          <div style="flex: 1;">
+            <code class="code-value">${code.id}</code>
+            ${usedInfo}
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            ${statusBadge}
+            <button class="logout-btn" style="background: var(--danger); padding: 6px 12px; font-size: 0.8rem;" onclick="deleteCode('${code.id}')">Удалить</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+  } catch (err) {
+    console.error('Error loading codes:', err);
+    errorDiv.innerHTML = '<div class="error">❌ Ошибка загрузки кодов: ' + err.message + '</div>';
+    list.innerHTML = '<p class="empty-state">Не удалось загрузить данные</p>';
+  }
+}
+
+// ===== ГЕНЕРАЦИЯ КОДА =====
+async function generateRandomCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = 'WB-';
   for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
   code += '-';
   for (let i = 0; i < 4; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
   
-  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-  codes.push(code);
-  localStorage.setItem('pbValidCodes', JSON.stringify(codes));
-  renderCodes();
-  alert('Код добавлен: ' + code);
+  try {
+    const codeRef = doc(db, 'proCodes', code);
+    await setDoc(codeRef, {
+      status: 'active',
+      createdAt: new Date()
+    });
+    renderCodes();
+    alert('✅ Код создан: ' + code);
+  } catch (err) {
+    console.error('Error creating code:', err);
+    alert('❌ Ошибка создания кода: ' + err.message);
+  }
 }
 
-function addManualCode() {
+// ===== ДОБАВЛЕНИЕ КОДА ВРУЧНУЮ =====
+async function addManualCode() {
   const input = document.getElementById('newCodeInput');
   const code = input.value.trim().toUpperCase();
+  
   if (!code || !code.startsWith('WB-')) {
-    alert('Неверный формат. Должен начинаться с WB-');
+    alert('Неверный формат. Код должен начинаться с WB-XXXX-XXXX');
     return;
   }
-  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-  if (codes.includes(code)) {
-    alert('Такой код уже существует');
+  
+  if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
+    alert('Неверный формат. Правильный формат: WB-XXXX-XXXX (где X — буквы/цифры)');
     return;
   }
-  codes.push(code);
-  localStorage.setItem('pbValidCodes', JSON.stringify(codes));
-  input.value = '';
-  renderCodes();
+  
+  try {
+    const codeRef = doc(db, 'proCodes', code);
+    await setDoc(codeRef, {
+      status: 'active',
+      createdAt: new Date()
+    });
+    input.value = '';
+    renderCodes();
+    alert('✅ Код добавлен: ' + code);
+  } catch (err) {
+    console.error('Error adding code:', err);
+    if (err.code === 'permission-denied') {
+      alert('❌ У вас нет прав для создания кодов. Проверьте правила безопасности Firestore.');
+    } else {
+      alert('❌ Ошибка добавления кода: ' + err.message);
+    }
+  }
 }
 
-function deleteCode(index) {
-  if (!confirm('Удалить этот код?')) return;
-  const codes = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-  codes.splice(index, 1);
-  localStorage.setItem('pbValidCodes', JSON.stringify(codes));
-  renderCodes();
-}
+// ===== УДАЛЕНИЕ КОДА =====
+window.deleteCode = async function(codeId) {
+  if (!confirm('Удалить код ' + codeId + '?')) return;
+  
+  try {
+    const codeRef = doc(db, 'proCodes', codeId);
+    await deleteDoc(codeRef);
+    renderCodes();
+  } catch (err) {
+    console.error('Error deleting code:', err);
+    alert('❌ Ошибка удаления кода: ' + err.message);
+  }
+};
 
 // Инициализация при загрузке
 renderUsers();
+
+// Делаем функции глобальными для onclick
+window.switchTab = switchTab;
+window.handleLogout = handleLogout;
+window.generateRandomCode = generateRandomCode;
+window.addManualCode = addManualCode;
 </script>
 </body>
 </html>
