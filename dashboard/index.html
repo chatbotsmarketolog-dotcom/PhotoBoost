@@ -1854,6 +1854,32 @@ Cloud.onAuth(async (user) => {
   renderMyReviews();
   updateStarDisplay();
 });
+
+// ===== Делаем функции видимыми для inline onclick в HTML =====
+window.switchTab = switchTab;
+window.handleLogout = handleLogout;
+window.activateByCode = activateByCode;
+window.openPayment = openPayment;
+window.closeModal = closeModal;
+window.markPaid = markPaid;
+window.toggleSelectAll = toggleSelectAll;
+window.downloadSelectedZip = downloadSelectedZip;
+window.clearHistory = clearHistory;
+window.renderReports = renderReports;
+window.clearReports = clearReports;
+window.toggleReportR = toggleReportR;
+window.openViewModalFromReport = openViewModalFromReport;
+window.toggleHistorySelect = toggleHistorySelect;
+window.downloadHistoryItem = downloadHistoryItem;
+window.deleteUserReview = deleteUserReview;
+window.setRating = setRating;
+window.handleReviewPhoto = handleReviewPhoto;
+window.removeReviewPhoto = removeReviewPhoto;
+window.submitReview = submitReview;
+window.openViewModal = openViewModal;
+window.closeViewModal = closeViewModal;
+window.toggleReport = toggleReport;
+window.downloadProcessed = downloadProcessed;
 </script>
 </body>
 </html>
