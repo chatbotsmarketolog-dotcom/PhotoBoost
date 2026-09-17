@@ -120,7 +120,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .progress-bar{height:100%;background:var(--gradient-purple);width:0%;transition:width 0.3s ease}
 .results-area{margin-top:30px}
 .result-item{background:#faf9ff;padding:20px;border-radius:16px;margin-bottom:16px;display:grid;grid-template-columns:140px 1fr auto;gap:20px;align-items:start}
-
 .comparison-slider{position:relative;width:140px;height:140px;border-radius:12px;overflow:hidden;cursor:col-resize;user-select:none;background:#e2e8f0;transition:transform 0.2s}
 .comparison-slider:hover{transform:scale(1.02)}
 .comparison-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
@@ -131,13 +130,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .slider-label{position:absolute;top:8px;z-index:6;font-size:0.62rem;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:6px;pointer-events:none}
 .label-before{left:8px;background:rgba(0,0,0,0.55);color:#fff}
 .label-after{right:8px;background:rgba(124,58,237,0.85);color:#fff}
-
 .result-info h4{margin-bottom:10px;word-break:break-word}
 .result-metrics{display:flex;gap:20px;flex-wrap:wrap;font-size:0.85rem}
 .metric-value{font-weight:700;color:var(--success)}
 .metric-value.dim{color:var(--text-dark)}
 .metric-label{color:var(--text-muted);font-size:0.75rem;text-transform:uppercase}
-
 .result-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .badge{padding:3px 10px;border-radius:50px;font-size:0.72rem;font-weight:600;display:inline-block}
 .badge-wb{background:#cb11ab22;color:#cb11ab}
@@ -145,7 +142,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .badge-avito{background:#00aaff22;color:#00aaff}
 .badge-ym{background:#fc022222;color:#fc0222}
 .badge-cat{background:#7c3aed22;color:var(--primary)}
-
 .validation-report{margin-top:14px;background:white;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden}
 .report-header{padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:0.9rem;flex-wrap:wrap}
 .report-header:hover{background:#f1f5f9}
@@ -163,26 +159,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .report-text{flex:1}
 .report-text strong{display:block;margin-bottom:2px}
 .report-text p{color:var(--text-muted);font-size:0.8rem;margin:0}
-
 .view-modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,10,26,0.97);backdrop-filter:blur(10px);z-index:2500;justify-content:center;align-items:center;padding:20px}
 .view-modal-overlay.active{display:flex}
 .view-modal{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:95vw}
-.view-modal .comparison-slider{
-  width:min(85vw,1000px);
-  aspect-ratio:var(--slider-aspect,3/4);
-  height:auto;
-  max-height:72vh;
-  border-radius:16px;
-  background:#0a0a1a;
-  overflow:hidden;
-  box-shadow:0 20px 60px rgba(0,0,0,0.5);
-}
-.view-modal .comparison-slider img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#1a1a2e;
-}
+.view-modal .comparison-slider{width:min(85vw,1000px);aspect-ratio:var(--slider-aspect,3/4);height:auto;max-height:72vh;border-radius:16px;background:#0a0a1a;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.view-modal .comparison-slider img{width:100%;height:100%;object-fit:contain;background:#1a1a2e}
 .view-modal .slider-label{font-size:0.75rem;padding:5px 12px;top:12px}
 .view-modal-close{position:fixed;top:20px;right:20px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);cursor:pointer;font-size:1.5rem;color:white;z-index:2600;display:flex;align-items:center;justify-content:center;transition:all 0.3s}
 .view-modal-close:hover{background:rgba(255,255,255,0.2);transform:scale(1.1)}
@@ -191,7 +172,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .view-modal-stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .view-stat{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:8px 16px;border-radius:50px;color:white;font-size:0.85rem;font-weight:600}
 .view-stat.accent{background:rgba(16,185,129,0.2);border-color:rgba(16,185,129,0.4);color:#6ee7b7}
-
 .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;max-width:900px;margin:0 auto}
 .pricing-card{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:24px;padding:40px 36px;position:relative}
 .pricing-card.featured{border:2px solid var(--gold);transform:scale(1.03)}
@@ -256,11 +236,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .receipt-box p{color:#92400e;font-weight:600;font-size:0.9rem}
 .sber-notice{background:#eff6ff;border-left:4px solid #3b82f6;padding:12px 16px;border-radius:8px;margin-top:12px;font-size:0.85rem;color:#1e40af}
 .contact-buttons{display:grid;gap:10px;margin-bottom:16px}
-.photo-upload-label{display:block;cursor:pointer;padding:12px 16px;background:#f3f0ff;border:2px dashed var(--primary);border-radius:10px;text-align:center;color:var(--primary);font-weight:600;transition:all 0.3s;margin-top:8px}
-.photo-upload-label:hover{background:#e9e4ff}
-.photo-preview{margin-top:10px;text-align:center}
-.photo-preview img{max-width:120px;max-height:120px;border-radius:10px;border:2px solid #e2e8f0}
-.photo-preview .remove-photo{margin-top:8px;background:var(--danger);color:white;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:0.85rem}
+.auth-error{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;padding:10px 12px;border-radius:8px;font-size:0.85rem;margin-bottom:12px}
+.auth-success{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;padding:10px 12px;border-radius:8px;font-size:0.85rem;margin-bottom:12px}
 
 @media (max-width:1024px){.hero h1{font-size:2.6rem}.section-title{font-size:2.2rem}.tool-wrapper{padding:30px}.hero-container{gap:30px}}
 @media (max-width:900px){
@@ -543,11 +520,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="modal-body">
 <p>Сервис PhotoBoost уважает вашу приватность.</p>
 <h3>1. Какие данные мы обрабатываем</h3>
-<p>• Имя и email — при регистрации.<br>• Фотографии — обрабатываются <strong>локально в вашем браузере</strong>.<br>• История обработок и отзывы хранятся в облаке Firebase для синхронизации.</p>
+<p>• Имя и email — при регистрации.<br>• Фотографии — обрабатываются <strong>локально в вашем браузере</strong>.<br>• Аккаунт и история хранятся в облаке Firebase Firestore.</p>
 <h3>2. Как мы используем данные</h3>
 <p>Только для работы Сервиса.</p>
 <h3>3. Хранение</h3>
-<p>Данные хранятся в Firebase Firestore с защитой правилами безопасности.</p>
+<p>Пароль хранится в виде необратимого hash (SHA-256 + salt).</p>
 </div>
 </div>
 </div>
@@ -573,6 +550,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
 <div class="modal-header"><div class="modal-icon">🔐</div><h2>Вход</h2><p class="modal-subtitle">Рады видеть вас!</p></div>
 <div class="modal-body">
+<div id="loginError" class="auth-error" style="display:none"></div>
 <form onsubmit="handleLogin(event)">
 <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required placeholder="your@email.com"></div>
 <div class="form-group"><label class="form-label">Пароль</label><input type="password" class="form-input" id="loginPassword" required placeholder="••••••••"></div>
@@ -588,6 +566,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
 <div class="modal-header"><div class="modal-icon">✨</div><h2>Регистрация</h2><p class="modal-subtitle">Присоединяйтесь!</p></div>
 <div class="modal-body">
+<div id="registerError" class="auth-error" style="display:none"></div>
 <form onsubmit="handleRegister(event)">
 <div class="form-group"><label class="form-label">Имя</label><input type="text" class="form-input" id="regName" required placeholder="Иван"></div>
 <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail" required placeholder="your@email.com"></div>
@@ -602,12 +581,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="modal-overlay" id="resetModal">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('resetModal')">✕</button>
-<div class="modal-header"><div class="modal-icon">🔑</div><h2>Сброс пароля</h2><p class="modal-subtitle">Введите email, мы отправим ссылку для сброса</p></div>
+<div class="modal-header"><div class="modal-icon">🔑</div><h2>Сброс пароля</h2><p class="modal-subtitle">Введите email — ниже появятся поля нового пароля</p></div>
 <div class="modal-body">
-<form onsubmit="handleReset(event)">
-<div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required></div>
-<button type="submit" class="btn btn-primary btn-large" style="width:100%;">Отправить ссылку</button>
-</form>
+<div id="resetStep1">
+  <div id="resetError1" class="auth-error" style="display:none"></div>
+  <form onsubmit="handleResetStep1(event)">
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="resetEmail" required></div>
+    <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Продолжить</button>
+  </form>
+</div>
+<div id="resetStep2" style="display:none;">
+  <div id="resetError2" class="auth-error" style="display:none"></div>
+  <div id="resetSuccess" class="auth-success" style="display:none"></div>
+  <form onsubmit="handleResetStep2(event)">
+    <div class="form-group"><label class="form-label">Новый пароль</label><input type="password" class="form-input" id="newPassword" required minlength="6"></div>
+    <div class="form-group"><label class="form-label">Повторите пароль</label><input type="password" class="form-input" id="confirmPassword" required minlength="6"></div>
+    <button type="submit" class="btn btn-primary btn-large" style="width:100%;">Сохранить новый пароль</button>
+  </form>
+</div>
 </div>
 </div>
 </div>
@@ -633,6 +624,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <a href="https://t.me/PhotoBoosts" target="_blank" class="btn btn-primary" style="text-decoration:none;">✈️ Написать в Telegram</a>
 <a href="https://vk.ru/art_akrilll" target="_blank" class="btn btn-secondary" style="text-decoration:none;">💬 Написать ВКонтакте</a>
 </div>
+<p style="text-align:center;font-size:0.85rem;color:var(--text-muted);">Код вводится в личном кабинете → «Подписка»</p>
 </div>
 </div>
 </div>
@@ -660,7 +652,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <script type="module">
 import { Cloud } from './js/cloud.js';
 
-let state = { user: null, data: null, selectedFiles: [], processedFiles: [], reviewPhoto: null };
+let state = { user: null, data: null, selectedFiles: [], processedFiles: [] };
 let viewSliderActive = false;
 
 const MP_LABELS = { wb: 'Wildberries', ozon: 'Ozon', avito: 'Avito', ym: 'Я.Маркет' };
@@ -709,7 +701,7 @@ function updateNav() {
   const a = document.getElementById('navActions');
   const m = document.getElementById('mobileAuth');
   if (state.user) {
-    a.innerHTML = '<div class="user-badge" onclick="location.href=\'dashboard/\'"><div class="user-avatar">' + state.user.displayName.charAt(0).toUpperCase() + '</div><div class="user-name">' + state.user.displayName.split(' ')[0] + '</div></div>';
+    a.innerHTML = '<div class="user-badge" onclick="location.href=\'dashboard/\'"><div class="user-avatar">' + (state.user.displayName || 'U').charAt(0).toUpperCase() + '</div><div class="user-name">' + (state.user.displayName || 'Пользователь').split(' ')[0] + '</div></div>';
     if (m) m.innerHTML = '<button class="btn btn-primary" onclick="closeMenu();location.href=\'dashboard/\'">👤 Личный кабинет</button><button class="btn btn-ghost" onclick="handleLogout()">Выйти</button>';
   } else {
     a.innerHTML = '<button class="btn btn-ghost" onclick="openModal(\'loginModal\')">Войти</button><button class="btn btn-primary" onclick="openModal(\'registerModal\')">Регистрация</button>';
@@ -717,76 +709,95 @@ function updateNav() {
   }
 }
 
+// ---------- инлайн-сообщения вместо нативных диалогов ----------
+function showAuthError(id, msg) { const el = document.getElementById(id); if (el) { el.textContent = '❌ ' + msg; el.style.display = 'block'; } }
+function hideAuthError(id) { const el = document.getElementById(id); if (el) { el.style.display = 'none'; } }
+function showAuthOk(id, msg) { const el = document.getElementById(id); if (el) { el.textContent = '✅ ' + msg; el.style.display = 'block'; } }
+
 async function handleRegister(e) {
   e.preventDefault();
-  const name = document.getElementById('regName').value;
-  const email = document.getElementById('regEmail').value;
+  hideAuthError('registerError');
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
   const password = document.getElementById('regPassword').value;
-  
   try {
     const user = await Cloud.register(name, email, password);
     state.user = user;
     state.data = await Cloud.loadProfile(user.uid);
     closeModal('registerModal');
-    updateNav();
-    updateUI();
-    renderSelectedZone();
-    alert('✅ Аккаунт создан! Добро пожаловать, ' + name + '!');
+    updateNav(); updateUI(); renderSelectedZone();
   } catch (err) {
-    alert('❌ Ошибка: ' + err.message);
+    showAuthError('registerError', err.message || 'Ошибка регистрации');
   }
 }
 
 async function handleLogin(e) {
   e.preventDefault();
-  const email = document.getElementById('loginEmail').value;
+  hideAuthError('loginError');
+  const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
-  
   try {
     const user = await Cloud.login(email, password);
     state.user = user;
     state.data = await Cloud.loadProfile(user.uid);
     closeModal('loginModal');
-    updateNav();
-    updateUI();
-    renderSelectedZone();
+    updateNav(); updateUI(); renderSelectedZone();
   } catch (err) {
-    alert('❌ Неверный email или пароль');
+    showAuthError('loginError', err.message || 'Неверный email или пароль');
   }
 }
 
-async function handleReset(e) {
+let pendingResetEmail = null;
+async function handleResetStep1(e) {
   e.preventDefault();
-  const email = document.getElementById('resetEmail').value;
+  hideAuthError('resetError1');
+  const email = document.getElementById('resetEmail').value.trim();
+  const exists = await Cloud.userExists(email);
+  if (!exists) { showAuthError('resetError1', 'Пользователь с таким email не найден'); return; }
+  pendingResetEmail = email;
+  document.getElementById('resetStep1').style.display = 'none';
+  document.getElementById('resetStep2').style.display = 'block';
+}
+async function handleResetStep2(e) {
+  e.preventDefault();
+  hideAuthError('resetError2');
+  const p1 = document.getElementById('newPassword').value;
+  const p2 = document.getElementById('confirmPassword').value;
+  if (p1.length < 6) { showAuthError('resetError2', 'Пароль должен быть минимум 6 символов'); return; }
+  if (p1 !== p2) { showAuthError('resetError2', 'Пароли не совпадают'); return; }
   try {
-    await Cloud.sendPasswordReset(email);
-    alert('✅ Ссылка для сброса пароля отправлена на ' + email);
-    closeModal('resetModal');
-  } catch (err) {
-    alert('❌ Ошибка: ' + err.message);
-  }
+    await Cloud.resetPassword(pendingResetEmail, p1);
+    showAuthOk('resetSuccess', 'Пароль изменён! Сейчас откроется вход.');
+    setTimeout(() => { closeModal('resetModal'); resetResetModal(); openModal('loginModal'); }, 1200);
+  } catch (err) { showAuthError('resetError2', err.message); }
+}
+function resetResetModal() {
+  document.getElementById('resetStep1').style.display = 'block';
+  document.getElementById('resetStep2').style.display = 'none';
+  hideAuthError('resetError1'); hideAuthError('resetError2');
+  const rs = document.getElementById('resetSuccess'); if (rs) rs.style.display = 'none';
 }
 
 async function handleLogout() {
   await Cloud.logout();
   state.user = null;
   state.data = null;
-  updateNav();
-  updateUI();
-  renderSelectedZone();
+  updateNav(); updateUI(); renderSelectedZone();
 }
 
 function openPayment() {
-  if (!state.user) { alert('Зарегистрируйтесь, чтобы купить PRO'); openModal('registerModal'); return; }
-  const paid = state.data.paidClicked;
+  if (!state.user) { openModal('registerModal'); return; }
+  const paid = state.data && state.data.paidClicked;
   document.getElementById('paidBtn').style.display = paid ? 'none' : 'block';
   document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
   openModal('paymentModal');
 }
 
 function markPaid() {
-  state.data.paidClicked = true;
-  Cloud.updateProfile(state.user.uid, { paidClicked: true });
+  if (state.data && state.user) {
+    state.data.paidClicked = true;
+    Cloud.updateProfile(state.user.uid, { paidClicked: true });
+  }
   document.getElementById('paidBtn').style.display = 'none';
   document.getElementById('paymentContacts').style.display = 'block';
 }
@@ -799,9 +810,9 @@ function updateUI() {
   ['formatSetting', 'watermarkSetting'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-    const inp = el.querySelector('select,input');
-    if (isPro) { el.classList.remove('disabled'); if (inp) inp.disabled = false; }
-    else { el.classList.add('disabled'); if (inp) inp.disabled = true; }
+    const input = el.querySelector('select, input');
+    if (isPro) { el.classList.remove('disabled'); if (input) input.disabled = false; }
+    else { el.classList.add('disabled'); if (input) input.disabled = true; }
   });
   document.getElementById('processBtn').disabled = state.selectedFiles.length === 0 || (!isPro && state.data && state.data.freeUsage <= 0);
 }
@@ -823,7 +834,7 @@ function handleFiles(files) {
 
   if (!state.data || state.data.plan !== 'pro') {
     if (state.selectedFiles.length >= max) {
-      alert('❌ На бесплатном тарифе — только 1 фото.\nАктивируйте PRO, чтобы загружать от 2 до 100 фото!');
+      alert('❌ На бесплатном тарифе — только 1 фото.');
       fileInput.value = '';
       return;
     }
@@ -831,12 +842,12 @@ function handleFiles(files) {
   } else {
     const free = max - state.selectedFiles.length;
     if (free <= 0) {
-      alert('⚠️ Достигнут лимит PRO — 100 фото. Сбросьте выбор, чтобы загрузить новые.');
+      alert('⚠️ Достигнут лимит PRO — 100 фото.');
       fileInput.value = '';
       return;
     }
     if (all.length > free) {
-      alert('⚠️ Лимит PRO — 100 фото за раз.\nБудет добавлено первых: ' + free);
+      alert('⚠️ Будет добавлено первых: ' + free);
       state.selectedFiles = state.selectedFiles.concat(all.slice(0, free));
     } else {
       state.selectedFiles = state.selectedFiles.concat(all);
@@ -876,7 +887,7 @@ function renderSelectedZone() {
   document.getElementById('addMoreBtn').addEventListener('click', (e) => {
     e.stopPropagation();
     if (!isPro) {
-      alert('❌ Добавление нескольких фото доступно только в PRO.\nАктивируйте PRO, чтобы загружать до 100 фото.');
+      alert('❌ Добавление нескольких фото доступно только в PRO.');
       return;
     }
     fileInput.click();
@@ -900,9 +911,7 @@ function clearSelected() {
 
 const fileCache = new Map();
 
-function fileKey(file) {
-  return file.name + '|' + file.size + '|' + file.lastModified;
-}
+function fileKey(file) { return file.name + '|' + file.size + '|' + file.lastModified; }
 
 function loadImageFromFile(file) {
   return new Promise((res, rej) => {
@@ -934,13 +943,8 @@ async function getPrecompute(file) {
 function centerCrop(img, W, H) {
   const targetAspect = W / H;
   let cw, ch;
-  if (img.width / img.height > targetAspect) {
-    ch = img.height;
-    cw = ch * targetAspect;
-  } else {
-    cw = img.width;
-    ch = cw / targetAspect;
-  }
+  if (img.width / img.height > targetAspect) { ch = img.height; cw = ch * targetAspect; }
+  else { cw = img.width; ch = cw / targetAspect; }
   return { x: (img.width - cw) / 2, y: (img.height - ch) / 2, width: cw, height: ch };
 }
 
@@ -949,19 +953,16 @@ function enhanceImage(ctx, w, h) {
   srcCanvas.width = w; srcCanvas.height = h;
   const sctx = srcCanvas.getContext('2d');
   sctx.drawImage(ctx.canvas, 0, 0);
-
   const blurCanvas = document.createElement('canvas');
   blurCanvas.width = w; blurCanvas.height = h;
   const bctx = blurCanvas.getContext('2d');
   bctx.filter = 'blur(1.5px)';
   bctx.drawImage(srcCanvas, 0, 0);
-
   const src = sctx.getImageData(0, 0, w, h).data;
   const blur = bctx.getImageData(0, 0, w, h).data;
   const out = ctx.createImageData(w, h);
   const o = out.data;
   const k = 0.30;
-
   for (let i = 0; i < src.length; i += 4) {
     o[i]   = Math.max(0, Math.min(255, src[i]   + k * (src[i]   - blur[i])));
     o[i+1] = Math.max(0, Math.min(255, src[i+1] + k * (src[i+1] - blur[i+1])));
@@ -978,14 +979,12 @@ function analyzeBackground(imgData, w, h) {
   let sumR = 0, sumG = 0, sumB = 0;
   corners.forEach(idx => { sumR += imgData[idx]; sumG += imgData[idx+1]; sumB += imgData[idx+2]; });
   const bgR = sumR / 4, bgG = sumG / 4, bgB = sumB / 4;
-
   let maxDiff = 0;
   corners.forEach(idx => {
     const diff = Math.abs(imgData[idx] - bgR) + Math.abs(imgData[idx+1] - bgG) + Math.abs(imgData[idx+2] - bgB);
     if (diff > maxDiff) maxDiff = diff;
   });
   const uniform = maxDiff <= 40;
-
   let coverage = null;
   if (uniform) {
     let fg = 0, n = 0;
@@ -1022,13 +1021,9 @@ function analyzeImage(canvas, marketplace, category) {
     }
   }
   const avgBrightness = brightSum / brightCount;
-  if (avgBrightness > 235) {
-    report.dangers.push({ title: 'Пересветы', desc: 'Изображение слишком яркое (средняя яркость ' + Math.round(avgBrightness) + '/255). Маркетплейсы могут отклонить такое фото.' });
-  } else if (avgBrightness > 200) {
-    report.warnings.push({ title: 'Высокая яркость', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — близко к пересвету. Рекомендуем немного затемнить фото.' });
-  } else {
-    report.success.push({ title: 'Яркость в норме', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — освещение оптимальное.' });
-  }
+  if (avgBrightness > 235) report.dangers.push({ title: 'Пересветы', desc: 'Изображение слишком яркое (средняя яркость ' + Math.round(avgBrightness) + '/255). Маркетплейсы могут отклонить такое фото.' });
+  else if (avgBrightness > 200) report.warnings.push({ title: 'Высокая яркость', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — близко к пересвету. Рекомендуем немного затемнить фото.' });
+  else report.success.push({ title: 'Яркость в норме', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — освещение оптимальное.' });
 
   let edges = 0, samples = 0;
   for (let y = 0; y < h - 1; y += 4) {
@@ -1043,13 +1038,9 @@ function analyzeImage(canvas, marketplace, category) {
   }
   const edgeRatio = samples ? edges / samples : 0;
   const edgePct = (edgeRatio * 100).toFixed(1);
-  if (edgeRatio < 0.02) {
-    report.dangers.push({ title: 'Сильное размытие', desc: 'Чётких границ всего ' + edgePct + '% кадра. Фото нечёткое — модерация почти наверняка отклонит. Загрузите более резкий исходник.' });
-  } else if (edgeRatio < 0.045) {
-    report.warnings.push({ title: 'Возможное размытие', desc: 'Чётких границ ' + edgePct + '% кадра — ниже комфортного уровня. Проверьте резкость исходника перед загрузкой.' });
-  } else {
-    report.success.push({ title: 'Резкость в норме', desc: 'Чётких границ ' + edgePct + '% кадра — детали хорошо различимы, фото не выглядит размытым.' });
-  }
+  if (edgeRatio < 0.02) report.dangers.push({ title: 'Сильное размытие', desc: 'Чётких границ всего ' + edgePct + '% кадра. Фото нечёткое — модерация почти наверняка отклонит. Загрузите более резкий исходник.' });
+  else if (edgeRatio < 0.045) report.warnings.push({ title: 'Возможное размытие', desc: 'Чётких границ ' + edgePct + '% кадра — ниже комфортного уровня. Проверьте резкость исходника перед загрузкой.' });
+  else report.success.push({ title: 'Резкость в норме', desc: 'Чётких границ ' + edgePct + '% кадра — детали хорошо различимы, фото не выглядит размытым.' });
 
   let edgeVariance = 0, edgeSamples = 0;
   const checkEdge = (x, y) => {
@@ -1061,12 +1052,8 @@ function analyzeImage(canvas, marketplace, category) {
   };
   for (let x = 0; x < w; x += 20) { checkEdge(x, 0); checkEdge(x, h - 1); }
   for (let y = 0; y < h; y += 20) { checkEdge(0, y); checkEdge(w - 1, y); }
-
-  if (edgeVariance > edgeSamples * 0.3) {
-    report.warnings.push({ title: 'Объект у края кадра', desc: 'Контрастные элементы подходят к самой границе. Рекомендуем добавить отступы, чтобы товар не «прилипал» к краю.' });
-  } else {
-    report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
-  }
+  if (edgeVariance > edgeSamples * 0.3) report.warnings.push({ title: 'Объект у края кадра', desc: 'Контрастные элементы подходят к самой границе. Рекомендуем добавить отступы, чтобы товар не «прилипал» к краю.' });
+  else report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
 
   const textBlocks = detectTextBlocks(imgData, w, h);
   if (textBlocks >= 3) {
@@ -1076,40 +1063,24 @@ function analyzeImage(canvas, marketplace, category) {
     else if (marketplace === 'wb') advice = TEXT_ADVICE.wb;
     else if (marketplace === 'ym') advice = TEXT_ADVICE.ym;
     else advice = TEXT_ADVICE.avito;
-    report.warnings.push({
-      title: 'Обнаружен текст или логотип (' + textBlocks + ' блок.)',
-      desc: advice + ' ' + TEXT_CATEGORIES
-    });
+    report.warnings.push({ title: 'Обнаружен текст или логотип (' + textBlocks + ' блок.)', desc: advice + ' ' + TEXT_CATEGORIES });
   } else {
     report.success.push({ title: 'Текстовых блоков не обнаружено', desc: 'Крупных надписей, логотипов и водяных знаков на фото не найдено.' });
   }
 
   const bg = analyzeBackground(imgData, w, h);
-
   if (marketplace === 'ozon' && category === 'clothing') {
-    if (!bg.uniform) {
-      report.warnings.push({ title: 'Фон не соответствует Ozon', desc: 'Ozon требует строго серый фон (#F2F3F5) для одежды и обуви. Ваш фон не соответствует. Рекомендуем заменить фон или использовать другое фото. ' + MANUAL_BG_NOTE });
-    } else if (colorDist(bg.bgR, bg.bgG, bg.bgB, 242, 243, 245) > 60) {
-      report.warnings.push({ title: 'Фон не соответствует Ozon', desc: 'Ozon требует строго серый фон (#F2F3F5) для одежды и обуви. Ваш фон однородный, но другого оттенка. Рекомендуем заменить фон или использовать другое фото. ' + MANUAL_BG_NOTE });
-    } else {
-      report.success.push({ title: 'Фон соответствует Ozon', desc: 'Однородный серый фон, близкий к #F2F3F5 — требование выполнено.' });
-    }
+    if (!bg.uniform) report.warnings.push({ title: 'Фон не соответствует Ozon', desc: 'Ozon требует строго серый фон (#F2F3F5) для одежды и обуви. Ваш фон не соответствует. Рекомендуем заменить фон или использовать другое фото. ' + MANUAL_BG_NOTE });
+    else if (colorDist(bg.bgR, bg.bgG, bg.bgB, 242, 243, 245) > 60) report.warnings.push({ title: 'Фон не соответствует Ozon', desc: 'Ozon требует строго серый фон (#F2F3F5) для одежды и обуви. Ваш фон однородный, но другого оттенка. Рекомендуем заменить фон или использовать другое фото. ' + MANUAL_BG_NOTE });
+    else report.success.push({ title: 'Фон соответствует Ozon', desc: 'Однородный серый фон, близкий к #F2F3F5 — требование выполнено.' });
   } else if (marketplace === 'ym') {
-    if (!bg.uniform) {
-      report.warnings.push({ title: 'Фон не соответствует Я.Маркету', desc: 'Требуется белый или прозрачный фон, товар занимает не менее 2/3 кадра. Ваше фото не соответствует. ' + MANUAL_BG_NOTE });
-    } else if (colorDist(bg.bgR, bg.bgG, bg.bgB, 255, 255, 255) > 60) {
-      report.warnings.push({ title: 'Фон не соответствует Я.Маркету', desc: 'Требуется белый или прозрачный фон. Ваш фон однородный, но не белый. ' + MANUAL_BG_NOTE });
-    } else if (bg.coverage !== null && bg.coverage < 0.45) {
-      report.warnings.push({ title: 'Товар занимает мало кадра', desc: 'Требуется белый или прозрачный фон, товар занимает не менее 2/3 кадра. Сейчас товар занимает примерно ' + Math.round(bg.coverage * 100) + '% кадра — снимите товар крупнее.' });
-    } else {
-      report.success.push({ title: 'Фон соответствует Я.Маркету', desc: 'Белый фон, товар занимает примерно ' + Math.round((bg.coverage || 0) * 100) + '% кадра — требования выполнены.' });
-    }
+    if (!bg.uniform) report.warnings.push({ title: 'Фон не соответствует Я.Маркету', desc: 'Требуется белый или прозрачный фон, товар занимает не менее 2/3 кадра. Ваше фото не соответствует. ' + MANUAL_BG_NOTE });
+    else if (colorDist(bg.bgR, bg.bgG, bg.bgB, 255, 255, 255) > 60) report.warnings.push({ title: 'Фон не соответствует Я.Маркету', desc: 'Требуется белый или прозрачный фон. Ваш фон однородный, но не белый. ' + MANUAL_BG_NOTE });
+    else if (bg.coverage !== null && bg.coverage < 0.45) report.warnings.push({ title: 'Товар занимает мало кадра', desc: 'Требуется белый или прозрачный фон, товар занимает не менее 2/3 кадра. Сейчас товар занимает примерно ' + Math.round(bg.coverage * 100) + '% кадра — снимите товар крупнее.' });
+    else report.success.push({ title: 'Фон соответствует Я.Маркету', desc: 'Белый фон, товар занимает примерно ' + Math.round((bg.coverage || 0) * 100) + '% кадра — требования выполнены.' });
   } else if (marketplace === 'wb') {
-    if (category === 'clothing' && !bg.uniform) {
-      report.warnings.push({ title: 'Проверьте фон для WB', desc: 'Для одежды на WB лучше смотрится однородный светлый фон, хотя строгих требований нет. Возможна ручная замена для повышения конверсии. ' + MANUAL_BG_NOTE });
-    } else {
-      report.success.push({ title: 'Фон подходит для WB', desc: 'WB не требует строго однородного фона для этой категории — главное, чтобы товар хорошо читался.' });
-    }
+    if (category === 'clothing' && !bg.uniform) report.warnings.push({ title: 'Проверьте фон для WB', desc: 'Для одежды на WB лучше смотрится однородный светлый фон, хотя строгих требований нет. Возможна ручная замена для повышения конверсии. ' + MANUAL_BG_NOTE });
+    else report.success.push({ title: 'Фон подходит для WB', desc: 'WB не требует строго однородного фона для этой категории — главное, чтобы товар хорошо читался.' });
   } else if (marketplace === 'ozon') {
     report.success.push({ title: 'Фон подходит для Ozon', desc: 'Для этой категории Ozon не требует строго однородного фона.' });
   } else if (marketplace === 'avito') {
@@ -1125,23 +1096,19 @@ function detectTextBlocks(imgData, w, h) {
   const bw = Math.floor(w / cols);
   const bh = Math.floor(h / rows);
   let textBlocks = 0;
-
   for (let by = 0; by < rows; by++) {
     for (let bx = 0; bx < cols; bx++) {
       const x0 = bx * bw, y0 = by * bh;
       const x1 = Math.min(x0 + bw, w - 2), y1 = Math.min(y0 + bh, h - 2);
-
       let n = 0, sum = 0, sumSq = 0;
       const hist = new Array(16).fill(0);
       let edgeCount = 0, edgeSamples = 0;
-
       for (let y = y0; y < y1; y += 3) {
         for (let x = x0; x < x1; x += 3) {
           const i = (y * w + x) * 4;
           const lum = lumAt(imgData, i);
           sum += lum; sumSq += lum * lum; n++;
           hist[Math.min(15, Math.floor(lum / 16))]++;
-
           const ir = (y * w + x + 1) * 4;
           const id = ((y + 1) * w + x) * 4;
           const gx = Math.abs(imgData[i] - imgData[ir]) + Math.abs(imgData[i+1] - imgData[ir+1]) + Math.abs(imgData[i+2] - imgData[ir+2]);
@@ -1151,16 +1118,13 @@ function detectTextBlocks(imgData, w, h) {
         }
       }
       if (n < 40 || edgeSamples === 0) continue;
-
       const mean = sum / n;
       const variance = sumSq / n - mean * mean;
       const edgeDensity = edgeCount / edgeSamples;
-
       let max1 = -1, bi1 = -1, max2 = -1, bi2 = -1;
       for (let b = 0; b < 16; b++) { if (hist[b] > max1) { max1 = hist[b]; bi1 = b; } }
       for (let b = 0; b < 16; b++) { if (b === bi1) continue; if (hist[b] > max2) { max2 = hist[b]; bi2 = b; } }
       const bimodal = (bi1 >= 0 && bi2 >= 0) && Math.abs(bi1 - bi2) >= 3 && ((max1 + max2) / n) >= 0.6;
-
       const textLike = bimodal && variance > 900 && edgeDensity >= 0.08 && edgeDensity <= 0.85;
       if (textLike) textBlocks++;
     }
@@ -1173,7 +1137,6 @@ function initSlider(container) {
   const handle = container.querySelector('.slider-handle');
   const imgAfter = container.querySelector('.img-after');
   let isDragging = false;
-
   const move = (e) => {
     if (!isDragging) return;
     const rect = container.getBoundingClientRect();
@@ -1185,7 +1148,6 @@ function initSlider(container) {
     handle.style.left = percent + '%';
     imgAfter.style.clipPath = 'inset(0 0 0 ' + percent + '%)';
   };
-
   handle.addEventListener('mousedown', (e) => { isDragging = true; e.preventDefault(); });
   handle.addEventListener('touchstart', () => isDragging = true, { passive: true });
   window.addEventListener('mousemove', move);
@@ -1197,7 +1159,6 @@ function initSlider(container) {
 function openViewModal(i) {
   const r = state.processedFiles[i];
   if (!r) return;
-
   const modal = document.getElementById('viewModal');
   const slider = document.getElementById('viewSlider');
   const imgBefore = slider.querySelector('.img-before');
@@ -1207,16 +1168,13 @@ function openViewModal(i) {
   const labelAfter = slider.querySelector('.label-after');
   const meta = document.getElementById('viewModalMeta');
   const stats = document.getElementById('viewModalStats');
-
   const mp = r.marketplace || 'wb';
   let aspectRatio = '3/4';
   let mpLabel = '900×1200 (Wildberries)';
   if (mp === 'avito') { aspectRatio = '4/3'; mpLabel = '1200×900 (Avito)'; }
   else if (mp === 'ozon') mpLabel = '900×1200 (Ozon)';
   else if (mp === 'ym') mpLabel = '900×1200 (Я.Маркет)';
-
   slider.style.setProperty('--slider-aspect', aspectRatio);
-
   imgBefore.style.display = 'block';
   handle.style.display = 'flex';
   labelBefore.style.display = 'block';
@@ -1225,18 +1183,15 @@ function openViewModal(i) {
   imgAfter.src = r.optimizedData;
   handle.style.left = '50%';
   imgAfter.style.clipPath = 'inset(0 0 0 50%)';
-
   const sv = ((1 - r.optimizedSize / r.originalSize) * 100).toFixed(1);
   meta.textContent = 'Формат: ' + mpLabel + ' • ' + (r.finalName || r.originalName);
   stats.innerHTML =
     '<div class="view-stat">ДО: ' + (r.originalSize/1024).toFixed(0) + ' КБ</div>' +
     '<div class="view-stat">ПОСЛЕ: ' + (r.optimizedSize/1024).toFixed(0) + ' КБ</div>' +
     '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (r.ext || 'jpg').toUpperCase() + '</div>';
-
   modal.classList.add('active');
   viewSliderActive = true;
   document.body.style.overflow = 'hidden';
-
   setTimeout(() => initSlider(slider), 100);
 }
 
@@ -1247,27 +1202,19 @@ function closeViewModal() {
 }
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && viewSliderActive) {
-    closeViewModal();
-  }
+  if (e.key === 'Escape' && viewSliderActive) closeViewModal();
 });
-
 document.getElementById('viewModal').addEventListener('click', (e) => {
-  if (e.target.id === 'viewModal') {
-    closeViewModal();
-  }
+  if (e.target.id === 'viewModal') closeViewModal();
 });
 
 document.getElementById('processBtn').addEventListener('click', async () => {
   if (!state.selectedFiles.length) return;
-  if (!state.user) { alert('Зарегистрируйтесь, чтобы обрабатывать фото'); openModal('registerModal'); return; }
-  if (!state.data || state.data.plan !== 'pro' && state.data.freeUsage <= 0) { openPayment(); return; }
+  if (!state.user) { openModal('registerModal'); return; }
+  if (!state.data || (state.data.plan !== 'pro' && state.data.freeUsage <= 0)) { openPayment(); return; }
 
   const selectedMPs = Array.from(document.querySelectorAll('input[name="mp"]:checked')).map(cb => cb.value);
-  if (selectedMPs.length === 0) {
-    alert('Пожалуйста, выберите хотя бы одну площадку.');
-    return;
-  }
+  if (selectedMPs.length === 0) { alert('Пожалуйста, выберите хотя бы одну площадку.'); return; }
 
   const category = document.getElementById('category').value;
   const btn = document.getElementById('processBtn');
@@ -1289,7 +1236,6 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   try {
     for (const f of state.selectedFiles) {
       const pre = await getPrecompute(f);
-
       for (const mp of selectedMPs) {
         const s = {
           marketplace: mp,
@@ -1298,74 +1244,32 @@ document.getElementById('processBtn').addEventListener('click', async () => {
           outputFormat: state.data.plan === 'pro' ? document.getElementById('outputFormat').value : 'jpg',
           watermark: state.data.plan === 'pro' ? document.getElementById('watermarkText').value : ''
         };
-
         let r;
-        try {
-          r = await processImage(pre, f, s);
-        } catch (err) {
+        try { r = await processImage(pre, f, s); }
+        catch (err) {
           console.error('Error processing image:', err);
-          r = {
-            originalName: f.name,
-            originalSize: f.size,
-            optimizedData: null,
-            optimizedSize: f.size,
-            ext: 'jpg',
-            originalUrl: null,
-            marketplace: mp,
-            category: category,
-            aspectRatio: mp === 'avito' ? '4/3' : '3/4',
-            validationReport: {
-              success: [],
-              warnings: [],
-              dangers: [{ title: 'Ошибка обработки', desc: 'Не удалось обработать файл.' }]
-            }
-          };
+          r = { originalName: f.name, originalSize: f.size, optimizedData: null, optimizedSize: f.size, ext: 'jpg', originalUrl: null, marketplace: mp, category: category, aspectRatio: mp === 'avito' ? '4/3' : '3/4', validationReport: { success: [], warnings: [], dangers: [{ title: 'Ошибка обработки', desc: 'Не удалось обработать файл.' }] } };
         }
-
-        if (!r.optimizedData) {
-          completedTasks++;
-          progressBar.style.width = ((completedTasks / totalTasks) * 100) + '%';
-          continue;
-        }
-
+        if (!r.optimizedData) { completedTasks++; progressBar.style.width = ((completedTasks / totalTasks) * 100) + '%'; continue; }
         const finalName = selectedMPs.length > 1 ? f.name.replace(/\.[^/.]+$/, '') + '_' + mp + '.' + r.ext : f.name;
-
-        state.processedFiles.push({...r, finalName});
-        displayResult({...r, finalName}, state.processedFiles.length - 1);
-
-        await Cloud.pushHistory(state.user.uid, {
-          name: finalName,
-          ext: r.ext,
-          date: new Date().toISOString(),
-          originalSize: r.originalSize,
-          optimizedSize: r.optimizedSize,
-          thumbnail: r.optimizedData,
-          data: r.optimizedData,
-          marketplace: mp,
-          category: category,
-          aspectRatio: r.aspectRatio,
-          validationReport: r.validationReport
-        });
-
+        state.processedFiles.push(Object.assign({}, r, { finalName: finalName }));
+        displayResult(Object.assign({}, r, { finalName: finalName }), state.processedFiles.length - 1);
         completedTasks++;
         progressBar.style.width = ((completedTasks / totalTasks) * 100) + '%';
       }
     }
-
     if (state.data.plan !== 'pro') {
       state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
       await Cloud.updateProfile(state.user.uid, { freeUsage: state.data.freeUsage });
     }
     state.data.totalProcessed = (state.data.totalProcessed || 0) + state.selectedFiles.length;
     await Cloud.updateProfile(state.user.uid, { totalProcessed: state.data.totalProcessed });
-
   } catch (err) {
     console.error('Processing error:', err);
   } finally {
     btn.disabled = false;
     btn.textContent = originalBtnText;
     setTimeout(() => { progressContainer.style.display = 'none'; }, 1000);
-
     if (state.processedFiles.length > 1) document.getElementById('downloadAllBtn').style.display = 'block';
     updateUI();
   }
@@ -1378,19 +1282,15 @@ async function processImage(pre, file, s) {
         let W, H;
         if (s.marketplace === 'avito') { W = 1200; H = 900; }
         else { W = 900; H = 1200; }
-
         const c = document.getElementById('canvas');
-        c.width = W;
-        c.height = H;
+        c.width = W; c.height = H;
         const ctx = c.getContext('2d');
         const img = pre.img;
-
         const crop = centerCrop(img, W, H);
         ctx.filter = 'contrast(1.05) saturate(1.06) brightness(1.02)';
         ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, W, H);
         ctx.filter = 'none';
         enhanceImage(ctx, W, H);
-
         if (s.watermark) {
           ctx.font = 'bold 24px Arial';
           ctx.fillStyle = 'rgba(255,255,255,0.7)';
@@ -1398,50 +1298,19 @@ async function processImage(pre, file, s) {
           ctx.textBaseline = 'bottom';
           ctx.fillText(s.watermark, W - 20, H - 20);
         }
-
         const validationReport = analyzeImage(c, s.marketplace, s.category);
-
         let mime, ext, q;
         const qualityVal = s.quality;
         const maxSize = qualityVal === 'high' ? 1000 : qualityVal === 'low' ? 100 : 300;
-
-        if (s.outputFormat === 'png') {
-          mime = 'image/png'; ext = 'png'; q = 1.0;
-        } else if (s.outputFormat === 'webp') {
-          mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
-        } else {
-          mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
-        }
-
+        if (s.outputFormat === 'png') { mime = 'image/png'; ext = 'png'; q = 1.0; }
+        else if (s.outputFormat === 'webp') { mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7; }
+        else { mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7; }
         let url = c.toDataURL(mime, q);
-
-        if (mime === 'image/webp' && !url.startsWith('data:image/webp')) {
-          mime = 'image/jpeg'; ext = 'jpg'; url = c.toDataURL(mime, q);
-        }
-
+        if (mime === 'image/webp' && !url.startsWith('data:image/webp')) { mime = 'image/jpeg'; ext = 'jpg'; url = c.toDataURL(mime, q); }
         let size = url.length * 0.75;
-        while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') {
-          q -= 0.05;
-          url = c.toDataURL(mime, q);
-          size = url.length * 0.75;
-        }
-
-        res({
-          originalName: file.name,
-          originalSize: file.size,
-          optimizedData: url,
-          optimizedSize: size,
-          ext: ext,
-          originalUrl: URL.createObjectURL(file),
-          validationReport: validationReport,
-          marketplace: s.marketplace,
-          category: s.category,
-          aspectRatio: s.marketplace === 'avito' ? '4/3' : '3/4'
-        });
-      } catch (err) {
-        console.error('processImage inner error:', err);
-        rej(err);
-      }
+        while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') { q -= 0.05; url = c.toDataURL(mime, q); size = url.length * 0.75; }
+        res({ originalName: file.name, originalSize: file.size, optimizedData: url, optimizedSize: size, ext: ext, originalUrl: URL.createObjectURL(file), validationReport: validationReport, marketplace: s.marketplace, category: s.category, aspectRatio: s.marketplace === 'avito' ? '4/3' : '3/4' });
+      } catch (err) { console.error('processImage inner error:', err); rej(err); }
     })();
   });
 }
@@ -1450,42 +1319,27 @@ function displayResult(r, i) {
   const sv = ((1 - r.optimizedSize / r.originalSize) * 100).toFixed(1);
   const d = document.createElement('div');
   d.className = 'result-item';
-
   let reportHtml = '';
   if (r.validationReport) {
     const report = r.validationReport;
     const dangerCount = report.dangers.length;
     const warningCount = report.warnings.length;
-
     let statusText = '';
-    if (dangerCount > 0) {
-      statusText = '<span style="color:var(--danger);font-weight:700;">❌ ' + dangerCount + ' проблем' + (dangerCount === 1 ? 'а' : '') + '</span>';
-    } else if (warningCount > 0) {
-      statusText = '<span style="color:#d97706;font-weight:700;">⚠️ ' + warningCount + ' предупреждени' + (warningCount === 1 ? 'е' : 'й') + '</span>';
-    } else {
-      statusText = '<span style="color:var(--success);font-weight:700;">✅ Все проверки пройдены</span>';
-    }
-
-    const allItems = [
-      ...report.dangers.map(item => ({...item, type: 'danger'})),
-      ...report.warnings.map(item => ({...item, type: 'warning'})),
-      ...report.success.map(item => ({...item, type: 'success'}))
-    ];
-
-    const itemsHtml = allItems.map(item => {
-      const iconClass = 'report-' + item.type;
-      const icon = item.type === 'danger' ? '❌' : item.type === 'warning' ? '⚠️' : '✅';
-      return '<div class="report-item"><div class="report-icon ' + iconClass + '">' + icon + '</div><div class="report-text"><strong>' + item.title + '</strong><p>' + item.desc + '</p></div></div>';
+    if (dangerCount > 0) statusText = '<span style="color:var(--danger);font-weight:700;">❌ ' + dangerCount + ' проблем' + (dangerCount === 1 ? 'а' : '') + '</span>';
+    else if (warningCount > 0) statusText = '<span style="color:#d97706;font-weight:700;">⚠️ ' + warningCount + ' предупреждени' + (warningCount === 1 ? 'е' : 'й') + '</span>';
+    else statusText = '<span style="color:var(--success);font-weight:700;">✅ Все проверки пройдены</span>';
+    const allItems = report.dangers.map(it => Object.assign({}, it, { type: 'danger' }))
+      .concat(report.warnings.map(it => Object.assign({}, it, { type: 'warning' })))
+      .concat(report.success.map(it => Object.assign({}, it, { type: 'success' })));
+    const itemsHtml = allItems.map(it => {
+      const icon = it.type === 'danger' ? '❌' : it.type === 'warning' ? '⚠️' : '✅';
+      return '<div class="report-item"><div class="report-icon report-' + it.type + '">' + icon + '</div><div class="report-text"><strong>' + it.title + '</strong><p>' + it.desc + '</p></div></div>';
     }).join('');
-
     reportHtml = '<div class="validation-report"><div class="report-header" onclick="toggleReport(' + i + ')"><span>📊 Отчёт валидации</span>' + statusText + '<div class="report-toggle" id="report-toggle-' + i + '">▼</div></div><div class="report-body" id="report-body-' + i + '"><div class="report-content">' + itemsHtml + '</div></div></div>';
   }
-
   const mp = r.marketplace || 'wb';
   const cat = r.category || 'other';
-
   const modeHint = '<div style="font-size:0.75rem;color:var(--success);margin-bottom:6px;font-weight:600;">🛡️ Безопасный режим: обрезка по центру до ' + (mp === 'avito' ? '1200×900' : '900×1200') + ' + улучшение резкости + сжатие, без замены фона</div>';
-
   d.innerHTML =
     '<div class="comparison-slider" id="slider-' + i + '" onclick="openViewModal(' + i + ')">' +
       '<img src="' + r.originalUrl + '" class="img-before" alt="До">' +
@@ -1509,107 +1363,80 @@ function displayResult(r, i) {
       reportHtml +
     '</div>' +
     '<button class="btn btn-primary" onclick="downloadFile(' + i + ')">Скачать готовые фото</button>';
-
   document.getElementById('resultsArea').appendChild(d);
-
   setTimeout(() => initSlider(document.getElementById('slider-' + i)), 50);
 }
 
 function toggleReport(i) {
   const body = document.getElementById('report-body-' + i);
   const toggle = document.getElementById('report-toggle-' + i);
-  body.classList.toggle('open');
-  toggle.classList.toggle('open');
+  if (body && toggle) { body.classList.toggle('open'); toggle.classList.toggle('open'); }
 }
 
-function downloadFile(i){
-  const r=state.processedFiles[i];
-  const a=document.createElement('a');
-  a.download='optimized_'+(r.finalName || r.originalName).replace(/\.[^/.]+$/,'')+'.'+r.ext;
-  a.href=r.optimizedData;
+function downloadFile(i) {
+  const r = state.processedFiles[i];
+  const a = document.createElement('a');
+  a.download = 'optimized_' + (r.finalName || r.originalName).replace(/\.[^/.]+$/, '') + '.' + r.ext;
+  a.href = r.optimizedData;
   a.click();
 }
 
-document.getElementById('downloadAllBtn').addEventListener('click',async()=>{
-  if(!state.data || state.data.plan !== 'pro'){openPayment();return}
-  const zip=new JSZip();
-  const usedNames={};
-  state.processedFiles.forEach((r,i)=>{
-    const baseName=(r.finalName || r.originalName).replace(/\.[^/.]+$/,'');
-    let name='optimized_'+baseName+'.'+r.ext;
-
-    if(usedNames[name]){
+document.getElementById('downloadAllBtn').addEventListener('click', async () => {
+  if (!state.data || state.data.plan !== 'pro') { openPayment(); return; }
+  const zip = new JSZip();
+  const usedNames = {};
+  state.processedFiles.forEach((r) => {
+    const baseName = (r.finalName || r.originalName).replace(/\.[^/.]+$/, '');
+    let name = 'optimized_' + baseName + '.' + r.ext;
+    if (usedNames[name]) {
       usedNames[name]++;
-      const dot=name.lastIndexOf('.');
-      name=dot>0?name.slice(0,dot)+'_'+usedNames[name]+name.slice(dot):name+'_'+usedNames[name];
-    }else{
-      usedNames[name]=1;
-    }
-    zip.file(name,r.optimizedData.split(',')[1],{base64:true});
+      const dot = name.lastIndexOf('.');
+      name = dot > 0 ? name.slice(0, dot) + '_' + usedNames[name] + name.slice(dot) : name + '_' + usedNames[name];
+    } else usedNames[name] = 1;
+    zip.file(name, r.optimizedData.split(',')[1], { base64: true });
   });
-  const blob=await zip.generateAsync({type:'blob'});
-  const a=document.createElement('a');
-  a.download='photoboost_session_'+state.processedFiles.length+'.zip';
-  a.href=URL.createObjectURL(blob);
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a');
+  a.download = 'photoboost_session_' + state.processedFiles.length + '.zip';
+  a.href = URL.createObjectURL(blob);
   a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 });
 
 async function renderUserReviews() {
   const c = document.getElementById('userReviewsContainer');
-  const reviews = await Cloud.loadReviews(30);
-  
-  if (!reviews.length) {
-    c.innerHTML = '';
-    return;
-  }
-  
-  c.innerHTML = reviews.map(r => {
-    const photoHtml = r.photoUrl ? 
-      '<img src="' + r.photoUrl + '" class="testimonial-author-photo">' :
-      '<div class="testimonial-author-photo" style="background:var(--gradient-purple);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">' + r.name.charAt(0).toUpperCase() + '</div>';
-    
-    return '<div class="testimonial-card">' +
-      '<div class="stars">' + '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) + '</div>' +
-      '<p class="testimonial-text">' + r.text + '</p>' +
-      '<div class="testimonial-author">' +
-        photoHtml +
-        '<div class="testimonial-author-info">' +
-          '<h4>' + r.name + '</h4>' +
-          '<p>' + (r.position || 'Пользователь') + '</p>' +
-          '<div class="testimonial-date">' + formatDate(r.createdAt) + '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
+  try {
+    const reviews = await Cloud.loadReviews(30);
+    if (!reviews.length) { c.innerHTML = ''; return; }
+    c.innerHTML = reviews.map(r => {
+      const photoHtml = r.photoUrl
+        ? '<img src="' + r.photoUrl + '" class="testimonial-author-photo">'
+        : '<div class="testimonial-author-photo" style="background:var(--gradient-purple);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">' + (r.name || 'П').charAt(0).toUpperCase() + '</div>';
+      return '<div class="testimonial-card"><div class="stars">' + '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating) + '</div><p class="testimonial-text">' + r.text + '</p><div class="testimonial-author">' + photoHtml + '<div class="testimonial-author-info"><h4>' + r.name + '</h4><p>' + (r.position || 'Пользователь') + '</p><div class="testimonial-date">' + formatDate(r.createdAt) + '</div></div></div></div>';
+    }).join('');
+  } catch (e) { c.innerHTML = ''; }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  const reviewForm = document.querySelector('#registerModal form');
-  if (reviewForm) {
-    // Добавляем обработчик для формы отзыва в кабинете (если она есть)
-  }
-});
-
-Cloud.onAuth(async (user) => {
-  if (user) {
-    state.user = user;
-    state.data = await Cloud.loadProfile(user.uid);
-  } else {
-    state.user = null;
-    state.data = null;
-  }
-  updateNav();
-  updateUI();
-  renderSelectedZone();
-  renderUserReviews();
-});
 
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => {
   if (e.target === o) { o.classList.remove('active'); document.body.style.overflow = ''; }
 }));
 
-// ===== Делаем функции видимыми для inline onclick в HTML =====
+Cloud.onAuth(async (user) => {
+  if (user) {
+    state.user = user;
+    state.data = await Cloud.loadProfile(user.uid);
+    if (!state.data) {
+      state.data = { plan: 'free', freeUsage: 2, totalProcessed: 0, totalSavedBytes: 0, paidClicked: false };
+      await Cloud.updateProfile(user.uid, state.data);
+    }
+  } else {
+    state.user = null;
+    state.data = null;
+  }
+  updateNav(); updateUI(); renderSelectedZone(); renderUserReviews();
+});
+
+// ===== делаем функции видимыми для inline onclick =====
 window.scrollToSection = scrollToSection;
 window.toggleMenu = toggleMenu;
 window.closeMenu = closeMenu;
@@ -1619,7 +1446,8 @@ window.switchModal = switchModal;
 window.toggleFaq = toggleFaq;
 window.handleLogin = handleLogin;
 window.handleRegister = handleRegister;
-window.handleReset = handleReset;
+window.handleResetStep1 = handleResetStep1;
+window.handleResetStep2 = handleResetStep2;
 window.handleLogout = handleLogout;
 window.openPayment = openPayment;
 window.markPaid = markPaid;
