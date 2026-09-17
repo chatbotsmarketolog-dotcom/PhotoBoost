@@ -31,7 +31,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .dash-tab-content { display: none; }
 .dash-tab-content.active { display: block; }
 .card { background: white; border-radius: 20px; padding: 30px; border: 1px solid #f1f5f9; margin-bottom: 20px; }
-/* ===== ИНСТРУМЕНТ ===== */
 .upload-zone { border: 2px dashed #cbd5e1; border-radius: 20px; padding: 50px 20px; text-align: center; cursor: pointer; background: #faf9ff; margin-bottom: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 170px; }
 .upload-zone:hover { border-color: var(--primary); background: #f3f0ff; }
 .upload-icon-big { width: 70px; height: 70px; background: var(--gradient-purple); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; }
@@ -55,8 +54,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .progress-bar { height: 100%; background: var(--gradient-purple); width: 0%; transition: width 0.3s ease; }
 .results-area { margin-top: 24px; }
 .result-item { background: #faf9ff; padding: 20px; border-radius: 16px; margin-bottom: 16px; display: grid; grid-template-columns: 140px 1fr auto; gap: 20px; align-items: start; }
-
-/* ===== СЛАЙДЕР ДО/ПОСЛЕ ===== */
 .comparison-slider{position:relative;width:140px;height:140px;border-radius:12px;overflow:hidden;cursor:col-resize;user-select:none;background:#e2e8f0;transition:transform 0.2s}
 .comparison-slider:hover{transform:scale(1.02)}
 .comparison-slider img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
@@ -67,14 +64,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .slider-label{position:absolute;top:8px;z-index:6;font-size:0.62rem;font-weight:800;letter-spacing:1px;padding:3px 8px;border-radius:6px;pointer-events:none}
 .label-before{left:8px;background:rgba(0,0,0,0.55);color:#fff}
 .label-after{right:8px;background:rgba(124,58,237,0.85);color:#fff}
-
 .result-info h4 { margin-bottom: 10px; word-break: break-word; }
 .result-metrics { display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.85rem; }
 .metric-value { font-weight: 700; color: var(--success); }
 .metric-value.dim { color: var(--text-dark); }
 .metric-label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; }
-
-/* ===== ОТЧЁТ ВАЛИДАЦИИ ===== */
 .validation-report { margin-top: 14px; background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
 .report-header { padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; flex-wrap: wrap; }
 .report-header:hover { background: #f1f5f9; }
@@ -92,8 +86,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .report-text { flex: 1; }
 .report-text strong { display: block; margin-bottom: 2px; }
 .report-text p { color: var(--text-muted); font-size: 0.8rem; margin: 0; }
-
-/* ===== РАЗДЕЛ ОТЧЁТОВ ===== */
 .reports-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
 .reports-toolbar h3 { font-size: 1.3rem; }
 .reports-filters { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -126,8 +118,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .status-warning { background: #d9770622; color: #d97706; }
 .status-danger { background: #ef444422; color: var(--danger); }
 .report-list-details { margin-top: 12px; }
-
-/* ===== МОДАЛКА ПРОСМОТРА ===== */
 .view-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,26,0.97); backdrop-filter: blur(10px); z-index: 2500; justify-content: center; align-items: center; padding: 20px; }
 .view-modal-overlay.active { display: flex; }
 .view-modal { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 95vw; }
@@ -155,8 +145,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .view-modal-stats { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .view-stat { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 8px 16px; border-radius: 50px; color: white; font-size: 0.85rem; font-weight: 600; }
 .view-stat.accent { background: rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.4); color: #6ee7b7; }
-
-/* ===== ПОДПИСКА ===== */
 .subscription-card { background: linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(245,158,11,0.05) 100%); border: 1px solid rgba(251,191,36,0.3); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
 .subscription-card.free { background: linear-gradient(135deg,#f1f5f9 0%,#e2e8f0 100%); border-color: #cbd5e1; }
 .subscription-card.expiring { background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.05) 100%); border-color: rgba(239,68,68,0.3); }
@@ -174,7 +162,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .activate-code-box { background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(236,72,153,0.08)); border: 2px dashed var(--primary); padding: 24px; border-radius: 16px; margin-bottom: 20px; }
 .activate-input-row { display: flex; gap: 10px; }
 .activate-input-row input { flex: 1; text-transform: uppercase; text-align: center; font-weight: 700; letter-spacing: 2px; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-family: inherit; }
-/* ===== ИСТОРИЯ ===== */
 .history-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; padding: 14px 18px; background: #faf9ff; border: 1px solid #f1f5f9; border-radius: 12px; }
 .history-toolbar label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
 .history-toolbar input[type=checkbox] { width: 20px; height: 20px; cursor: pointer; }
@@ -189,7 +176,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .history-download { padding: 8px 14px; font-size: 0.85rem; }
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 .empty-state-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
-/* ===== ОТЗЫВЫ ===== */
 .review-form-box { background: linear-gradient(135deg, rgba(124,58,237,0.05), rgba(236,72,153,0.05)); border: 1px solid #f1f5f9; padding: 24px; border-radius: 16px; margin-bottom: 24px; }
 .review-form-box h3 { margin-bottom: 16px; font-size: 1.1rem; }
 .review-form-box .form-group { margin-bottom: 16px; }
@@ -206,7 +192,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .my-review-item p { font-size: 0.9rem; margin-bottom: 8px; }
 .my-review-item .delete-btn { position: absolute; top: 12px; right: 12px; background: rgba(239,68,68,0.1); color: var(--danger); border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s; }
 .my-review-item .delete-btn:hover { background: var(--danger); color: white; }
-/* ===== МОДАЛКА ОПЛАТЫ ===== */
+.my-review-item .review-photo { max-width: 100px; max-height: 100px; border-radius: 8px; margin-bottom: 8px; }
+.my-review-item .review-date { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10,10,26,0.8); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
 .modal { background: white; border-radius: 24px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -221,7 +208,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .sber-notice { background: #eff6ff; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 8px; margin-top: 12px; font-size: 0.85rem; color: #1e40af; }
 .contact-buttons { display: grid; gap: 10px; margin-bottom: 16px; }
 .btn-secondary { background: #0077ff; color: white; }
-/* ===== АДАПТИВНОСТЬ ===== */
+.photo-upload-label { display: block; cursor: pointer; padding: 12px 16px; background: #f3f0ff; border: 2px dashed var(--primary); border-radius: 10px; text-align: center; color: var(--primary); font-weight: 600; transition: all 0.3s; margin-top: 8px; }
+.photo-upload-label:hover { background: #e9e4ff; }
+.photo-preview { margin-top: 10px; text-align: center; }
+.photo-preview img { max-width: 120px; max-height: 120px; border-radius: 10px; border: 2px solid #e2e8f0; }
+.photo-preview .remove-photo { margin-top: 8px; background: var(--danger); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
 @media (max-width: 900px) {
 .container { padding: 95px 16px 40px; }
 .nav-container { padding: 14px 16px; }
@@ -420,6 +411,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 </div>
 </div>
 <div class="form-group">
+<label class="form-label">Ваше фото (необязательно)</label>
+<label class="photo-upload-label" for="reviewPhotoInput">📷 Загрузить фото</label>
+<input type="file" id="reviewPhotoInput" accept="image/*" style="display:none;" onchange="handleReviewPhoto(this)">
+<div class="photo-preview" id="reviewPhotoPreview" style="display:none;"></div>
+</div>
+<div class="form-group">
 <label class="form-label">Текст отзыва *</label>
 <textarea class="form-textarea" id="reviewText" required placeholder="Расскажите о вашем опыте использования PhotoBoost..." minlength="20" maxlength="1000"></textarea>
 <div class="char-counter"><span id="reviewCharCount">0</span> / 1000</div>
@@ -492,14 +489,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <canvas id="canvas" style="display:none;"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script>
-// ===== СОСТОЯНИЕ =====
+<script type="module">
+import { Cloud } from '../js/cloud.js';
+
 let state = {
-  user: JSON.parse(localStorage.getItem('pbUser')) || null,
+  user: null,
   data: null,
   selectedFiles: [],
   processedFiles: [],
-  reviewRating: 5
+  reviewRating: 5,
+  reviewPhoto: null
 };
 
 let selectedHistory = new Set();
@@ -508,7 +507,6 @@ let viewSliderActive = false;
 const MP_LABELS = { wb: 'Wildberries', ozon: 'Ozon', avito: 'Avito', ym: 'Я.Маркет' };
 const CAT_LABELS = { clothing: 'Одежда/Обувь', other: 'Другие товары' };
 
-// Тексты рекомендаций по площадкам (конкретика вместо запугивания)
 const TEXT_ADVICE = {
   wb: 'На главном фото WB не рекомендуется размещать маркетинговый текст (слоганы, «гарантия», «хит»). Инфографику лучше перенести на 2-е и последующие фото. Если это название бренда или характеристики (размер, цвет) — это допустимо.',
   ozon_clothing: 'На главном фото Ozon для этой категории не должно быть инфографики и маркетингового текста. Оставьте только товар на сером фоне.',
@@ -521,19 +519,14 @@ const MANUAL_BG_NOTE = 'Мы не можем автоматически заме
 
 const PRO_F = { maxBatchSize: 100 };
 const FREE_F = { maxBatchSize: 1 };
-function getFeatures() { return (state.data && state.data.isPro) ? PRO_F : FREE_F; }
-function dataKey() { return 'pbData_' + (state.user ? state.user.email : 'guest'); }
-function loadUserData() {
-  const def = { history: [], freeUsage: 2, totalProcessed: 0, totalSaved: 0, isPro: false, proExpiry: null, paidClicked: false, usedCodes: [] };
-  state.data = Object.assign(def, JSON.parse(localStorage.getItem(dataKey()) || 'null') || {});
-  if (state.data.proExpiry && new Date(state.data.proExpiry) < new Date()) { state.data.isPro = false; saveUserData(); }
-}
-function saveUserData() { if (state.data) localStorage.setItem(dataKey(), JSON.stringify(state.data)); }
-function formatDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('ru-RU'); }
 
-// ===== ЗАЩИТА СТРАНИЦЫ =====
-if (!state.user) location.href = '../';
-loadUserData();
+function getFeatures() { return (state.data && state.data.plan === 'pro') ? PRO_F : FREE_F; }
+
+function formatDate(d) {
+  if (!d) return '—';
+  const date = d.toDate ? d.toDate() : new Date(d);
+  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
 
 document.querySelectorAll('.mp-checkbox').forEach(cb => {
   cb.addEventListener('click', function(e) {
@@ -545,7 +538,6 @@ document.querySelectorAll('.mp-checkbox').forEach(cb => {
   });
 });
 
-// ===== ВКЛАДКИ =====
 function switchTab(tab, btn) {
   document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.dash-tab-content').forEach(c => c.classList.remove('active'));
@@ -557,22 +549,21 @@ function switchTab(tab, btn) {
   if (tab === 'review') {
     renderMyReviews();
     if (state.user && !document.getElementById('reviewName').value) {
-      document.getElementById('reviewName').value = state.user.name;
+      document.getElementById('reviewName').value = state.user.displayName;
     }
   }
   if (tab === 'tool') renderSelectedZone();
   if (tab === 'subscription') renderSubscription();
 }
 
-// ===== ПОДПИСКА =====
 function renderSubscription() {
-  const isPro = state.data.isPro;
+  const isPro = state.data && state.data.plan === 'pro';
   const activateSection = document.getElementById('activateCodeSection');
   const buyBtn = document.getElementById('buyProBtn');
   const renewBtn = document.getElementById('renewProBtn');
   const subCard = document.getElementById('subCard');
-  document.getElementById('dashProcessed').textContent = state.data.totalProcessed;
-  document.getElementById('dashSaved').textContent = state.data.totalSaved.toFixed(2) + ' МБ';
+  document.getElementById('dashProcessed').textContent = state.data ? state.data.totalProcessed || 0 : 0;
+  document.getElementById('dashSaved').textContent = state.data ? (state.data.totalSavedBytes || 0 / (1024 * 1024)).toFixed(2) + ' МБ' : '0 МБ';
   if (isPro) {
     activateSection.style.display = 'none';
     buyBtn.style.display = 'none';
@@ -591,30 +582,37 @@ function renderSubscription() {
     document.getElementById('subTitle').textContent = 'Бесплатный тариф';
     document.getElementById('subText').textContent = 'Доступны базовые функции';
     document.getElementById('dashStatus').textContent = 'Free';
-    document.getElementById('dashRemaining').textContent = state.data.freeUsage;
-    activateSection.style.display = state.data.paidClicked ? 'block' : 'none';
+    document.getElementById('dashRemaining').textContent = state.data ? state.data.freeUsage : 0;
+    activateSection.style.display = state.data && state.data.paidClicked ? 'block' : 'none';
   }
 }
 
-// ===== ИСТОРИЯ =====
-function renderHistory() {
+async function renderHistory() {
   const list = document.getElementById('historyList');
   selectedHistory = new Set();
   const selAll = document.getElementById('selectAllHistory');
   if (selAll) selAll.checked = false;
   updateSelCount();
 
-  if (state.data.history.length === 0) {
+  if (!state.user) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔐</div><p>Войдите, чтобы увидеть историю</p></div>';
+    return;
+  }
+
+  const history = await Cloud.loadHistory(state.user.uid, 200);
+  state.data.history = history;
+
+  if (history.length === 0) {
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🖼️</div><p>Здесь появятся ваши обработанные фото.</p></div>';
     return;
   }
-  list.innerHTML = state.data.history.map((item, i) =>
+  list.innerHTML = history.map((item, i) =>
     '<div class="history-item">' +
       '<input type="checkbox" onchange="toggleHistorySelect(' + i + ', this.checked)">' +
       '<img src="' + (item.thumbnail || item.data) + '" class="history-thumb">' +
       '<div class="history-info">' +
         '<h4>' + (item.name || 'фото_' + (i+1)) + '</h4>' +
-        '<p>' + formatDate(item.date) + ' • ' + ((item.optimizedSize||0)/1024).toFixed(1) + ' КБ</p>' +
+        '<p>' + formatDate(item.createdAt || item.date) + ' • ' + ((item.optimizedSize||0)/1024).toFixed(1) + ' КБ</p>' +
       '</div>' +
       '<button class="btn btn-primary history-download" onclick="downloadHistoryItem(' + i + ')">Скачать</button>' +
     '</div>'
@@ -654,7 +652,7 @@ function downloadSelectedZip() {
     alert('❌ Отметьте галочками хотя бы одно фото в истории');
     return;
   }
-  if (!state.data.isPro) {
+  if (!state.data || state.data.plan !== 'pro') {
     alert('🔒 ZIP-архив доступен только в PRO-подписке');
     openPayment();
     return;
@@ -706,20 +704,21 @@ function downloadSelectedZip() {
   });
 }
 
-function clearHistory() {
+async function clearHistory() {
   if (!confirm('Очистить историю? Отчёты тоже будут удалены.')) return;
+  if (!state.user) return;
   state.data.history = [];
-  saveUserData();
+  await Cloud.updateProfile(state.user.uid, { history: [] });
   renderHistory();
+  renderReports();
 }
 
-// ===== РАЗДЕЛ ОТЧЁТОВ =====
 function renderReports() {
   const list = document.getElementById('reportsList');
   const summary = document.getElementById('reportsSummary');
   const filter = document.getElementById('reportsFilter').value;
 
-  if (state.data.history.length === 0) {
+  if (!state.data || !state.data.history || state.data.history.length === 0) {
     summary.innerHTML = '';
     list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📊</div><p>Отчёты появятся после первой обработки фото. Все проверки сохраняются автоматически.</p></div>';
     return;
@@ -799,7 +798,7 @@ function renderReports() {
         '<img src="' + (item.thumbnail || item.data) + '" class="report-list-thumb" onclick="openViewModalFromReport(' + realIdx + ')">' +
         '<div class="report-list-meta">' +
           '<h4>' + (item.name || 'фото') + '</h4>' +
-          '<p>' + formatDate(item.date) + ' • ' + ((item.optimizedSize||0)/1024).toFixed(1) + ' КБ</p>' +
+          '<p>' + formatDate(item.createdAt || item.date) + ' • ' + ((item.optimizedSize||0)/1024).toFixed(1) + ' КБ</p>' +
           '<div class="report-list-badges">' + mpBadge + catBadge + '</div>' +
         '</div>' +
         '<div class="report-list-status ' + statusClass + '">' + statusText + '</div>' +
@@ -864,42 +863,49 @@ function openViewModalFromReport(i) {
   document.body.style.overflow = 'hidden';
 }
 
-function clearReports() {
+async function clearReports() {
   if (!confirm('Очистить все отчёты? Фото в истории тоже будут удалены.')) return;
+  if (!state.user) return;
   state.data.history = [];
-  saveUserData();
+  await Cloud.updateProfile(state.user.uid, { history: [] });
   renderReports();
   renderHistory();
 }
 
-// ===== ПРОФИЛЬ =====
 function renderProfile() {
-  document.getElementById('profileName').textContent = state.user.name;
-  document.getElementById('profileEmail').textContent = state.user.email;
-  document.getElementById('profileDate').textContent = formatDate(state.user.registeredAt);
+  if (!state.user) return;
+  document.getElementById('profileName').textContent = state.user.displayName || '—';
+  document.getElementById('profileEmail').textContent = state.user.email || '—';
+  document.getElementById('profileDate').textContent = state.data && state.data.createdAt ? formatDate(state.data.createdAt) : '—';
 }
 
-// ===== ОТЗЫВЫ =====
-function getUserReviews() { return JSON.parse(localStorage.getItem('pbUserReviews') || '[]'); }
-function saveUserReviews(reviews) { localStorage.setItem('pbUserReviews', JSON.stringify(reviews)); }
-function renderMyReviews() {
+async function renderMyReviews() {
   const list = document.getElementById('myReviewsList');
   if (!state.user) { list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔐</div><p>Войдите</p></div>'; return; }
-  const userReviews = getUserReviews().filter(r => r.authorEmail === state.user.email);
+  
+  const allReviews = await Cloud.loadReviews(100);
+  const userReviews = allReviews.filter(r => r.authorUid === state.user.uid);
+  
   if (userReviews.length === 0) { list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>Вы ещё не оставляли отзывов</p></div>'; return; }
+  
   list.innerHTML = userReviews.map(review => {
     const starsHtml = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-    return '<div class="my-review-item"><button class="delete-btn" onclick="deleteUserReview(' + review.id + ')">Удалить</button><div class="stars">' + starsHtml + '</div><p>' + review.text + '</p><div style="font-size: 0.8rem; color: var(--text-muted);">' + formatDate(review.date) + (review.position ? ' • ' + review.position : '') + '</div></div>';
+    const photoHtml = review.photoUrl ? '<img src="' + review.photoUrl + '" class="review-photo">' : '';
+    return '<div class="my-review-item"><button class="delete-btn" onclick="deleteUserReview(\'' + review.id + '\')">Удалить</button>' +
+      photoHtml +
+      '<div class="stars">' + starsHtml + '</div><p>' + review.text + '</p>' +
+      '<div class="review-date">' + formatDate(review.createdAt) + (review.position ? ' • ' + review.position : '') + '</div></div>';
   }).join('');
 }
-function deleteUserReview(id) {
+
+async function deleteUserReview(id) {
   if (!confirm('Удалить отзыв?')) return;
-  let reviews = getUserReviews();
-  reviews = reviews.filter(r => r.id !== id);
-  saveUserReviews(reviews);
+  await Cloud.deleteReview(id, state.user.uid);
   renderMyReviews();
 }
+
 function setRating(value) { state.reviewRating = value; updateStarDisplay(); }
+
 function updateStarDisplay() {
   const stars = document.querySelectorAll('#starRating .star');
   stars.forEach((star, index) => {
@@ -907,7 +913,29 @@ function updateStarDisplay() {
     else star.classList.remove('active');
   });
 }
-function submitReview(e) {
+
+function handleReviewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.reviewPhoto = e.target.result;
+    const preview = document.getElementById('reviewPhotoPreview');
+    preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview"><button class="remove-photo" onclick="removeReviewPhoto()">Удалить фото</button>';
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeReviewPhoto() {
+  state.reviewPhoto = null;
+  document.getElementById('reviewPhotoPreview').innerHTML = '';
+  document.getElementById('reviewPhotoPreview').style.display = 'none';
+  document.getElementById('reviewPhotoInput').value = '';
+}
+
+async function submitReview(e) {
   e.preventDefault();
   if (!state.user) { alert('Войдите'); return; }
   const name = document.getElementById('reviewName').value.trim();
@@ -916,102 +944,94 @@ function submitReview(e) {
   const rating = state.reviewRating;
   if (!name || !text) { alert('Заполните поля'); return; }
   if (text.length < 20) { alert('Минимум 20 символов'); return; }
-  const newReview = {
-    id: Date.now(),
+  
+  const reviewData = {
+    authorUid: state.user.uid,
     authorEmail: state.user.email,
     name: name,
     position: position || 'Пользователь',
     text: text,
     rating: rating,
-    date: new Date().toISOString()
+    photoUrl: state.reviewPhoto || null
   };
-  const reviews = getUserReviews();
-  reviews.unshift(newReview);
-  saveUserReviews(reviews);
-  document.getElementById('reviewName').value = '';
-  document.getElementById('reviewPosition').value = '';
-  document.getElementById('reviewText').value = '';
-  document.getElementById('reviewCharCount').textContent = '0';
-  state.reviewRating = 5;
-  updateStarDisplay();
-  renderMyReviews();
-  alert('✅ Отзыв опубликован!');
+  
+  try {
+    await Cloud.addReview(reviewData);
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewPosition').value = '';
+    document.getElementById('reviewText').value = '';
+    document.getElementById('reviewCharCount').textContent = '0';
+    state.reviewRating = 5;
+    state.reviewPhoto = null;
+    removeReviewPhoto();
+    updateStarDisplay();
+    renderMyReviews();
+    alert('✅ Отзыв опубликован!');
+  } catch (err) {
+    alert('❌ Ошибка: ' + err.message);
+  }
 }
 
-// ===== ВЫХОД =====
-function handleLogout() {
+async function handleLogout() {
   if (confirm('Выйти из аккаунта?')) {
-    localStorage.removeItem('pbUser');
+    await Cloud.logout();
     location.href = '../';
   }
 }
 
-// ===== ОПЛАТА =====
 function openPayment() {
-  const paid = state.data.paidClicked;
+  const paid = state.data && state.data.paidClicked;
   document.getElementById('paidBtn').style.display = paid ? 'none' : 'block';
   document.getElementById('paymentContacts').style.display = paid ? 'block' : 'none';
   document.getElementById('paymentModal').classList.add('active');
 }
+
 function closeModal(id) {
   const m = document.getElementById(id);
   if (m) m.classList.remove('active');
 }
-function markPaid() { state.data.paidClicked = true; saveUserData(); document.getElementById('paidBtn').style.display = 'none'; document.getElementById('paymentContacts').style.display = 'block'; }
 
-function activateByCode() {
+function markPaid() {
+  if (state.data) {
+    state.data.paidClicked = true;
+    Cloud.updateProfile(state.user.uid, { paidClicked: true });
+  }
+  document.getElementById('paidBtn').style.display = 'none';
+  document.getElementById('paymentContacts').style.display = 'block';
+}
+
+async function activateByCode() {
   const input = document.getElementById('activationCodeInput');
-  if (!input) return;
+  if (!input || !state.user) return;
   const code = input.value.trim().toUpperCase();
   if (!/^WB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) { alert('❌ Формат: WB-A1B2-C3D4'); return; }
 
-  const codesArr = JSON.parse(localStorage.getItem('pbValidCodes') || '[]');
-  let codeObj = null;
-
-  if (codesArr.length > 0 && typeof codesArr[0] === 'object' && codesArr[0].code !== undefined) {
-    codeObj = codesArr.find(c => c.code === code);
-  } else if (codesArr.length > 0) {
-    if (codesArr.includes(code)) {
-      codeObj = { code: code, status: 'active' };
-    }
-  } else {
-    codeObj = { code: code, status: 'active' };
+  try {
+    await Cloud.activateCode(code, state.user.uid);
+    const exp = new Date();
+    exp.setMonth(exp.getMonth() + 1);
+    state.data.plan = 'pro';
+    state.data.proExpiry = exp;
+    await Cloud.updateProfile(state.user.uid, {
+      plan: 'pro',
+      proExpiry: exp.toISOString()
+    });
+    input.value = '';
+    alert('🎉 PRO активирована до ' + formatDate(exp) + '!');
+    renderSubscription();
+    updateUI();
+    renderSelectedZone();
+  } catch (err) {
+    alert('❌ ' + err.message);
   }
-
-  if (!codeObj) { alert('❌ Код не найден'); return; }
-  if (codeObj.status === 'used') { alert('❌ Код уже использован'); return; }
-  if (state.data.usedCodes.includes(code)) { alert('❌ Вы уже активировали этот код'); return; }
-
-  if (typeof codesArr[0] === 'object' && codesArr[0].code !== undefined) {
-    codeObj.status = 'used';
-    codeObj.usedBy = state.user.email;
-    codeObj.usedAt = new Date().toISOString();
-    localStorage.setItem('pbValidCodes', JSON.stringify(codesArr));
-  } else if (codesArr.length > 0) {
-    const filtered = codesArr.filter(c => c !== code);
-    localStorage.setItem('pbValidCodes', JSON.stringify(filtered));
-  }
-
-  state.data.usedCodes.push(code);
-  state.data.isPro = true;
-  const exp = new Date();
-  exp.setMonth(exp.getMonth() + 1);
-  state.data.proExpiry = exp.toISOString();
-  saveUserData();
-  input.value = '';
-  alert('🎉 PRO активирована до ' + formatDate(state.data.proExpiry) + '!');
-  renderSubscription();
-  updateUI();
-  renderSelectedZone();
 }
 
-// ===== ИНСТРУМЕНТ =====
 function updateUI() {
   const statusDot = document.getElementById('statusDot');
   const statusText = document.getElementById('statusText');
   const processBtn = document.getElementById('processBtn');
   const zipLock = document.getElementById('zipLock');
-  const isPro = state.data.isPro;
+  const isPro = state.data && state.data.plan === 'pro';
 
   if (isPro) {
     statusDot.classList.add('active');
@@ -1020,8 +1040,8 @@ function updateUI() {
     if (zipLock) zipLock.style.display = 'none';
   } else {
     statusDot.classList.remove('active');
-    statusText.innerHTML = 'Бесплатно: <strong>' + state.data.freeUsage + '</strong> фото';
-    processBtn.disabled = state.selectedFiles.length === 0 || state.data.freeUsage <= 0;
+    statusText.innerHTML = 'Бесплатно: <strong>' + (state.data ? state.data.freeUsage : 0) + '</strong> фото';
+    processBtn.disabled = state.selectedFiles.length === 0 || (state.data && state.data.freeUsage <= 0);
     if (zipLock) zipLock.style.display = 'inline';
   }
 
@@ -1050,7 +1070,7 @@ function handleFiles(files) {
   const all = Array.from(files).filter(f => f.type.startsWith('image/'));
   if (!all.length) { fileInput.value = ''; return; }
 
-  if (!state.data.isPro) {
+  if (!state.data || state.data.plan !== 'pro') {
     if (state.selectedFiles.length >= max) {
       alert('❌ На бесплатном тарифе — только 1 фото.');
       fileInput.value = '';
@@ -1079,7 +1099,7 @@ function handleFiles(files) {
 function renderSelectedZone() {
   const n = state.selectedFiles.length;
   const max = getFeatures().maxBatchSize;
-  const isPro = state.data.isPro;
+  const isPro = state.data && state.data.plan === 'pro';
 
   if (n === 0) {
     uploadZone.innerHTML =
@@ -1127,9 +1147,6 @@ function clearSelected() {
   updateUI();
 }
 
-// =====================================================
-// КЭШ ФАЙЛОВ: один файл загружается один раз
-// =====================================================
 const fileCache = new Map();
 
 function fileKey(file){
@@ -1163,7 +1180,6 @@ async function getPrecompute(file){
   return pre;
 }
 
-// Предсказуемая обрезка по центру (без «умных» вырезаний)
 function centerCrop(img, W, H){
   const targetAspect = W / H;
   let cw, ch;
@@ -1177,10 +1193,6 @@ function centerCrop(img, W, H){
   return { x: (img.width - cw) / 2, y: (img.height - ch) / 2, width: cw, height: ch };
 }
 
-// =====================================================
-// БЕЗОПАСНОЕ УЛУЧШЕНИЕ: мягкий unsharp mask + контраст
-// Никаких вырезаний фона и изменений композиции
-// =====================================================
 function enhanceImage(ctx, w, h) {
   const srcCanvas = document.createElement('canvas');
   srcCanvas.width = w; srcCanvas.height = h;
@@ -1197,7 +1209,7 @@ function enhanceImage(ctx, w, h) {
   const blur = bctx.getImageData(0, 0, w, h).data;
   const out = ctx.createImageData(w, h);
   const o = out.data;
-  const k = 0.30; // сила резкости — мягкая, без артефактов
+  const k = 0.30;
 
   for (let i = 0; i < src.length; i += 4) {
     o[i]   = Math.max(0, Math.min(255, src[i]   + k * (src[i]   - blur[i])));
@@ -1207,10 +1219,6 @@ function enhanceImage(ctx, w, h) {
   }
   ctx.putImageData(out, 0, 0);
 }
-
-// =====================================================
-// ВАЛИДАЦИЯ: конкретные рекомендации по площадкам
-// =====================================================
 
 function lumAt(d, i){ return 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]; }
 
@@ -1252,10 +1260,8 @@ function analyzeImage(canvas, marketplace, category) {
   const imgData = ctx.getImageData(0, 0, w, h).data;
   const report = { success: [], warnings: [], dangers: [] };
 
-  // 0. Безопасный конвейер (единый для всех площадок, включая Avito)
   report.success.push({ title: 'Безопасная обработка', desc: 'Фото обрезано по центру до формата площадки (' + w + '×' + h + '), мягко улучшены резкость и контраст, сжато без потерь композиции. Фон и товар не изменялись.' });
 
-  // 1. Яркость — детерминированная сетка
   let brightSum = 0, brightCount = 0;
   const bStep = Math.max(2, Math.floor(Math.min(w, h) / 120));
   for (let y = 0; y < h; y += bStep) {
@@ -1273,7 +1279,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Яркость в норме', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — освещение оптимальное.' });
   }
 
-  // 2. Резкость — доля чётких границ (не зависит от тёмного фона)
   let edges = 0, samples = 0;
   for (let y = 0; y < h - 1; y += 4) {
     for (let x = 0; x < w - 1; x += 4) {
@@ -1295,7 +1300,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Резкость в норме', desc: 'Чётких границ ' + edgePct + '% кадра — детали хорошо различимы, фото не выглядит размытым.' });
   }
 
-  // 3. Прилипание к краю кадра
   let edgeVariance = 0, edgeSamples = 0;
   const checkEdge = (x, y) => {
     const idx = (y * w + x) * 4;
@@ -1313,7 +1317,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
   }
 
-  // 4. Текст / логотипы — конкретика по площадке + категории текста
   const textBlocks = detectTextBlocks(imgData, w, h);
   if (textBlocks >= 3) {
     let advice;
@@ -1330,7 +1333,6 @@ function analyzeImage(canvas, marketplace, category) {
     report.success.push({ title: 'Текстовых блоков не обнаружено', desc: 'Крупных надписей, логотипов и водяных знаков на фото не найдено.' });
   }
 
-  // 5. Фон — требования конкретной площадки
   const bg = analyzeBackground(imgData, w, h);
 
   if (marketplace === 'ozon' && category === 'clothing') {
@@ -1366,7 +1368,6 @@ function analyzeImage(canvas, marketplace, category) {
   return report;
 }
 
-// Блоковый детектор текста/логотипов без AI
 function detectTextBlocks(imgData, w, h) {
   const cols = 10;
   const rows = Math.max(8, Math.round(10 * h / w));
@@ -1416,7 +1417,6 @@ function detectTextBlocks(imgData, w, h) {
   return textBlocks;
 }
 
-// === СЛАЙДЕРЫ ===
 function initSlider(container) {
   if (!container) return;
   const handle = container.querySelector('.slider-handle');
@@ -1509,7 +1509,8 @@ document.getElementById('viewModal').addEventListener('click', (e) => {
 
 document.getElementById('processBtn').addEventListener('click', async () => {
   if (!state.selectedFiles.length) return;
-  if (!state.data.isPro && state.data.freeUsage <= 0) { openPayment(); return; }
+  if (!state.user) { alert('Войдите, чтобы обрабатывать фото'); location.href = '../'; return; }
+  if (!state.data || state.data.plan !== 'pro' && state.data.freeUsage <= 0) { openPayment(); return; }
 
   const selectedMPs = Array.from(document.querySelectorAll('input[name="mp"]:checked')).map(cb => cb.value);
   if (selectedMPs.length === 0) {
@@ -1543,8 +1544,8 @@ document.getElementById('processBtn').addEventListener('click', async () => {
           marketplace: mp,
           category: category,
           quality: document.getElementById('quality').value,
-          outputFormat: state.data.isPro ? document.getElementById('outputFormat').value : 'jpg',
-          watermark: state.data.isPro ? document.getElementById('watermarkText').value : ''
+          outputFormat: state.data.plan === 'pro' ? document.getElementById('outputFormat').value : 'jpg',
+          watermark: state.data.plan === 'pro' ? document.getElementById('watermarkText').value : ''
         };
 
         let r;
@@ -1581,7 +1582,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
         state.processedFiles.push({...r, finalName});
         displayResult({...r, finalName}, state.processedFiles.length - 1);
 
-        state.data.history.unshift({
+        await Cloud.pushHistory(state.user.uid, {
           name: finalName,
           ext: r.ext,
           date: new Date().toISOString(),
@@ -1600,18 +1601,24 @@ document.getElementById('processBtn').addEventListener('click', async () => {
       }
     }
 
-    if (!state.data.isPro) state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
-    state.data.totalProcessed += state.selectedFiles.length;
-
+    if (state.data.plan !== 'pro') {
+      state.data.freeUsage = Math.max(0, state.data.freeUsage - state.selectedFiles.length);
+      await Cloud.updateProfile(state.user.uid, { freeUsage: state.data.freeUsage });
+    }
+    state.data.totalProcessed = (state.data.totalProcessed || 0) + state.selectedFiles.length;
+    
     let saved = 0;
+    state.data.history = state.data.history || [];
     state.data.history.forEach(item => {
       if (item.originalSize && item.optimizedSize) {
         saved += (item.originalSize - item.optimizedSize);
       }
     });
-    state.data.totalSaved = saved / (1024 * 1024);
-
-    saveUserData();
+    state.data.totalSavedBytes = saved;
+    await Cloud.updateProfile(state.user.uid, { 
+      totalProcessed: state.data.totalProcessed,
+      totalSavedBytes: state.data.totalSavedBytes
+    });
 
   } catch (err) {
     console.error('Processing error:', err);
@@ -1625,12 +1632,6 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 });
 
-// =====================================================
-// ЕДИНЫЙ БЕЗОПАСНЫЙ КОНВЕЙЕР ДЛЯ ВСЕХ ПЛОЩАДОК
-// (включая Avito): обрезка по центру до формата ->
-// мягкое улучшение резкости/контраста -> сжатие.
-// Никакой замены фона, никакого размытого фона-подложки.
-// =====================================================
 async function processImage(pre, file, s) {
   return new Promise((res, rej) => {
     (async () => {
@@ -1645,7 +1646,6 @@ async function processImage(pre, file, s) {
         const ctx = c.getContext('2d');
         const img = pre.img;
 
-        // Обрезка по центру до формата площадки + лёгкое улучшение
         const crop = centerCrop(img, W, H);
         ctx.filter = 'contrast(1.05) saturate(1.06) brightness(1.02)';
         ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, W, H);
@@ -1792,7 +1792,7 @@ function downloadProcessed(i) {
 }
 
 document.getElementById('downloadAllBtn').addEventListener('click', async () => {
-  if (!state.data.isPro) { alert('🔒 ZIP доступен в PRO'); openPayment(); return; }
+  if (!state.data || state.data.plan !== 'pro') { alert('🔒 ZIP доступен в PRO'); openPayment(); return; }
   const zip = new JSZip();
   const usedNames = {};
   state.processedFiles.forEach((r, i) => {
@@ -1827,12 +1827,33 @@ document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('cli
   if (e.target === o) { o.classList.remove('active'); document.body.style.overflow = ''; }
 }));
 
-document.getElementById('welcomeText').textContent = 'Добро пожаловать, ' + state.user.name + '!';
-renderSubscription();
-updateUI();
-renderSelectedZone();
-renderMyReviews();
-updateStarDisplay();
+Cloud.onAuth(async (user) => {
+  if (user) {
+    state.user = user;
+    state.data = await Cloud.loadProfile(user.uid);
+    if (!state.data) {
+      state.data = {
+        plan: 'free',
+        freeUsage: 2,
+        totalProcessed: 0,
+        totalSavedBytes: 0,
+        paidClicked: false,
+        history: []
+      };
+      await Cloud.updateProfile(user.uid, state.data);
+    }
+    document.getElementById('welcomeText').textContent = 'Добро пожаловать, ' + (user.displayName || user.email) + '!';
+  } else {
+    state.user = null;
+    state.data = null;
+    location.href = '../';
+  }
+  renderSubscription();
+  updateUI();
+  renderSelectedZone();
+  renderMyReviews();
+  updateStarDisplay();
+});
 </script>
 </body>
 </html>
