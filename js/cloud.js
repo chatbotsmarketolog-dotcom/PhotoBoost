@@ -1,11 +1,17 @@
 // js/cloud.js — облачный слой PhotoBoost
-import { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, doc, setDoc, getDoc, updateDoc, collection, addDoc, query, orderBy, limit, getDocs, runTransaction, serverTimestamp } from './firebase-init.js';
+import {
+  auth, db,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail,
+  doc, setDoc, getDoc, updateDoc, deleteDoc,
+  collection, addDoc, getDocs, query, orderBy, limit, runTransaction, serverTimestamp
+} from './firebase-init.js';
 
 const Cloud = {
   onAuth(cb) { return onAuthStateChanged(auth, cb); },
 
   async register(name, email, password) {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await cred.user.updateProfile({ displayName: name });
     await setDoc(doc(db, 'users', cred.user.uid), {
       name: name,
       email: email,
@@ -14,6 +20,7 @@ const Cloud = {
       proExpiry: null,
       totalProcessed: 0,
       totalSavedBytes: 0,
+      paidClicked: false,
       createdAt: serverTimestamp()
     });
     return cred.user;
@@ -26,6 +33,8 @@ const Cloud = {
 
   async logout() { await signOut(auth); },
 
+  async sendPasswordReset(email) { await sendPasswordResetEmail(auth, email); },
+
   async loadProfile(uid) {
     const snap = await getDoc(doc(db, 'users', uid));
     return snap.exists() ? snap.data() : null;
@@ -36,38 +45,28 @@ const Cloud = {
   },
 
   async pushHistory(uid, item) {
-    const ref = await addDoc(collection(db, 'users', uid, 'history'), {
-      ...item,
+    const ref = await addDoc(collection(db, 'users', uid, 'history'), Object.assign({}, item, {
       createdAt: serverTimestamp()
-    });
+    }));
     return ref.id;
   },
 
   async loadHistory(uid, limitCount) {
-    const q = query(
-      collection(db, 'users', uid, 'history'),
-      orderBy('createdAt', 'desc'),
-      limit(limitCount || 200)
-    );
+    const q = query(collection(db, 'users', uid, 'history'), orderBy('createdAt', 'desc'), limit(limitCount || 200));
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
   },
 
   async addReview(data) {
-    return addDoc(collection(db, 'reviews'), {
-      ...data,
+    return addDoc(collection(db, 'reviews'), Object.assign({}, data, {
       createdAt: serverTimestamp()
-    });
+    }));
   },
 
   async loadReviews(limitCount) {
-    const q = query(
-      collection(db, 'reviews'),
-      orderBy('createdAt', 'desc'),
-      limit(limitCount || 30)
-    );
+    const q = query(collection(db, 'reviews'), orderBy('createdAt', 'desc'), limit(limitCount || 30));
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
   },
 
   async deleteReview(id, uid) {
@@ -94,4 +93,5 @@ const Cloud = {
   }
 };
 
+export { Cloud };
 window.Cloud = Cloud;
