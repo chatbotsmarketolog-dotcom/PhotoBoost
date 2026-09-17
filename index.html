@@ -1584,7 +1584,6 @@ async function renderUserReviews() {
   }).join('');
 }
 
-// Загрузка фото для отзыва
 document.addEventListener('DOMContentLoaded', () => {
   const reviewForm = document.querySelector('#registerModal form');
   if (reviewForm) {
@@ -1609,6 +1608,25 @@ Cloud.onAuth(async (user) => {
 document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => {
   if (e.target === o) { o.classList.remove('active'); document.body.style.overflow = ''; }
 }));
+
+// ===== Делаем функции видимыми для inline onclick в HTML =====
+window.scrollToSection = scrollToSection;
+window.toggleMenu = toggleMenu;
+window.closeMenu = closeMenu;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.switchModal = switchModal;
+window.toggleFaq = toggleFaq;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+window.handleReset = handleReset;
+window.handleLogout = handleLogout;
+window.openPayment = openPayment;
+window.markPaid = markPaid;
+window.openViewModal = openViewModal;
+window.closeViewModal = closeViewModal;
+window.toggleReport = toggleReport;
+window.downloadFile = downloadFile;
 </script>
 </body>
 </html>
