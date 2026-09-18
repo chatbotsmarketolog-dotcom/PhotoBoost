@@ -44,6 +44,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .mp-checkbox:hover { border-color: var(--primary); }
 .mp-checkbox input { accent-color: var(--primary); width: 16px; height: 16px; }
 .mp-checkbox.checked { border-color: var(--primary); background: rgba(124,58,237,0.05); }
+.auto-note{display:flex;gap:8px;align-items:flex-start;background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;padding:10px 14px;border-radius:10px;font-size:0.82rem;margin-top:14px}
 .safety-note { display: flex; gap: 10px; align-items: flex-start; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 12px 16px; border-radius: 12px; font-size: 0.85rem; margin-top: 16px; }
 .safety-note b { display: block; margin-bottom: 2px; }
 .action-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: linear-gradient(135deg,#faf9ff 0%,#fdf2f8 100%); border-radius: 14px; margin-top: 24px; flex-wrap: wrap; gap: 15px; }
@@ -297,19 +298,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="setting-item">
   <label>Улучшение</label>
   <select id="enhanceMode">
+    <option value="auto" selected>Авто (рекомендуется)</option>
     <option value="off">Выкл (только обрезка + сжатие)</option>
-    <option value="soft" selected>Мягкое (denoise + лёгкая резкость)</option>
+    <option value="soft">Мягкое (denoise + лёгкая резкость)</option>
     <option value="strong">Сильное (denoise + заметная резкость)</option>
   </select>
-  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Выбор запоминается и применяется ко всему пакету.</p>
+  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">По умолчанию «Авто» — сервис сам подберёт силу.</p>
 </div>
 <div class="setting-item">
   <label>Тип входа</label>
   <select id="inputType">
-    <option value="photo" selected>Фото товара</option>
+    <option value="auto" selected>Авто (определить самим)</option>
+    <option value="photo">Фото товара</option>
     <option value="screenshot">Скриншот / инфографика</option>
   </select>
-  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Для скриншотов резкость отключается, чтобы не точить текст.</p>
+  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">По умолчанию «Авто» — определим тип сами.</p>
 </div>
 <div class="setting-item">
   <label>Качество и размер файла</label>
@@ -331,6 +334,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <p style="font-size:0.75rem;color:var(--danger);margin-top:4px;font-weight:600;">⚠️ Не используйте на карточках — штрафуют!</p>
 </div>
 </div>
+<div class="auto-note">✨ <span><b>По умолчанию всё автоматически.</b> Сервис сам анализирует фото (товар или скриншот/инфографика), подбирает силу шумоподавления и резкости и качество экспорта. Селекты выше — только для ручной корректировки, трогать их не обязательно.</span></div>
 <div class="safety-note">
   <span>🛡️</span>
   <span><b>Безопасный режим обработки</b>Мы не вырезаем фон и не изменяем композицию — только аккуратная обрезка по центру до формата площадки (900×1200 или 1200×900 для Avito), мягкое улучшение резкости/контраста и сжатие. Если фон не подходит под требования площадки, мы честно подскажем заменить его вручную.</span>
@@ -524,8 +528,8 @@ let viewSliderActive = false;
 
 const MP_LABELS = { wb: 'Wildberries', ozon: 'Ozon', avito: 'Avito', ym: 'Я.Маркет' };
 const CAT_LABELS = { clothing: 'Одежда/Обувь', other: 'Другие товары' };
-const ENH_LABELS = { off: 'Выкл', soft: 'Мягкое', strong: 'Сильное' };
-const INPUT_LABELS = { photo: 'Фото', screenshot: 'Скриншот' };
+const ENH_LABELS = { auto: 'Авто', off: 'Выкл', soft: 'Мягкое', strong: 'Сильное' };
+const INPUT_LABELS = { auto: 'Авто', photo: 'Фото', screenshot: 'Скриншот' };
 
 const TEXT_ADVICE = {
   wb: 'На главном фото WB не рекомендуется размещать маркетинговый текст (слоганы, «гарантия», «хит»). Инфографику лучше перенести на 2-е и последующие фото. Если это название бренда или характеристики (размер, цвет) — это допустимо.',
@@ -636,6 +640,55 @@ function sharpenImage(ctx,w,h,k){
   ctx.putImageData(out,0,0);
 }
 
+// ========== АВТО-ОПРЕДЕЛЕНИЕ ТИПА ВХОДА И РЕЖИМА ==========
+function detectInputType(imgData,w,h){
+  const step=4; let flat=0,pairs=0,total=0;
+  const hist=new Map();
+  for(let y=0;y<h;y+=step){
+    for(let x=0;x<w;x+=step){
+      const i=(y*w+x)*4;
+      const key=(imgData[i]>>4)+','+(imgData[i+1]>>4)+','+(imgData[i+2]>>4);
+      hist.set(key,(hist.get(key)||0)+1);
+      total++;
+      if(x+step<w && y+step<h){
+        const j=(y*w+x+step)*4, k=((y+step)*w+x)*4;
+        const d=Math.abs(imgData[i]-imgData[j])+Math.abs(imgData[i+1]-imgData[j+1])+Math.abs(imgData[i+2]-imgData[j+2])
+                +Math.abs(imgData[i]-imgData[k])+Math.abs(imgData[i+1]-imgData[k+1])+Math.abs(imgData[i+2]-imgData[k+2]);
+        if(d<12) flat++;
+        pairs++;
+      }
+    }
+  }
+  const flatRatio = pairs? flat/pairs : 0;
+  const uniqueRatio = total? hist.size/total : 1;
+  if (flatRatio > 0.5 && uniqueRatio < 0.6) return 'screenshot';
+  return 'photo';
+}
+function measureImage(imgData,w,h){
+  let edges=0,samples=0;
+  for(let y=1;y<h-1;y+=4)for(let x=1;x<w-1;x+=4){
+    const i=(y*w+x)*4;
+    const g=Math.abs(lumAt(imgData,i)-lumAt(imgData,i+4))+Math.abs(lumAt(imgData,i)-lumAt(imgData,i+w*4));
+    if(g>24)edges++; samples++;
+  }
+  const edgeRatio=samples?edges/samples:0;
+  let lap=0,ln=0;
+  for(let y=2;y<h-2;y+=6)for(let x=2;x<w-2;x+=6){
+    const i=(y*w+x)*4; const c=lumAt(imgData,i);
+    const l=4*c - lumAt(imgData,i-4) - lumAt(imgData,i+4) - lumAt(imgData,i-w*4) - lumAt(imgData,i+w*4);
+    lap+=Math.abs(l); ln++;
+  }
+  const noise=ln?lap/ln:0;
+  return { edgeRatio, noise };
+}
+function autoEnhanceMode(imgData,w,h,inputType){
+  const m=measureImage(imgData,w,h);
+  if(inputType==='screenshot'){ return m.noise>18 ? 'strong' : 'soft'; }
+  if(m.edgeRatio<0.03) return 'strong';
+  if(m.noise>20) return 'strong';
+  return 'soft';
+}
+
 // ========== ФИКС FIRESTORE 1MiB: СЖАТИЕ ДАННЫХ ПЕРЕД ЗАПИСЬЮ ==========
 async function compressDataUrl(dataUrl, maxChars, maxDim){
   maxChars = maxChars || 900000;
@@ -705,7 +758,7 @@ function analyzeImage(canvas, marketplace, category){
   const ctx=canvas.getContext('2d'); const w=canvas.width,h=canvas.height;
   const imgData=ctx.getImageData(0,0,w,h).data;
   const report={success:[],warnings:[],dangers:[]};
-  report.success.push({title:'Безопасная обработка',desc:'Фото обрезано по центру до '+w+'×'+h+', применены denoise + улучшение по режиму, сжатие без потерь композиции. Фон и товар не изменялись.'});
+  report.success.push({title:'Безопасная обработки',desc:'Фото обрезано по центру до '+w+'×'+h+', применены denoise + улучшение по режиму, сжатие без потерь композиции. Фон и товар не изменялись.'});
   let bSum=0,bCnt=0; const bStep=Math.max(2,Math.floor(Math.min(w,h)/120));
   for(let y=0;y<h;y+=bStep)for(let x=0;x<w;x+=bStep){ bSum+=lumAt(imgData,(y*w+x)*4); bCnt++; }
   const avgB=bSum/bCnt;
@@ -1617,8 +1670,8 @@ document.getElementById('processBtn').addEventListener('click', async () => {
           data: dataForStorage,
           marketplace: mp,
           category: category,
-          enhanceMode: enhanceMode,
-          inputType: inputType,
+          enhanceMode: r.enhanceMode,
+          inputType: r.inputType,
           aspectRatio: r.aspectRatio,
           validationReport: r.validationReport
         });
@@ -1659,7 +1712,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 });
 
-// ========== R1/R2/R3/R4: ПОЛНАЯ ОБРАБОТКА ИЗОБРАЖЕНИЯ С DENOISE ==========
+// ========== R1/R2/R3/R4: ПОЛНАЯ ОБРАБОТКА ИЗОБРАЖЕНИЯ С DENOISE + АВТО-РЕЖИМ ==========
 async function processImage(pre, file, s) {
   return new Promise((res, rej) => {
     (async () => {
@@ -1678,15 +1731,19 @@ async function processImage(pre, file, s) {
         // 1. Обрезка БЕЗ фильтра (чистое копирование)
         ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, W, H);
 
-        // 2. Получаем параметры по режиму и типу входа
-        const params = getEnhanceParams(s.enhanceMode, s.inputType);
+        // 2. АВТО-определение типа входа и режима улучшения (если выбрано "Авто")
+        const detData = ctx.getImageData(0, 0, W, H);
+        const inputType = (s.inputType === 'auto') ? detectInputType(detData.data, W, H) : s.inputType;
+        const enhanceMode = (s.enhanceMode === 'auto') ? autoEnhanceMode(detData.data, W, H, inputType) : s.enhanceMode;
 
-        // 3. Применяем улучшения, если режим не "Выкл"
-        if (s.enhanceMode !== 'off') {
+        // 3. Получаем параметры по итоговому режиму и типу входа
+        const params = getEnhanceParams(enhanceMode, inputType);
+
+        // 4. Применяем улучшения, если режим не "Выкл"
+        if (enhanceMode !== 'off') {
           // R1: denoise СТРОГО перед резкостью
           if (params.denoise > 0) {
-            const imgData = ctx.getImageData(0, 0, W, H);
-            const denoised = await denoiseAsync(imgData, params.denoise);
+            const denoised = await denoiseAsync(detData, params.denoise);
             ctx.putImageData(new ImageData(denoised, W, H), 0, 0);
           }
           // Контраст + насыщенность
@@ -1707,7 +1764,7 @@ async function processImage(pre, file, s) {
 
         // R4: стартовое качество с учётом типа входа и наличия текста
         let q = params.q !== null ? params.q : baseQ(s.quality);
-        if (s.inputType === 'screenshot') q = Math.max(q, 0.9);
+        if (inputType === 'screenshot') q = Math.max(q, 0.9);
         if (validationReport.meta && (validationReport.meta.textBlocks > 0 || validationReport.meta.edgeRatio > 0.1)) {
           q = Math.min(0.95, q + 0.1);
         }
@@ -1747,8 +1804,8 @@ async function processImage(pre, file, s) {
           validationReport: validationReport,
           marketplace: s.marketplace,
           category: s.category,
-          enhanceMode: s.enhanceMode,
-          inputType: s.inputType,
+          enhanceMode: enhanceMode,   // передаём РЕАЛЬНЫЙ режим (soft/strong/off), не 'auto'
+          inputType: inputType,       // передаём РЕАЛЬНЫЙ тип (photo/screenshot), не 'auto'
           aspectRatio: s.marketplace === 'avito' ? '4/3' : '3/4'
         });
       } catch (err) {
