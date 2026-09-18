@@ -295,6 +295,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Влияет на проверки фона: для одежды требования строже.</p>
 </div>
 <div class="setting-item">
+  <label>Улучшение</label>
+  <select id="enhanceMode">
+    <option value="off">Выкл (только обрезка + сжатие)</option>
+    <option value="soft" selected>Мягкое (denoise + лёгкая резкость)</option>
+    <option value="strong">Сильное (denoise + заметная резкость)</option>
+  </select>
+  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Выбор запоминается и применяется ко всему пакету.</p>
+</div>
+<div class="setting-item">
+  <label>Тип входа</label>
+  <select id="inputType">
+    <option value="photo" selected>Фото товара</option>
+    <option value="screenshot">Скриншот / инфографика</option>
+  </select>
+  <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Для скриншотов резкость отключается, чтобы не точить текст.</p>
+</div>
+<div class="setting-item">
   <label>Качество и размер файла</label>
   <select id="quality">
     <option value="high">Максимальное (до 1 МБ)</option>
@@ -421,7 +438,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <textarea class="form-textarea" id="reviewText" required placeholder="Расскажите о вашем опыте использования PhotoBoost..." minlength="20" maxlength="1000"></textarea>
 <div class="char-counter"><span id="reviewCharCount">0</span> / 1000</div>
 </div>
-<button type="submit" class="btn btn-primary" style="width:100%;">🚀 Опубликовать отзыв</button>
+<button type="button" class="btn btn-primary" style="width:100%;" onclick="submitReview(event)">🚀 Опубликовать отзыв</button>
 </form>
 </div>
 <div style="margin-top: 32px;">
@@ -488,6 +505,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 </div>
 
 <canvas id="canvas" style="display:none;"></canvas>
+<canvas id="thumbnailCanvas" style="display:none;"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script type="module">
 import { Cloud } from '../js/cloud.js';
@@ -506,6 +524,8 @@ let viewSliderActive = false;
 
 const MP_LABELS = { wb: 'Wildberries', ozon: 'Ozon', avito: 'Avito', ym: 'Я.Маркет' };
 const CAT_LABELS = { clothing: 'Одежда/Обувь', other: 'Другие товары' };
+const ENH_LABELS = { off: 'Выкл', soft: 'Мягкое', strong: 'Сильное' };
+const INPUT_LABELS = { photo: 'Фото', screenshot: 'Скриншот' };
 
 const TEXT_ADVICE = {
   wb: 'На главном фото WB не рекомендуется размещать маркетинговый текст (слоганы, «гарантия», «хит»). Инфографику лучше перенести на 2-е и последующие фото. Если это название бренда или характеристики (размер, цвет) — это допустимо.',
@@ -526,6 +546,208 @@ function formatDate(d) {
   if (!d) return '—';
   const date = d.toDate ? d.toDate() : new Date(d);
   return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ========== R1: WEB WORKER ДЛЯ DENOISE (работает в отдельном потоке, не блокирует UI) ==========
+const WORKER_SRC = [
+'self.onmessage=function(e){',
+' var d=e.data, data=d.data, w=d.w, h=d.h, range=d.range, id=d.id;',
+' var out=new Uint8ClampedArray(data);',
+' var r2=range*range;',
+' for(var y=1;y<h-1;y++){',
+'  for(var x=1;x<w-1;x++){',
+'   var i=(y*w+x)*4;',
+'   var sr=0,sg=0,sb=0,cnt=0;',
+'   for(var dy=-1;dy<=1;dy++){',
+'    for(var dx=-1;dx<=1;dx++){',
+'     var j=((y+dy)*w+(x+dx))*4;',
+'     var dr=data[j]-data[i],dg=data[j+1]-data[i+1],db=data[j+2]-data[i+2];',
+'     var d2=dr*dr+dg*dg+db*db;',
+'     if(d2<r2){ sr+=data[j]; sg+=data[j+1]; sb+=data[j+2]; cnt++; }',
+'    }',
+'   }',
+'   if(cnt>0){ out[i]=sr/cnt; out[i+1]=sg/cnt; out[i+2]=sb/cnt; }',
+'  }',
+' }',
+' self.postMessage({id:id,out:out},[out.buffer]);',
+'};'
+].join('\n');
+let _worker=null, _jobId=0; const _jobs=new Map();
+function getWorker(){
+  if(_worker) return _worker;
+  try {
+    _worker = new Worker(URL.createObjectURL(new Blob([WORKER_SRC],{type:'text/javascript'})));
+    _worker.onmessage = (e)=>{ const {id,out}=e.data; const j=_jobs.get(id); if(j){ _jobs.delete(id); j.resolve(out); } };
+    _worker.onerror = ()=>{ _worker=null; };
+  } catch(e){ _worker=null; }
+  return _worker;
+}
+async function denoiseAsync(imageData, range){
+  if(!range || range<=0) return imageData.data;
+  const w=getWorker();
+  if(!w) return imageData.data; // fallback: без denoise, если Worker недоступен
+  try {
+    return await new Promise((resolve)=>{
+      const id=++_jobId;
+      _jobs.set(id,{resolve});
+      const copy=new Uint8ClampedArray(imageData.data);
+      w.postMessage({id,data:copy,w:imageData.width,h:imageData.height,range},[copy.buffer]);
+      setTimeout(()=>{ if(_jobs.has(id)){ _jobs.delete(id); resolve(imageData.data); } }, 8000);
+    });
+  } catch(e){ return imageData.data; }
+}
+
+// ========== R2/R3: ПАРАМЕТРЫ УЛУЧШЕНИЯ ПО РЕЖИМУ И ТИПУ ВХОДА ==========
+function getEnhanceParams(mode, inputType){
+  if(inputType==='screenshot'){
+    if(mode==='off')   return {denoise:0,  sharpen:0,    contrast:1,    saturate:1,    q:0.92};
+    if(mode==='soft')  return {denoise:20, sharpen:0,    contrast:1,    saturate:1,    q:0.92};
+    return                       {denoise:28, sharpen:0.05, contrast:1.03, saturate:1,    q:0.92};
+  }
+  if(mode==='off')   return {denoise:0,  sharpen:0,    contrast:1,    saturate:1,    q:null};
+  if(mode==='soft')  return {denoise:30, sharpen:0.30, contrast:1.05, saturate:1.06, q:null};
+  return                       {denoise:45, sharpen:0.60, contrast:1.12, saturate:1.10, q:null};
+}
+function baseQ(qv){ return qv==='high'?0.9 : qv==='low'?0.5 : 0.7; }
+function clamp255(v){ return v<0?0 : v>255?255 : v; }
+function applyContrastSaturate(ctx,w,h,contrast,saturate){
+  if(contrast===1 && saturate===1) return;
+  const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+  tmp.getContext('2d').drawImage(ctx.canvas,0,0);
+  ctx.filter='contrast('+contrast+') saturate('+saturate+')';
+  ctx.clearRect(0,0,w,h);
+  ctx.drawImage(tmp,0,0);
+  ctx.filter='none';
+}
+function sharpenImage(ctx,w,h,k){
+  if(k<=0) return;
+  const src=ctx.getImageData(0,0,w,h);
+  const a=document.createElement('canvas'); a.width=w;a.height=h; a.getContext('2d').putImageData(src,0,0);
+  const b=document.createElement('canvas'); b.width=w;b.height=h;
+  const bctx=b.getContext('2d'); bctx.filter='blur(1.5px)'; bctx.drawImage(a,0,0);
+  const blur=bctx.getImageData(0,0,w,h).data;
+  const out=ctx.createImageData(w,h); const o=out.data, s=src.data;
+  for(let i=0;i<s.length;i+=4){
+    o[i]=clamp255(s[i]+k*(s[i]-blur[i]));
+    o[i+1]=clamp255(s[i+1]+k*(s[i+1]-blur[i+1]));
+    o[i+2]=clamp255(s[i+2]+k*(s[i+2]-blur[i+2]));
+    o[i+3]=255;
+  }
+  ctx.putImageData(out,0,0);
+}
+
+// ========== ФИКС FIRESTORE 1MiB: СЖАТИЕ ДАННЫХ ПЕРЕД ЗАПИСЬЮ ==========
+async function compressDataUrl(dataUrl, maxChars, maxDim){
+  maxChars = maxChars || 900000;
+  maxDim = maxDim || 2000;
+  const img = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
+  let w=img.width, h=img.height;
+  if(Math.max(w,h)>maxDim){ const s=maxDim/Math.max(w,h); w=Math.round(w*s); h=Math.round(h*s); }
+  const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+  cv.getContext('2d').drawImage(img,0,0,w,h);
+  let q=0.9, url=cv.toDataURL('image/jpeg',q);
+  while(url.length>maxChars && q>0.3){ q-=0.08; url=cv.toDataURL('image/jpeg',q); }
+  while(url.length>maxChars && Math.max(w,h)>300){
+    w=Math.round(w*0.75); h=Math.round(h*0.75);
+    cv.width=w; cv.height=h;
+    cv.getContext('2d').drawImage(img,0,0,w,h);
+    q=0.85; url=cv.toDataURL('image/jpeg',q);
+    while(url.length>maxChars && q>0.3){ q-=0.08; url=cv.toDataURL('image/jpeg',q); }
+  }
+  return url;
+}
+async function makeThumbnail(dataUrl, maxDim){
+  maxDim = maxDim || 260;
+  const img = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=dataUrl; });
+  let w=img.width, h=img.height;
+  if(Math.max(w,h)>maxDim){ const s=maxDim/Math.max(w,h); w=Math.round(w*s); h=Math.round(h*s); }
+  const cv=document.getElementById('thumbnailCanvas'); cv.width=w; cv.height=h;
+  cv.getContext('2d').drawImage(img,0,0,w,h);
+  return cv.toDataURL('image/jpeg',0.75);
+}
+
+// ========== АНАЛИЗ / ВАЛИДАЦИЯ ==========
+function lumAt(d,i){ return 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]; }
+function analyzeBackground(imgData,w,h){
+  const corners=[0,(w-1)*4,(w*(h-1))*4,(w*h-1)*4];
+  let sR=0,sG=0,sB=0; corners.forEach(i=>{sR+=imgData[i];sG+=imgData[i+1];sB+=imgData[i+2];});
+  const bgR=sR/4,bgG=sG/4,bgB=sB/4; let maxDiff=0;
+  corners.forEach(i=>{ const d=Math.abs(imgData[i]-bgR)+Math.abs(imgData[i+1]-bgG)+Math.abs(imgData[i+2]-bgB); if(d>maxDiff)maxDiff=d; });
+  const uniform = maxDiff<=40; let coverage=null;
+  if(uniform){ let fg=0,n=0; for(let y=0;y<h;y+=6){for(let x=0;x<w;x+=6){const i=(y*w+x)*4; const d=Math.abs(imgData[i]-bgR)+Math.abs(imgData[i+1]-bgG)+Math.abs(imgData[i+2]-bgB); if(d>60)fg++; n++;}} coverage=fg/n; }
+  return {uniform,bgR,bgG,bgB,coverage};
+}
+function colorDist(a,b,c,d,e,f){ return Math.abs(a-d)+Math.abs(b-e)+Math.abs(c-f); }
+function detectTextBlocks(imgData,w,h){
+  const cols=10, rows=Math.max(8,Math.round(10*h/w));
+  const bw=Math.floor(w/cols), bh=Math.floor(h/rows); let tb=0;
+  for(let by=0;by<rows;by++)for(let bx=0;bx<cols;bx++){
+    const x0=bx*bw,y0=by*bh,x1=Math.min(x0+bw,w-2),y1=Math.min(y0+bh,h-2);
+    let n=0,sum=0,sumSq=0; const hist=new Array(16).fill(0); let ec=0,es=0;
+    for(let y=y0;y<y1;y+=3)for(let x=x0;x<x1;x+=3){
+      const i=(y*w+x)*4; const l=lumAt(imgData,i); sum+=l; sumSq+=l*l; n++; hist[Math.min(15,Math.floor(l/16))]++;
+      const ir=(y*w+x+1)*4, id=((y+1)*w+x)*4;
+      const gx=Math.abs(imgData[i]-imgData[ir])+Math.abs(imgData[i+1]-imgData[ir+1])+Math.abs(imgData[i+2]-imgData[ir+2]);
+      const gy=Math.abs(imgData[i]-imgData[id])+Math.abs(imgData[i+1]-imgData[id+1])+Math.abs(imgData[i+2]-imgData[id+2]);
+      if(gx+gy>90){ec++;} es++;
+    }
+    if(n<40||es===0) continue;
+    const mean=sum/n, variance=sumSq/n-mean*mean, ed=ec/es;
+    let m1=-1,b1=-1,m2=-1,b2=-1;
+    for(let b=0;b<16;b++){ if(hist[b]>m1){m1=hist[b];b1=b;} }
+    for(let b=0;b<16;b++){ if(b===b1)continue; if(hist[b]>m2){m2=hist[b];b2=b;} }
+    const bimodal=(b1>=0&&b2>=0)&&Math.abs(b1-b2)>=3&&((m1+m2)/n)>=0.6;
+    if(bimodal && variance>900 && ed>=0.08 && ed<=0.85) tb++;
+  }
+  return tb;
+}
+function analyzeImage(canvas, marketplace, category){
+  const ctx=canvas.getContext('2d'); const w=canvas.width,h=canvas.height;
+  const imgData=ctx.getImageData(0,0,w,h).data;
+  const report={success:[],warnings:[],dangers:[]};
+  report.success.push({title:'Безопасная обработка',desc:'Фото обрезано по центру до '+w+'×'+h+', применены denoise + улучшение по режиму, сжатие без потерь композиции. Фон и товар не изменялись.'});
+  let bSum=0,bCnt=0; const bStep=Math.max(2,Math.floor(Math.min(w,h)/120));
+  for(let y=0;y<h;y+=bStep)for(let x=0;x<w;x+=bStep){ bSum+=lumAt(imgData,(y*w+x)*4); bCnt++; }
+  const avgB=bSum/bCnt;
+  if(avgB>235) report.dangers.push({title:'Пересветы',desc:'Изображение слишком яркое (средняя яркость '+Math.round(avgB)+'/255). Маркетплейсы могут отклонить.'});
+  else if(avgB>200) report.warnings.push({title:'Высокая яркость',desc:'Средняя яркость '+Math.round(avgB)+'/255 — близко к пересвету. Рекомендуем затемнить.'});
+  else report.success.push({title:'Яркость в норме',desc:'Средняя яркость '+Math.round(avgB)+'/255 — освещение оптимальное.'});
+  let edges=0,samples=0;
+  for(let y=0;y<h-1;y+=4)for(let x=0;x<w-1;x+=4){
+    const i=(y*w+x)*4, ir=(y*w+x+1)*4, id=((y+1)*w+x)*4;
+    const g=Math.abs(lumAt(imgData,i)-lumAt(imgData,ir))+Math.abs(lumAt(imgData,i)-lumAt(imgData,id));
+    if(g>24)edges++; samples++;
+  }
+  const edgeRatio=samples?edges/samples:0; const edgePct=(edgeRatio*100).toFixed(1);
+  if(edgeRatio<0.02) report.dangers.push({title:'Сильное размытие',desc:'Чётких границ '+edgePct+'% кадра. Фото нечёткое. Загрузите более резкий исходник.'});
+  else if(edgeRatio<0.045) report.warnings.push({title:'Возможное размытие',desc:'Чётких границ '+edgePct+'% кадра — ниже комфортного. Проверьте исходник.'});
+  else report.success.push({title:'Резкость в норме',desc:'Чётких границ '+edgePct+'% кадра.'});
+  let eVar=0,eS=0;
+  const ce=(x,y)=>{ const i=(y*w+x)*4; const ii=((Math.min(y+15,h-1))*w+Math.min(x+15,w-1))*4; const d=Math.abs(imgData[i]-imgData[ii])+Math.abs(imgData[i+1]-imgData[ii+1])+Math.abs(imgData[i+2]-imgData[ii+2]); if(d>100)eVar++; eS++; };
+  for(let x=0;x<w;x+=20){ce(x,0);ce(x,h-1);} for(let y=0;y<h;y+=20){ce(0,y);ce(w-1,y);}
+  if(eVar>eS*0.3) report.warnings.push({title:'Объект у края кадра',desc:'Контрастные элементы у границы. Добавьте отступы.'});
+  else report.success.push({title:'Отступы в норме',desc:'Товар не касается границ.'});
+  const tb=detectTextBlocks(imgData,w,h);
+  if(tb>=3){ let adv; if(marketplace==='ozon'&&category==='clothing')adv=TEXT_ADVICE.ozon_clothing; else if(marketplace==='ozon')adv=TEXT_ADVICE.ozon_other; else if(marketplace==='wb')adv=TEXT_ADVICE.wb; else if(marketplace==='ym')adv=TEXT_ADVICE.ym; else adv=TEXT_ADVICE.avito;
+    report.warnings.push({title:'Обнаружен текст/логотип ('+tb+')',desc:adv+' '+TEXT_CATEGORIES});
+  } else report.success.push({title:'Текстовых блоков нет',desc:'Крупных надписей и водяных знаков не найдено.'});
+  const bg=analyzeBackground(imgData,w,h);
+  if(marketplace==='ozon'&&category==='clothing'){
+    if(!bg.uniform) report.warnings.push({title:'Фон не соответствует Ozon',desc:'Ozon требует серый #F2F3F5 для одежды. '+MANUAL_BG_NOTE});
+    else if(colorDist(bg.bgR,bg.bgG,bg.bgB,242,243,245)>60) report.warnings.push({title:'Фон не соответствует Ozon',desc:'Фон однородный, но не серый. '+MANUAL_BG_NOTE});
+    else report.success.push({title:'Фон соответствует Ozon',desc:'Однородный серый фон.'});
+  } else if(marketplace==='ym'){
+    if(!bg.uniform) report.warnings.push({title:'Фон не соответствует Я.Маркету',desc:'Нужен белый фон, товар ≥2/3 кадра. '+MANUAL_BG_NOTE});
+    else if(colorDist(bg.bgR,bg.bgG,bg.bgB,255,255,255)>60) report.warnings.push({title:'Фон не соответствует Я.Маркету',desc:'Фон однородный, но не белый. '+MANUAL_BG_NOTE});
+    else if(bg.coverage!==null&&bg.coverage<0.45) report.warnings.push({title:'Товар мало кадра',desc:'Товар ~'+Math.round(bg.coverage*100)+'% кадра — снимите крупнее.'});
+    else report.success.push({title:'Фон соответствует Я.Маркету',desc:'Белый фон, товар ~'+Math.round((bg.coverage||0)*100)+'%.'});
+  } else if(marketplace==='wb'){
+    if(category==='clothing'&&!bg.uniform) report.warnings.push({title:'Проверьте фон для WB',desc:'Для одежды лучше однородный светлый фон. '+MANUAL_BG_NOTE});
+    else report.success.push({title:'Фон подходит для WB',desc:'WB не требует строгого фона для этой категории.'});
+  } else if(marketplace==='ozon') report.success.push({title:'Фон подходит для Ozon',desc:'Для этой категории строгих требований нет.'});
+  else if(marketplace==='avito') report.success.push({title:'Фон подходит для Avito',desc:'Главное — товар виден без надписей.'});
+  report.meta = { textBlocks: tb, edgeRatio: edgeRatio, avgBrightness: avgB };
+  return report;
 }
 
 document.querySelectorAll('.mp-checkbox').forEach(cb => {
@@ -853,7 +1075,8 @@ function openViewModalFromReport(i) {
     stats.innerHTML =
       '<div class="view-stat">ДО: ' + (item.originalSize/1024).toFixed(0) + ' КБ</div>' +
       '<div class="view-stat">ПОСЛЕ: ' + (item.optimizedSize/1024).toFixed(0) + ' КБ</div>' +
-      '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (item.ext || 'jpg').toUpperCase() + '</div>';
+      '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (item.ext || 'jpg').toUpperCase() + '</div>' +
+      '<div class="view-stat">Улучшение: ' + (ENH_LABELS[item.enhanceMode]||'—') + ' • ' + (INPUT_LABELS[item.inputType]||'Фото') + '</div>';
   } else {
     stats.innerHTML = '<div class="view-stat">ПОСЛЕ: ' + ((item.optimizedSize||0)/1024).toFixed(0) + ' КБ • ' + (item.ext || 'jpg').toUpperCase() + '</div>';
   }
@@ -936,7 +1159,7 @@ function removeReviewPhoto() {
 }
 
 async function submitReview(e) {
-  e.preventDefault();
+  if (e && e.preventDefault) e.preventDefault();
   if (!state.user) { alert('Войдите'); return; }
   const name = document.getElementById('reviewName').value.trim();
   const position = document.getElementById('reviewPosition').value.trim();
@@ -945,6 +1168,12 @@ async function submitReview(e) {
   if (!name || !text) { alert('Заполните поля'); return; }
   if (text.length < 20) { alert('Минимум 20 символов'); return; }
   
+  let photoUrl = state.reviewPhoto || null;
+  if (photoUrl) {
+    try { photoUrl = await compressDataUrl(photoUrl, 900000, 800); }
+    catch(err){ console.error('compress review photo failed:', err); photoUrl = null; }
+  }
+  
   const reviewData = {
     authorUid: state.user.uid,
     authorEmail: state.user.email,
@@ -952,7 +1181,7 @@ async function submitReview(e) {
     position: position || 'Пользователь',
     text: text,
     rating: rating,
-    photoUrl: state.reviewPhoto || null
+    photoUrl: photoUrl
   };
   
   try {
@@ -1193,230 +1422,6 @@ function centerCrop(img, W, H){
   return { x: (img.width - cw) / 2, y: (img.height - ch) / 2, width: cw, height: ch };
 }
 
-function enhanceImage(ctx, w, h) {
-  const srcCanvas = document.createElement('canvas');
-  srcCanvas.width = w; srcCanvas.height = h;
-  const sctx = srcCanvas.getContext('2d');
-  sctx.drawImage(ctx.canvas, 0, 0);
-
-  const blurCanvas = document.createElement('canvas');
-  blurCanvas.width = w; blurCanvas.height = h;
-  const bctx = blurCanvas.getContext('2d');
-  bctx.filter = 'blur(1.5px)';
-  bctx.drawImage(srcCanvas, 0, 0);
-
-  const src = sctx.getImageData(0, 0, w, h).data;
-  const blur = bctx.getImageData(0, 0, w, h).data;
-  const out = ctx.createImageData(w, h);
-  const o = out.data;
-  const k = 0.30;
-
-  for (let i = 0; i < src.length; i += 4) {
-    o[i]   = Math.max(0, Math.min(255, src[i]   + k * (src[i]   - blur[i])));
-    o[i+1] = Math.max(0, Math.min(255, src[i+1] + k * (src[i+1] - blur[i+1])));
-    o[i+2] = Math.max(0, Math.min(255, src[i+2] + k * (src[i+2] - blur[i+2])));
-    o[i+3] = 255;
-  }
-  ctx.putImageData(out, 0, 0);
-}
-
-function lumAt(d, i){ return 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2]; }
-
-function analyzeBackground(imgData, w, h) {
-  const corners = [0, (w - 1) * 4, (w * (h - 1)) * 4, (w * h - 1) * 4];
-  let sumR = 0, sumG = 0, sumB = 0;
-  corners.forEach(idx => { sumR += imgData[idx]; sumG += imgData[idx+1]; sumB += imgData[idx+2]; });
-  const bgR = sumR / 4, bgG = sumG / 4, bgB = sumB / 4;
-
-  let maxDiff = 0;
-  corners.forEach(idx => {
-    const diff = Math.abs(imgData[idx] - bgR) + Math.abs(imgData[idx+1] - bgG) + Math.abs(imgData[idx+2] - bgB);
-    if (diff > maxDiff) maxDiff = diff;
-  });
-  const uniform = maxDiff <= 40;
-
-  let coverage = null;
-  if (uniform) {
-    let fg = 0, n = 0;
-    for (let y = 0; y < h; y += 6) {
-      for (let x = 0; x < w; x += 6) {
-        const idx = (y * w + x) * 4;
-        const diff = Math.abs(imgData[idx] - bgR) + Math.abs(imgData[idx+1] - bgG) + Math.abs(imgData[idx+2] - bgB);
-        if (diff > 60) fg++;
-        n++;
-      }
-    }
-    coverage = fg / n;
-  }
-  return { uniform: uniform, bgR: bgR, bgG: bgG, bgB: bgB, coverage: coverage };
-}
-
-function colorDist(r1,g1,b1,r2,g2,b2){ return Math.abs(r1-r2)+Math.abs(g1-g2)+Math.abs(b1-b2); }
-
-function analyzeImage(canvas, marketplace, category) {
-  const ctx = canvas.getContext('2d');
-  const w = canvas.width;
-  const h = canvas.height;
-  const imgData = ctx.getImageData(0, 0, w, h).data;
-  const report = { success: [], warnings: [], dangers: [] };
-
-  report.success.push({ title: 'Безопасная обработка', desc: 'Фото обрезано по центру до формата площадки (' + w + '×' + h + '), мягко улучшены резкость и контраст, сжато без потерь композиции. Фон и товар не изменялись.' });
-
-  let brightSum = 0, brightCount = 0;
-  const bStep = Math.max(2, Math.floor(Math.min(w, h) / 120));
-  for (let y = 0; y < h; y += bStep) {
-    for (let x = 0; x < w; x += bStep) {
-      brightSum += lumAt(imgData, (y * w + x) * 4);
-      brightCount++;
-    }
-  }
-  const avgBrightness = brightSum / brightCount;
-  if (avgBrightness > 235) {
-    report.dangers.push({ title: 'Пересветы', desc: 'Изображение слишком яркое (средняя яркость ' + Math.round(avgBrightness) + '/255). Маркетплейсы могут отклонить такое фото.' });
-  } else if (avgBrightness > 200) {
-    report.warnings.push({ title: 'Высокая яркость', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — близко к пересвету. Рекомендуем немного затемнить фото.' });
-  } else {
-    report.success.push({ title: 'Яркость в норме', desc: 'Средняя яркость ' + Math.round(avgBrightness) + '/255 — освещение оптимальное.' });
-  }
-
-  let edges = 0, samples = 0;
-  for (let y = 0; y < h - 1; y += 4) {
-    for (let x = 0; x < w - 1; x += 4) {
-      const i = (y * w + x) * 4;
-      const ir = (y * w + x + 1) * 4;
-      const id = ((y + 1) * w + x) * 4;
-      const g = Math.abs(lumAt(imgData, i) - lumAt(imgData, ir)) + Math.abs(lumAt(imgData, i) - lumAt(imgData, id));
-      if (g > 24) edges++;
-      samples++;
-    }
-  }
-  const edgeRatio = samples ? edges / samples : 0;
-  const edgePct = (edgeRatio * 100).toFixed(1);
-  if (edgeRatio < 0.02) {
-    report.dangers.push({ title: 'Сильное размытие', desc: 'Чётких границ всего ' + edgePct + '% кадра. Фото нечёткое — модерация почти наверняка отклонит. Загрузите более резкий исходник.' });
-  } else if (edgeRatio < 0.045) {
-    report.warnings.push({ title: 'Возможное размытие', desc: 'Чётких границ ' + edgePct + '% кадра — ниже комфортного уровня. Проверьте резкость исходника перед загрузкой.' });
-  } else {
-    report.success.push({ title: 'Резкость в норме', desc: 'Чётких границ ' + edgePct + '% кадра — детали хорошо различимы, фото не выглядит размытым.' });
-  }
-
-  let edgeVariance = 0, edgeSamples = 0;
-  const checkEdge = (x, y) => {
-    const idx = (y * w + x) * 4;
-    const idxIn = ((Math.min(y + 15, h - 1)) * w + Math.min(x + 15, w - 1)) * 4;
-    const diff = Math.abs(imgData[idx] - imgData[idxIn]) + Math.abs(imgData[idx+1] - imgData[idxIn+1]) + Math.abs(imgData[idx+2] - imgData[idxIn+2]);
-    if (diff > 100) edgeVariance++;
-    edgeSamples++;
-  };
-  for (let x = 0; x < w; x += 20) { checkEdge(x, 0); checkEdge(x, h - 1); }
-  for (let y = 0; y < h; y += 20) { checkEdge(0, y); checkEdge(w - 1, y); }
-
-  if (edgeVariance > edgeSamples * 0.3) {
-    report.warnings.push({ title: 'Объект у края кадра', desc: 'Контрастные элементы подходят к самой границе. Рекомендуем добавить отступы, чтобы товар не «прилипал» к краю.' });
-  } else {
-    report.success.push({ title: 'Отступы в норме', desc: 'Товар не касается границ кадра.' });
-  }
-
-  const textBlocks = detectTextBlocks(imgData, w, h);
-  if (textBlocks >= 3) {
-    let advice;
-    if (marketplace === 'ozon' && category === 'clothing') advice = TEXT_ADVICE.ozon_clothing;
-    else if (marketplace === 'ozon') advice = TEXT_ADVICE.ozon_other;
-    else if (marketplace === 'wb') advice = TEXT_ADVICE.wb;
-    else if (marketplace === 'ym') advice = TEXT_ADVICE.ym;
-    else advice = TEXT_ADVICE.avito;
-    report.warnings.push({
-      title: 'Обнаружен текст или логотип (' + textBlocks + ' блок.)',
-      desc: advice + ' ' + TEXT_CATEGORIES
-    });
-  } else {
-    report.success.push({ title: 'Текстовых блоков не обнаружено', desc: 'Крупных надписей, логотипов и водяных знаков на фото не найдено.' });
-  }
-
-  const bg = analyzeBackground(imgData, w, h);
-
-  if (marketplace === 'ozon' && category === 'clothing') {
-    if (!bg.uniform) {
-      report.warnings.push({ title: 'Фон не соответствует Ozon', desc: 'Ozon требует строго серый фон (#F2F3F5) для одежды и обуви. Ваш фон не соответствует. Рекомендуем заменить фон или использовать другое фото. ' + MANUAL_BG_NOTE });
-    } else if (colorDist(bg.bgR, bg.bgG, bg.bgB, 242, 243, 245) > 60) {
-      report.warnings.push({ title: 'Фон не соответствует Ozon', desc: 'Ozon требует строго серый фон (#F2F3F5) для одежды и обуви. Ваш фон однородный, но другого оттенка. Рекомендуем заменить фон или использовать другое фото. ' + MANUAL_BG_NOTE });
-    } else {
-      report.success.push({ title: 'Фон соответствует Ozon', desc: 'Однородный серый фон, близкий к #F2F3F5 — требование выполнено.' });
-    }
-  } else if (marketplace === 'ym') {
-    if (!bg.uniform) {
-      report.warnings.push({ title: 'Фон не соответствует Я.Маркету', desc: 'Требуется белый или прозрачный фон, товар занимает не менее 2/3 кадра. Ваше фото не соответствует. ' + MANUAL_BG_NOTE });
-    } else if (colorDist(bg.bgR, bg.bgG, bg.bgB, 255, 255, 255) > 60) {
-      report.warnings.push({ title: 'Фон не соответствует Я.Маркету', desc: 'Требуется белый или прозрачный фон. Ваш фон однородный, но не белый. ' + MANUAL_BG_NOTE });
-    } else if (bg.coverage !== null && bg.coverage < 0.45) {
-      report.warnings.push({ title: 'Товар занимает мало кадра', desc: 'Требуется белый или прозрачный фон, товар занимает не менее 2/3 кадра. Сейчас товар занимает примерно ' + Math.round(bg.coverage * 100) + '% кадра — снимите товар крупнее.' });
-    } else {
-      report.success.push({ title: 'Фон соответствует Я.Маркету', desc: 'Белый фон, товар занимает примерно ' + Math.round((bg.coverage || 0) * 100) + '% кадра — требования выполнены.' });
-    }
-  } else if (marketplace === 'wb') {
-    if (category === 'clothing' && !bg.uniform) {
-      report.warnings.push({ title: 'Проверьте фон для WB', desc: 'Для одежды на WB лучше смотрится однородный светлый фон, хотя строгих требований нет. Возможна ручная замена для повышения конверсии. ' + MANUAL_BG_NOTE });
-    } else {
-      report.success.push({ title: 'Фон подходит для WB', desc: 'WB не требует строго однородного фона для этой категории — главное, чтобы товар хорошо читался.' });
-    }
-  } else if (marketplace === 'ozon') {
-    report.success.push({ title: 'Фон подходит для Ozon', desc: 'Для этой категории Ozon не требует строго однородного фона.' });
-  } else if (marketplace === 'avito') {
-    report.success.push({ title: 'Фон подходит для Avito', desc: 'Avito не требует строго однородного фона — главное, чтобы товар был хорошо виден без надписей и водяных знаков.' });
-  }
-
-  return report;
-}
-
-function detectTextBlocks(imgData, w, h) {
-  const cols = 10;
-  const rows = Math.max(8, Math.round(10 * h / w));
-  const bw = Math.floor(w / cols);
-  const bh = Math.floor(h / rows);
-  let textBlocks = 0;
-
-  for (let by = 0; by < rows; by++) {
-    for (let bx = 0; bx < cols; bx++) {
-      const x0 = bx * bw, y0 = by * bh;
-      const x1 = Math.min(x0 + bw, w - 2), y1 = Math.min(y0 + bh, h - 2);
-
-      let n = 0, sum = 0, sumSq = 0;
-      const hist = new Array(16).fill(0);
-      let edgeCount = 0, edgeSamples = 0;
-
-      for (let y = y0; y < y1; y += 3) {
-        for (let x = x0; x < x1; x += 3) {
-          const i = (y * w + x) * 4;
-          const lum = lumAt(imgData, i);
-          sum += lum; sumSq += lum * lum; n++;
-          hist[Math.min(15, Math.floor(lum / 16))]++;
-
-          const ir = (y * w + x + 1) * 4;
-          const id = ((y + 1) * w + x) * 4;
-          const gx = Math.abs(imgData[i] - imgData[ir]) + Math.abs(imgData[i+1] - imgData[ir+1]) + Math.abs(imgData[i+2] - imgData[ir+2]);
-          const gy = Math.abs(imgData[i] - imgData[id]) + Math.abs(imgData[i+1] - imgData[id+1]) + Math.abs(imgData[i+2] - imgData[id+2]);
-          if (gx + gy > 90) edgeCount++;
-          edgeSamples++;
-        }
-      }
-      if (n < 40 || edgeSamples === 0) continue;
-
-      const mean = sum / n;
-      const variance = sumSq / n - mean * mean;
-      const edgeDensity = edgeCount / edgeSamples;
-
-      let max1 = -1, bi1 = -1, max2 = -1, bi2 = -1;
-      for (let b = 0; b < 16; b++) { if (hist[b] > max1) { max1 = hist[b]; bi1 = b; } }
-      for (let b = 0; b < 16; b++) { if (b === bi1) continue; if (hist[b] > max2) { max2 = hist[b]; bi2 = b; } }
-      const bimodal = (bi1 >= 0 && bi2 >= 0) && Math.abs(bi1 - bi2) >= 3 && ((max1 + max2) / n) >= 0.6;
-
-      const textLike = bimodal && variance > 900 && edgeDensity >= 0.08 && edgeDensity <= 0.85;
-      if (textLike) textBlocks++;
-    }
-  }
-  return textBlocks;
-}
-
 function initSlider(container) {
   if (!container) return;
   const handle = container.querySelector('.slider-handle');
@@ -1480,7 +1485,8 @@ function openViewModal(i) {
   stats.innerHTML =
     '<div class="view-stat">ДО: ' + (r.originalSize/1024).toFixed(0) + ' КБ</div>' +
     '<div class="view-stat">ПОСЛЕ: ' + (r.optimizedSize/1024).toFixed(0) + ' КБ</div>' +
-    '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (r.ext || 'jpg').toUpperCase() + '</div>';
+    '<div class="view-stat accent">Сжатие −' + sv + '% • ' + (r.ext || 'jpg').toUpperCase() + '</div>' +
+    '<div class="view-stat">Улучшение: ' + (ENH_LABELS[r.enhanceMode]||'—') + ' • ' + (INPUT_LABELS[r.inputType]||'Фото') + '</div>';
 
   modal.classList.add('active');
   viewSliderActive = true;
@@ -1519,6 +1525,11 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 
   const category = document.getElementById('category').value;
+  const enhanceMode = document.getElementById('enhanceMode').value;
+  const inputType = document.getElementById('inputType').value;
+  // R2: сохраняем выбор в localStorage
+  try { localStorage.setItem('pbEnhanceMode', enhanceMode); localStorage.setItem('pbInputType', inputType); } catch(e){}
+
   const btn = document.getElementById('processBtn');
   const originalBtnText = 'Оптимизировать';
   btn.disabled = true;
@@ -1543,6 +1554,8 @@ document.getElementById('processBtn').addEventListener('click', async () => {
         const s = {
           marketplace: mp,
           category: category,
+          enhanceMode: enhanceMode,
+          inputType: inputType,
           quality: document.getElementById('quality').value,
           outputFormat: state.data.plan === 'pro' ? document.getElementById('outputFormat').value : 'jpg',
           watermark: state.data.plan === 'pro' ? document.getElementById('watermarkText').value : ''
@@ -1562,6 +1575,8 @@ document.getElementById('processBtn').addEventListener('click', async () => {
             originalUrl: null,
             marketplace: mp,
             category: category,
+            enhanceMode: enhanceMode,
+            inputType: inputType,
             aspectRatio: mp === 'avito' ? '4/3' : '3/4',
             validationReport: {
               success: [],
@@ -1582,16 +1597,28 @@ document.getElementById('processBtn').addEventListener('click', async () => {
         state.processedFiles.push({...r, finalName});
         displayResult({...r, finalName}, state.processedFiles.length - 1);
 
+        // ========== ФИКС FIRESTORE 1MiB: сжимаем thumbnail и data перед записью ==========
+        let thumbnail = r.optimizedData;
+        let dataForStorage = r.optimizedData;
+        try {
+          thumbnail = await makeThumbnail(r.optimizedData, 260);
+          if (dataForStorage.length > 900000) {
+            dataForStorage = await compressDataUrl(dataForStorage, 900000, 2000);
+          }
+        } catch(e){ console.error('compress for storage failed:', e); }
+
         await Cloud.pushHistory(state.user.uid, {
           name: finalName,
           ext: r.ext,
           date: new Date().toISOString(),
           originalSize: r.originalSize,
           optimizedSize: r.optimizedSize,
-          thumbnail: r.optimizedData,
-          data: r.optimizedData,
+          thumbnail: thumbnail,
+          data: dataForStorage,
           marketplace: mp,
           category: category,
+          enhanceMode: enhanceMode,
+          inputType: inputType,
           aspectRatio: r.aspectRatio,
           validationReport: r.validationReport
         });
@@ -1632,6 +1659,7 @@ document.getElementById('processBtn').addEventListener('click', async () => {
   }
 });
 
+// ========== R1/R2/R3/R4: ПОЛНАЯ ОБРАБОТКА ИЗОБРАЖЕНИЯ С DENOISE ==========
 async function processImage(pre, file, s) {
   return new Promise((res, rej) => {
     (async () => {
@@ -1647,10 +1675,25 @@ async function processImage(pre, file, s) {
         const img = pre.img;
 
         const crop = centerCrop(img, W, H);
-        ctx.filter = 'contrast(1.05) saturate(1.06) brightness(1.02)';
+        // 1. Обрезка БЕЗ фильтра (чистое копирование)
         ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, W, H);
-        ctx.filter = 'none';
-        enhanceImage(ctx, W, H);
+
+        // 2. Получаем параметры по режиму и типу входа
+        const params = getEnhanceParams(s.enhanceMode, s.inputType);
+
+        // 3. Применяем улучшения, если режим не "Выкл"
+        if (s.enhanceMode !== 'off') {
+          // R1: denoise СТРОГО перед резкостью
+          if (params.denoise > 0) {
+            const imgData = ctx.getImageData(0, 0, W, H);
+            const denoised = await denoiseAsync(imgData, params.denoise);
+            ctx.putImageData(new ImageData(denoised, W, H), 0, 0);
+          }
+          // Контраст + насыщенность
+          applyContrastSaturate(ctx, W, H, params.contrast, params.saturate);
+          // Резкость (unsharp mask) — только для фото, для скриншотов k≈0
+          sharpenImage(ctx, W, H, params.sharpen);
+        }
 
         if (s.watermark) {
           ctx.font = 'bold 24px Arial';
@@ -1662,16 +1705,22 @@ async function processImage(pre, file, s) {
 
         const validationReport = analyzeImage(c, s.marketplace, s.category);
 
-        let mime, ext, q;
-        const qualityVal = s.quality;
-        const maxSize = qualityVal === 'high' ? 1000 : qualityVal === 'low' ? 100 : 300;
+        // R4: стартовое качество с учётом типа входа и наличия текста
+        let q = params.q !== null ? params.q : baseQ(s.quality);
+        if (s.inputType === 'screenshot') q = Math.max(q, 0.9);
+        if (validationReport.meta && (validationReport.meta.textBlocks > 0 || validationReport.meta.edgeRatio > 0.1)) {
+          q = Math.min(0.95, q + 0.1);
+        }
+
+        let mime, ext;
+        const maxSize = s.quality === 'high' ? 1000 : s.quality === 'low' ? 100 : 300;
 
         if (s.outputFormat === 'png') {
           mime = 'image/png'; ext = 'png'; q = 1.0;
         } else if (s.outputFormat === 'webp') {
-          mime = 'image/webp'; ext = 'webp'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+          mime = 'image/webp'; ext = 'webp';
         } else {
-          mime = 'image/jpeg'; ext = 'jpg'; q = qualityVal === 'high' ? 0.9 : qualityVal === 'low' ? 0.5 : 0.7;
+          mime = 'image/jpeg'; ext = 'jpg';
         }
 
         let url = c.toDataURL(mime, q);
@@ -1681,6 +1730,7 @@ async function processImage(pre, file, s) {
         }
 
         let size = url.length * 0.75;
+        // Плавно снижаем q, пока не пройдём целевой вес
         while (size > maxSize * 1024 && q > 0.1 && ext !== 'png') {
           q -= 0.05;
           url = c.toDataURL(mime, q);
@@ -1697,6 +1747,8 @@ async function processImage(pre, file, s) {
           validationReport: validationReport,
           marketplace: s.marketplace,
           category: s.category,
+          enhanceMode: s.enhanceMode,
+          inputType: s.inputType,
           aspectRatio: s.marketplace === 'avito' ? '4/3' : '3/4'
         });
       } catch (err) {
@@ -1745,7 +1797,7 @@ function displayResult(r, i) {
   const mp = r.marketplace || 'wb';
   const cat = r.category || 'other';
 
-  const modeHint = '<div style="font-size:0.75rem;color:var(--success);margin-bottom:6px;font-weight:600;">🛡️ Безопасный режим: обрезка по центру до ' + (mp === 'avito' ? '1200×900' : '900×1200') + ' + улучшение резкости + сжатие, без замены фона</div>';
+  const modeHint = '<div style="font-size:0.75rem;color:var(--success);margin-bottom:6px;font-weight:600;">🛡️ Режим: ' + (ENH_LABELS[r.enhanceMode]||'—') + ' • ' + (INPUT_LABELS[r.inputType]||'Фото') + ' — обрезка по центру до ' + (mp === 'avito' ? '1200×900' : '900×1200') + ' + denoise + улучшение + сжатие</div>';
 
   d.innerHTML =
     '<div class="comparison-slider" id="slider-' + i + '" onclick="openViewModal(' + i + ')">' +
@@ -1766,6 +1818,7 @@ function displayResult(r, i) {
       '<div class="result-metrics">' +
         '<div><div class="metric-label">Размер</div><div class="metric-value">' + (r.originalSize/1024).toFixed(1) + ' → ' + (r.optimizedSize/1024).toFixed(1) + ' КБ</div></div>' +
         '<div><div class="metric-label">Сжатие</div><div class="metric-value">-' + sv + '%</div></div>' +
+        '<div><div class="metric-label">Улучшение</div><div class="metric-value dim">' + (ENH_LABELS[r.enhanceMode]||'—') + '</div></div>' +
       '</div>' +
       reportHtml +
     '</div>' +
@@ -1848,6 +1901,11 @@ Cloud.onAuth(async (user) => {
     state.data = null;
     location.href = '../';
   }
+  // Восстанавливаем сохранённые настройки R2
+  try {
+    const em = localStorage.getItem('pbEnhanceMode'); if (em) document.getElementById('enhanceMode').value = em;
+    const it = localStorage.getItem('pbInputType'); if (it) document.getElementById('inputType').value = it;
+  } catch(e){}
   renderSubscription();
   updateUI();
   renderSelectedZone();
